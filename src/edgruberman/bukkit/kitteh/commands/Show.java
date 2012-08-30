@@ -49,7 +49,7 @@ public final class Show extends Executor {
         final int footerSize = Main.courier.draft("messages.show.footer").size();
         final int lineCount = Show.PAGE_SIZE - header.size() - footerSize;
 
-        final int pageTotal = (balance.size() / lineCount) + 1;
+        final int pageTotal = (balance.size() / lineCount)  + ( balance.size() % lineCount > 0 ? 1 : 0 );
         final int pageCurrent = ( args.size() >= 1 ? Show.parseInt(args.get(0), 1) : 1 );
         if (pageCurrent <= 0 || pageCurrent > pageTotal) {
             Main.courier.send(sender, "messages.unknownPage", pageCurrent);

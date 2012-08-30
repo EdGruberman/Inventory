@@ -55,7 +55,7 @@ public final class History extends Executor {
         final int footerSize = Main.courier.draft("messages.history.footer").size();
         final int lineCount = History.PAGE_SIZE - header.size() - footerSize;
 
-        final int pageTotal = (keys.size() / lineCount) + 1;
+        final int pageTotal = (keys.size() / lineCount) + ( keys.size() % lineCount > 0 ? 1 : 0 );
         final int pageCurrent = ( args.size() >= 1 ? History.parseInt(args.get(0), 1) : 1 );
         if (pageCurrent <= 0 || pageCurrent > pageTotal) {
             Main.courier.send(sender, "messages.unknownPage", pageCurrent);
