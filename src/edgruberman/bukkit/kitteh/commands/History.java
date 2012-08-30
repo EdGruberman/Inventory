@@ -15,10 +15,11 @@ import org.bukkit.entity.Player;
 
 import edgruberman.bukkit.kitteh.Main;
 import edgruberman.bukkit.kitteh.Manager;
+import edgruberman.bukkit.kitteh.messaging.Message;
 
 public final class History extends Executor {
 
-    private static final int PAGE_SIZE = 9;
+    private static final int PAGE_SIZE = 10;
 
     private final Manager manager;
 
@@ -35,7 +36,7 @@ public final class History extends Executor {
         }
 
         if (args.size() >= 2 && !sender.hasPermission("kitteh.history.all")) {
-            Main.courier.send(sender, "messages.historyDenied", args.get(0));
+            Main.courier.send(sender, "messages.historyDenied", args.get(1));
             return true;
         }
 
@@ -43,29 +44,35 @@ public final class History extends Executor {
 
         final ConfigurationSection history = this.manager.history(target);
         if (history == null) {
-            Main.courier.send(sender, "messages.historyNone", args.get(0));
+            Main.courier.send(sender, "messages.historyNone", target);
             return true;
         }
 
         // index accessible, newest to oldest
         final List<String> keys = History.asSortedList(history.getKeys(false), Collections.reverseOrder());
 
-        final int pageTotal = (keys.size() / History.PAGE_SIZE) + 1;
+        final List<Message> header = Main.courier.draft("messages.history.header", target);
+        final int footerSize = Main.courier.draft("messages.history.footer").size();
+        final int lineCount = History.PAGE_SIZE - header.size() - footerSize;
+
+        final int pageTotal = (keys.size() / lineCount) + 1;
         final int pageCurrent = ( args.size() >= 1 ? History.parseInt(args.get(0), 1) : 1 );
         if (pageCurrent <= 0 || pageCurrent > pageTotal) {
             Main.courier.send(sender, "messages.unknownPage", pageCurrent);
             return false;
         }
 
-        final int first = (pageCurrent - 1) * History.PAGE_SIZE;
-        final int last = Math.min(first + History.PAGE_SIZE, keys.size()) - 1;
+        final int first = (pageCurrent - 1) * lineCount;
+        final int last = Math.min(first + lineCount, keys.size()) - 1;
+
+        Main.courier.send(sender, "messages.history.header", target);
 
         for (int i = first; i <= last; i++) {
             final ConfigurationSection entry = history.getConfigurationSection(keys.get(i));
             Main.courier.send(sender, "messages.history.line", new Date(Long.parseLong(keys.get(i))), entry.getString("kit"), entry.getInt("quantity"), entry.getString("reason"));
         }
 
-        Main.courier.send(sender, "messages.history.summary", pageCurrent, pageTotal, keys.size());
+        Main.courier.send(sender, "messages.history.footer", pageCurrent, pageTotal, keys.size());
         return true;
     }
 

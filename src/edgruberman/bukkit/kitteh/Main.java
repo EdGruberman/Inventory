@@ -2,6 +2,7 @@ package edgruberman.bukkit.kitteh;
 
 import java.io.File;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import edgruberman.bukkit.kitteh.commands.Adjust;
@@ -19,10 +20,12 @@ public final class Main extends CustomPlugin {
     public static Courier courier;
 
     @Override
-    public void onLoad() { this.putConfigMinimum(CustomPlugin.CONFIGURATION_FILE, "1.0.0"); }
+    public void onLoad() { this.putConfigMinimum(CustomPlugin.CONFIGURATION_FILE, "1.1.0"); }
 
     @Override
     public void onEnable() {
+        Bukkit.getOfflinePlayers(); // set casing for offline player names based on previous connections
+
         this.reloadConfig();
         Main.courier = new ConfigurationCourier(this);
 
