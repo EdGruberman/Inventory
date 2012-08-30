@@ -43,7 +43,7 @@ permissions:
             kitteh.user: true
             kitteh.adjust: true
             kitteh.show.all: true
-            kitthe.history.all: true
+            kitteh.history.all: true
             kitteh.reload: true
     kitteh.show.all:
         description: Can use show command to view kits for any player
