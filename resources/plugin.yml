@@ -1,0 +1,68 @@
+name: Kitteh
+version: @VERSION@
+description: Provide collections of items to players
+author: EdGruberman (ed@rjump.com)
+main: edgruberman.bukkit.kitteh.Main
+commands:
+    'kitteh:take':
+        aliases: [kit, kit.take]
+        description: Receive kit
+        permission: kitteh.take
+        usage: /<command>[ <Kit>[ <Quantity>]]
+    'kitteh:show':
+        aliases: ['kit?', kit.show]
+        description: Show available kits
+        permission: kitteh.show
+        usage: /<command>
+    'kitteh:history':
+        aliases: [kit.history, kit.log]
+        description: View kit history log
+        permission: kitteh.history
+        usage: /<command>[ <Page>]
+    'kitteh:adjust':
+        aliases: [kit.adjust]
+        description: Grant or revoke a specific quantity of kit uses to a player
+        permission: kitteh.adjust
+        usage: /<command> <Kit> <Player> <Quantity>[ <Reason>]
+    'kitteh:reload':
+        description: Reload Kitteh plugin
+        permission: kitteh.reload
+        usage: /<command>
+permissions:
+    kitteh.user:
+        description: Can use basic commands
+        default: true
+        children:
+            kitteh.take: true
+            kitteh.show: true
+            kitteh.history: true
+    kitteh.admin:
+        description: Can use all commands
+        default: op
+        children:
+            kitteh.user: true
+            kitteh.adjust: true
+            kitteh.show.all: true
+            kitthe.history.all: true
+            kitteh.reload: true
+    kitteh.show.all:
+        description: Can use show command to view kits for any player
+        default: false
+    kitteh.history.all:
+        description: Can use history command to view history for any player
+        default: false
+    kitteh.take:
+        description: Can use take command
+        default: false
+    kitteh.show:
+        description: Can use show command
+        default: false
+    kitteh.history:
+        description: Can use history command
+        default: false
+    kitteh.adjust:
+        description: Can use adjust command
+        default: false
+    kitteh.reload:
+        description: Can use reload command
+        default: false

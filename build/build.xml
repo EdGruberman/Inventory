@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project default="Build" basedir="..">
+    <!-- Standard Plugin Build File v2.0.0 -->
+
+    <tstamp>
+        <format property="start" pattern="yyyy-MM-dd HH:mm:ss z" timezone="UTC" />
+    </tstamp>
+
+    <property name="src" location="src" />
+    <property name="resources" location="resources" />
+    <property name="stage" location="stage" />
+    <property name="dist" location="dist" />
+    <property name="doc" location="doc" />
+
+    <property name="version.properties" location="${ant.file}/../version.properties" />
+    <property prefix="plugin" file="${ant.file}/../plugin.properties" />
+
+    <path id="classpath">
+        <fileset dir="." includes="lib/**" />
+        <fileset dir="${bukkit.shared}" includes="**" />
+    </path>
+
+    <target name="Build" description="Increment build version and build" depends="-Previous Version">
+        <propertyfile file="${version.properties}">
+            <entry key="build" operation="+" value="1" type="int" />
+        </propertyfile>
+        <antcall target="-JAR Export" />
+        <antcall target="-Update Test Server" />
+    </target>
+
+    <target name="Revision Alpha (#.#.+1a0)" description="Increment revision version and build initial alpha" depends="-Previous Version">
+        <propertyfile file="${version.properties}">
+            <entry key="revision" operation="+" value="1" type="int" />
+            <entry key="type" value="a" />
+            <entry key="build" value="0" type="int" />
+        </propertyfile>
+        <antcall target="-JAR Export" />
+        <antcall target="-Update Test Server" />
+    </target>
+
+    <target name="Minor Alpha (#.+1.0a0)" description="Increment minor version and build initial alpha" depends="-Previous Version">
+        <propertyfile file="${version.properties}">
+            <entry key="minor" operation="+" value="1" type="int" />
+            <entry key="revision" value="0" type="int" />
+            <entry key="type" value="a" />
+            <entry key="build" value="0" type="int" />
+        </propertyfile>
+        <antcall target="-JAR Export" />
+        <antcall target="-Update Test Server" />
+    </target>
+
+    <target name="Major Alpha (+1.0.0a0)" description="Increment major version and build initial alpha" depends="-Previous Version">
+        <propertyfile file="${version.properties}">
+            <entry key="major" operation="+" value="1" type="int" />
+            <entry key="minor" value="0" type="int" />
+            <entry key="revision" value="0" type="int" />
+            <entry key="type" value="a" />
+            <entry key="build" value="0" type="int" />
+        </propertyfile>
+        <antcall target="-JAR Export" />
+        <antcall target="-Update Test Server" />
+    </target>
+
+    <target name="Beta (#.#.#b0)" description="Build initial beta" depends="-Previous Version">
+        <propertyfile file="${version.properties}">
+            <entry key="type" value="b" />
+            <entry key="build" value="0" type="int" />
+        </propertyfile>
+        <antcall target="-JAR Export" />
+        <antcall target="-Update Test Server" />
+    </target>
+
+    <target name="Release Candidate (#.#.#rc0)" description="Build initial release candidate" depends="-Previous Version">
+        <propertyfile file="${version.properties}">
+            <entry key="type" value="rc" />
+            <entry key="build" value="0" type="int" />
+        </propertyfile>
+        <antcall target="-JAR Export" />
+        <antcall target="-Update Test Server" />
+    </target>
+
+    <target name="Release (#.#.#)" description="Build full release" depends="-Previous Version">
+        <propertyfile file="${version.properties}">
+            <entry key="type" value="" />
+            <entry key="build" value="" />
+        </propertyfile>
+        <antcall target="-JAR Export" />
+        <antcall target="-Update Test Server" />
+    </target>
+
+    <target name="-JAR Export" description="Build Bukkit plugin JAR file" depends="-Clean">
+        <property prefix="version" file="${version.properties}" />
+        <property name="version" value="${version.major}.${version.minor}.${version.revision}${version.type}${version.build}" />
+        <echo message="Exporting Bukkit plugin JAR for version ${version}" />
+
+        <javac srcdir="${src}" destdir="${stage}" encoding="utf-8" debug="true" includeantruntime="false">
+            <classpath refid="classpath" />
+        </javac>
+
+        <copy todir="${stage}" preservelastmodified="true">
+            <fileset dir="${resources}" includes="**/*.yml"/>
+            <filterset>
+                <filter token="VERSION" value="${version}" />
+            </filterset>
+        </copy>
+        
+        <copy todir="${stage}" preservelastmodified="true">
+            <fileset dir="${resources}" excludes="**/*.yml"/>
+        </copy>
+
+        <jar basedir="${stage}/" jarfile="${dist}/${plugin.name}.jar">
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Built-Date" value="${start}"/>
+                <attribute name="Specification-Title" value="${plugin.name}" />
+                <attribute name="Specification-Version" value="${version.major}.${version.minor}" />
+                <attribute name="Specification-Vendor" value="${plugin.vendor}" />
+                <attribute name="Implementation-Title" value="${plugin.implementation-title}" />
+                <attribute name="Implementation-Version" value="${version.revision}${version.type}${version.build}" />
+                <attribute name="Implementation-Vendor" value="${plugin.vendor}" />
+                <attribute name="Implementation-Url" value="${plugin.implementation-url}" />
+                <attribute name="Class-Path" value="${plugin.class-path}" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="-Clean" description="Prepare build output directories">
+        <delete dir="${stage}" />
+        <delete dir="${dist}" />
+        <mkdir dir="${stage}" />
+        <mkdir dir="${dist}" />
+    </target>
+
+    <target name="-Previous Version" description="Generate console output to show previous version">
+        <property prefix="previous" file="${version.properties}" />
+        <property name="previous" value="${previous.major}.${previous.minor}.${previous.revision}${previous.type}${previous.build}" />
+        <echo message="Previous version was ${previous}" />
+    </target>
+
+    <target name="-Update Test Server" description="Copy built JAR to test server">
+        <copy file="${dist}/${plugin.name}.jar" todir="${bukkit.test}" />
+    </target>
+
+</project>
