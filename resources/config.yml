@@ -16,7 +16,7 @@ messages:
     takeUnavailable: '-> §7Kit §enot available§7: §7§o{1}{3,choice,0#|1# §8(§7{2}''<''{3}§8)}' # 1 = Kit, 2 = Balance, 3 = Requested
     history:
         header: '-> §7Kit history for §o{1}' # 1 = Player
-        line: '-> §7{1,date,MMM dd HH:mm} §2{2}§8(§7{3,choice,0#|1#+}{3}§8)§7: {4}' # 1 = When, 2 = Kit, 3 = Quantity, 4 = Reason
+        line: '-> §7{1,date,yyyy MMM dd HH:mm} §2{2}§8(§7{3,choice,0#|1#+}{3}§8)§7: {4}' # 1 = When, 2 = Kit, 3 = Quantity, 4 = Reason
         footer: '-> §7Page {1} of {2} §8({3} entries)' # 1 = Current Page, 2 = Total Page Count, 3 = Total History Entries
     historyNone: '-> §eNo kit history §7is recorded for §o{1}' # 1 = Player
     historyDenied: '-> §cPermission denied§7 to view history for §o{1}' # 1 = <Player>
