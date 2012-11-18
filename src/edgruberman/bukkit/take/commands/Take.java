@@ -1,4 +1,4 @@
-package edgruberman.bukkit.kitteh.commands;
+package edgruberman.bukkit.take.commands;
 
 import java.util.List;
 
@@ -6,9 +6,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import edgruberman.bukkit.kitteh.Kit;
-import edgruberman.bukkit.kitteh.Main;
-import edgruberman.bukkit.kitteh.Manager;
+import edgruberman.bukkit.take.Kit;
+import edgruberman.bukkit.take.Main;
+import edgruberman.bukkit.take.Manager;
 
 public final class Take extends Executor {
 
@@ -24,7 +24,7 @@ public final class Take extends Executor {
     @Override
     protected boolean execute(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (!(sender instanceof Player)) {
-            Main.courier.send(sender, "messages.requiresPlayer", label);
+            Main.courier.send(sender, "requiresPlayer", label);
             return true;
         }
 
@@ -32,7 +32,7 @@ public final class Take extends Executor {
 
         final Kit kit = this.manager.getKit(args.get(0));
         if (kit == null) {
-            Main.courier.send(sender, "messages.unknownKit", args.get(0));
+            Main.courier.send(sender, "unknownKit", args.get(0));
             return true;
         }
 
@@ -40,7 +40,7 @@ public final class Take extends Executor {
         if (args.size() >= 2) {
             requested = Take.parseInt(args.get(1), null);
             if (requested == null || requested <= 0) {
-                Main.courier.send(sender, "messages.unknownArgument", "<Quantity>", args.get(1));
+                Main.courier.send(sender, "unknownArgument", "<Quantity>", args.get(1));
                 return false;
             }
         }
@@ -49,7 +49,7 @@ public final class Take extends Executor {
         if (requested == null) requested = balance;
         if (balance <= 0 || requested > balance) {
             System.out.println(balance + " " + requested);
-            Main.courier.send(sender, "messages.takeUnavailable", kit.getName(), balance, requested);
+            Main.courier.send(sender, "takeUnavailable", kit.getName(), balance, requested);
             return true;
         }
 

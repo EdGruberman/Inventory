@@ -1,4 +1,4 @@
-package edgruberman.bukkit.kitteh.util;
+package edgruberman.bukkit.take.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,4 +1,4 @@
-package edgruberman.bukkit.kitteh.commands;
+package edgruberman.bukkit.take.commands;
 
 import java.util.List;
 
@@ -7,15 +7,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import edgruberman.bukkit.kitteh.Kit;
-import edgruberman.bukkit.kitteh.Main;
-import edgruberman.bukkit.kitteh.Manager;
+import edgruberman.bukkit.take.Kit;
+import edgruberman.bukkit.take.Main;
+import edgruberman.bukkit.take.Manager;
 
-public final class Adjust extends Executor {
+public final class Add extends Executor {
 
     private final Manager manager;
 
-    public Adjust(final Manager manager) {
+    public Add(final Manager manager) {
         this.manager = manager;
     }
 
@@ -23,29 +23,29 @@ public final class Adjust extends Executor {
     @Override
     protected boolean execute(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (args.size() < 1) {
-            Main.courier.send(sender, "messages.requiresArgument", "<Kit>");
+            Main.courier.send(sender, "requiresArgument", "<Kit>");
             return false;
         }
 
         if (args.size() < 2) {
-            Main.courier.send(sender, "messages.requiresArgument", "<Player>");
+            Main.courier.send(sender, "requiresArgument", "<Player>");
             return false;
         }
 
         if (args.size() < 3) {
-            Main.courier.send(sender, "messages.requiresArgument", "<Quantity>");
+            Main.courier.send(sender, "requiresArgument", "<Quantity>");
             return false;
         }
 
         final Kit kit = this.manager.getKit(args.get(0));
         if (kit == null) {
-            Main.courier.send(sender, "messages.unknownKit", args.get(0));
+            Main.courier.send(sender, "unknownKit", args.get(0));
             return false;
         }
 
-        final Integer quantity = Adjust.parseInt(args.get(2), null);
+        final Integer quantity = Add.parseInt(args.get(2), null);
         if (quantity == null) {
-            Main.courier.send(sender, "messages.unknownArgument", "<Quantity>", args.get(2));
+            Main.courier.send(sender, "unknownArgument", "<Quantity>", args.get(2));
             return false;
         }
 
@@ -53,7 +53,7 @@ public final class Adjust extends Executor {
         final String reason = ( args.size() >= 4 ? ChatColor.translateAlternateColorCodes('&', args.get(3)) : "{" + sender.getName() + "}");
         this.manager.adjust(player, kit, quantity, reason);
         final int balance = this.manager.balance(player, kit);
-        Main.courier.send(sender, "messages.adjust", player, kit.getName(), quantity, reason, balance);
+        Main.courier.send(sender, "adjust", player, kit.getName(), quantity, reason, balance);
         return true;
     }
 

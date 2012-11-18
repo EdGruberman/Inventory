@@ -1,4 +1,4 @@
-package edgruberman.bukkit.kitteh.messaging;
+package edgruberman.bukkit.take.messaging;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
  * players in a world at message delivery time
  *
  * @author EdGruberman (ed@rjump.com)
- * @version 2.0.0
+ * @version 2.1.0
  */
 public class WorldPlayers extends Recipients {
 
@@ -18,6 +18,10 @@ public class WorldPlayers extends Recipients {
 
     public WorldPlayers(final World world) {
         this.world = world;
+    }
+
+    public World getWorld() {
+        return this.world;
     }
 
     @Override

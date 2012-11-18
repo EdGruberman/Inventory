@@ -1,4 +1,4 @@
-package edgruberman.bukkit.kitteh;
+package edgruberman.bukkit.take;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import edgruberman.bukkit.kitteh.util.BufferedYamlConfiguration;
+import edgruberman.bukkit.take.util.BufferedYamlConfiguration;
 
 public class Manager {
 
@@ -56,10 +56,10 @@ public class Manager {
         //if (balance.getKeys(false).size() == 0) ledgerPlayer.set("balance", null);
 
         // record history
-        if (!ledgerPlayer.isConfigurationSection("history")) ledgerPlayer.createSection("history");
-        final ConfigurationSection history = ledgerPlayer.getConfigurationSection("history");
+        if (!ledgerPlayer.isConfigurationSection("log")) ledgerPlayer.createSection("log");
+        final ConfigurationSection log = ledgerPlayer.getConfigurationSection("log");
 
-        final ConfigurationSection transaction = history.createSection(String.valueOf(System.currentTimeMillis()));
+        final ConfigurationSection transaction = log.createSection(String.valueOf(System.currentTimeMillis()));
         transaction.set("kit", kit.getName());
         transaction.set("quantity", quantity);
         transaction.set("reason", reason);
@@ -105,14 +105,14 @@ public class Manager {
         return playerBalance.getInt(kit.getName(), 0);
     }
 
-    public ConfigurationSection history(final String player) {
+    public ConfigurationSection log(final String player) {
         final ConfigurationSection players = this.ledger.getConfigurationSection("players");
         if (players == null) return null;
 
         final ConfigurationSection ledgerPlayer = players.getConfigurationSection(player);
         if (ledgerPlayer == null) return null;
 
-        return ledgerPlayer.getConfigurationSection("history");
+        return ledgerPlayer.getConfigurationSection("log");
     }
 
 }

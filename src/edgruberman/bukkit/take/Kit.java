@@ -1,4 +1,4 @@
-package edgruberman.bukkit.kitteh;
+package edgruberman.bukkit.take;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,8 @@ public class Kit {
     public StringBuilder describe() {
         final StringBuilder description = new StringBuilder();
         for (final ItemStack item : this.items) {
-            if (description.length() != 0) description.append(Main.courier.format("messages.+contents.+delimiter"));
-            description.append(Main.courier.format("messages.+contents.+item", item.getType().name(), item.getDurability(), item.getAmount()));
+            if (description.length() != 0) description.append(Main.courier.format("+contents.+delimiter"));
+            description.append(Main.courier.format("+contents.+item", item.getType().name(), item.getDurability(), item.getAmount()));
         }
 
         return description;

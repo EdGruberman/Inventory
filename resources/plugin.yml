@@ -1,68 +1,68 @@
-name: Kitteh
+name: Take
 version: @VERSION@
-description: Provide collections of items to players
+description: Queue and track  items given to players
 author: EdGruberman (ed@rjump.com)
-main: edgruberman.bukkit.kitteh.Main
+main: edgruberman.bukkit.take.Main
 commands:
-    'kitteh:take':
-        aliases: [kit, kit.take]
-        description: Receive kit
-        permission: kitteh.take
+    'take:take':
+        aliases: [take, take.take]
+        description: Receive a kit
+        permission: take.take
         usage: /<command>[ <Kit>[ <Quantity>]]
-    'kitteh:show':
-        aliases: ['kit?', kit.show]
-        description: Show available kits
-        permission: kitteh.show
+    'take:show':
+        aliases: ['take?', take.show]
+        description: View available kits
+        permission: take.show
         usage: /<command>
-    'kitteh:history':
-        aliases: [kit.history, kit.log]
-        description: View kit history log
-        permission: kitteh.history
+    'take:log':
+        aliases: [take.log]
+        description: View kit history
+        permission: take.log
         usage: /<command>[ <Page>]
-    'kitteh:adjust':
-        aliases: [kit.adjust]
-        description: Grant or revoke a specific quantity of kit uses to a player
-        permission: kitteh.adjust
+    'take:add':
+        aliases: [take.add]
+        description: Add or remove kits
+        permission: take.add
         usage: /<command> <Kit> <Player> <Quantity>[ <Reason>]
-    'kitteh:reload':
-        description: Reload Kitteh plugin
-        permission: kitteh.reload
+    'take:reload':
+        description: Reload Take plugin
+        permission: take.reload
         usage: /<command>
 permissions:
-    kitteh.user:
-        description: Can use basic commands
-        default: true
-        children:
-            kitteh.take: true
-            kitteh.show: true
-            kitteh.history: true
-    kitteh.admin:
+    take.admin:
         description: Can use all commands
         default: op
         children:
-            kitteh.user: true
-            kitteh.adjust: true
-            kitteh.show.all: true
-            kitteh.history.all: true
-            kitteh.reload: true
-    kitteh.show.all:
-        description: Can use show command to view kits for any player
-        default: false
-    kitteh.history.all:
-        description: Can use history command to view history for any player
-        default: false
-    kitteh.take:
+            take.user: true
+            take.add: true
+            take.show.all: true
+            take.log.all: true
+            take.reload: true
+    take.user:
+        description: Can use basic commands
+        default: true
+        children:
+            take.take: true
+            take.show: true
+            take.log: true
+    take.take:
         description: Can use take command
         default: false
-    kitteh.show:
+    take.show:
         description: Can use show command
         default: false
-    kitteh.history:
-        description: Can use history command
+    take.log:
+        description: Can use log command
         default: false
-    kitteh.adjust:
-        description: Can use adjust command
+    take.add:
+        description: Can use add command
         default: false
-    kitteh.reload:
+    take.reload:
         description: Can use reload command
+        default: false
+    take.show.all:
+        description: Can use show command to view the balance for any player
+        default: false
+    take.log.all:
+        description: Can use log command to view the log for any player
         default: false

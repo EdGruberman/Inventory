@@ -1,33 +1,32 @@
-package edgruberman.bukkit.kitteh;
+package edgruberman.bukkit.take;
 
 import java.io.File;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
-import edgruberman.bukkit.kitteh.commands.Adjust;
-import edgruberman.bukkit.kitteh.commands.History;
-import edgruberman.bukkit.kitteh.commands.Reload;
-import edgruberman.bukkit.kitteh.commands.Show;
-import edgruberman.bukkit.kitteh.commands.Take;
-import edgruberman.bukkit.kitteh.messaging.ConfigurationCourier;
-import edgruberman.bukkit.kitteh.messaging.Courier;
-import edgruberman.bukkit.kitteh.util.BufferedYamlConfiguration;
-import edgruberman.bukkit.kitteh.util.CustomPlugin;
+import edgruberman.bukkit.take.commands.Add;
+import edgruberman.bukkit.take.commands.Log;
+import edgruberman.bukkit.take.commands.Reload;
+import edgruberman.bukkit.take.commands.Show;
+import edgruberman.bukkit.take.commands.Take;
+import edgruberman.bukkit.take.messaging.ConfigurationCourier;
+import edgruberman.bukkit.take.util.BufferedYamlConfiguration;
+import edgruberman.bukkit.take.util.CustomPlugin;
 
 public final class Main extends CustomPlugin {
 
-    public static Courier courier;
+    public static ConfigurationCourier courier;
 
     @Override
-    public void onLoad() { this.putConfigMinimum(CustomPlugin.CONFIGURATION_FILE, "1.1.0"); }
+    public void onLoad() { this.putConfigMinimum(CustomPlugin.CONFIGURATION_FILE, "2.0.0a0"); }
 
     @Override
     public void onEnable() {
         Bukkit.getOfflinePlayers(); // set casing for offline player names based on previous connections
 
         this.reloadConfig();
-        Main.courier = new ConfigurationCourier(this);
+        Main.courier = ConfigurationCourier.Factory.create(this).setPath("messages").setColorCode("colorCode").build();
 
         final BufferedYamlConfiguration ledger = this.loadConfig(new File(this.getDataFolder(), "ledger.yml"));
         final Manager manager = new Manager(this, ledger);
@@ -46,11 +45,11 @@ public final class Main extends CustomPlugin {
         }
 
         final Show show = new Show(manager);
-        this.getCommand("kitteh:show").setExecutor(show);
-        this.getCommand("kitteh:take").setExecutor(new Take(manager, show));
-        this.getCommand("kitteh:history").setExecutor(new History(manager));
-        this.getCommand("kitteh:adjust").setExecutor(new Adjust(manager));
-        this.getCommand("kitteh:reload").setExecutor(new Reload(this));
+        this.getCommand("take:show").setExecutor(show);
+        this.getCommand("take:take").setExecutor(new Take(manager, show));
+        this.getCommand("take:log").setExecutor(new Log(manager));
+        this.getCommand("take:add").setExecutor(new Add(manager));
+        this.getCommand("take:reload").setExecutor(new Reload(this));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package edgruberman.bukkit.kitteh.messaging;
+package edgruberman.bukkit.take.messaging;
 
 import java.util.logging.Level;
 import java.util.logging.LogRecord;

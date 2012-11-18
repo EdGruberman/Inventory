@@ -1,4 +1,4 @@
-package edgruberman.bukkit.kitteh.commands;
+package edgruberman.bukkit.take.commands;
 
 import java.util.Arrays;
 import java.util.List;

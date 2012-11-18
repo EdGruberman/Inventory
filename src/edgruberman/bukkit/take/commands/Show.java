@@ -1,4 +1,4 @@
-package edgruberman.bukkit.kitteh.commands;
+package edgruberman.bukkit.take.commands;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +9,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import edgruberman.bukkit.kitteh.Kit;
-import edgruberman.bukkit.kitteh.Main;
-import edgruberman.bukkit.kitteh.Manager;
-import edgruberman.bukkit.kitteh.messaging.Message;
+import edgruberman.bukkit.take.Kit;
+import edgruberman.bukkit.take.Main;
+import edgruberman.bukkit.take.Manager;
+import edgruberman.bukkit.take.messaging.Message;
 
 public final class Show extends Executor {
 
@@ -28,12 +28,12 @@ public final class Show extends Executor {
     @Override
     protected boolean execute(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (args.size() < 2 && !(sender instanceof Player)) {
-            Main.courier.send(sender, "messages.requiresPlayer", label);
+            Main.courier.send(sender, "requiresPlayer", label);
             return true;
         }
 
-        if (args.size() >= 2 && !sender.hasPermission("kitteh.show.all")) {
-            Main.courier.send(sender, "messages.showDenied", args.get(1));
+        if (args.size() >= 2 && !sender.hasPermission("take.show.all")) {
+            Main.courier.send(sender, "showDenied", args.get(1));
             return true;
         }
 
@@ -41,31 +41,31 @@ public final class Show extends Executor {
 
         final Map<Kit, Integer> balance = this.manager.balance(target);
         if (balance.size() == 0) {
-            Main.courier.send(sender, "messages.showNone", target);
+            Main.courier.send(sender, "showNone", target);
             return true;
         }
 
-        final List<Message> header = Main.courier.draft("messages.show.header", target);
-        final int footerSize = Main.courier.draft("messages.show.footer").size();
+        final List<Message> header = Main.courier.compose("show.header", target);
+        final int footerSize = Main.courier.compose("show.footer").size();
         final int lineCount = Show.PAGE_SIZE - header.size() - footerSize;
 
         final int pageTotal = (balance.size() / lineCount)  + ( balance.size() % lineCount > 0 ? 1 : 0 );
         final int pageCurrent = ( args.size() >= 1 ? Show.parseInt(args.get(0), 1) : 1 );
         if (pageCurrent <= 0 || pageCurrent > pageTotal) {
-            Main.courier.send(sender, "messages.unknownPage", pageCurrent);
+            Main.courier.send(sender, "unknownPage", pageCurrent);
             return false;
         }
 
         final int first = (pageCurrent - 1) * lineCount;
         final int last = Math.min(first + lineCount, balance.size()) - 1;
 
-        Main.courier.send(sender, "messages.show.header", target);
+        Main.courier.send(sender, "show.header", target);
 
         final List<Map.Entry<Kit, Integer>> available = new ArrayList<Map.Entry<Kit, Integer>>(balance.entrySet());
         for (int i = first; i <= last; i++)
-            Main.courier.send(sender, "messages.show.line", available.get(i).getKey().getName(), available.get(i).getValue(), available.get(i).getKey().describe().toString());
+            Main.courier.send(sender, "show.line", available.get(i).getKey().getName(), available.get(i).getValue(), available.get(i).getKey().describe().toString());
 
-        Main.courier.send(sender, "messages.show.footer", pageCurrent, pageTotal, balance.entrySet().size());
+        Main.courier.send(sender, "show.footer", pageCurrent, pageTotal, balance.entrySet().size());
         return true;
     }
 
