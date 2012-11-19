@@ -63,7 +63,7 @@ public final class Show extends Executor {
 
         final List<Map.Entry<Kit, Integer>> available = new ArrayList<Map.Entry<Kit, Integer>>(balance.entrySet());
         for (int i = first; i <= last; i++)
-            Main.courier.send(sender, "show.line", available.get(i).getKey().getName(), available.get(i).getValue(), available.get(i).getKey().describe().toString());
+            Main.courier.send(sender, "show.line", available.get(i).getKey().getName(), available.get(i).getValue(), available.get(i).getKey());
 
         Main.courier.send(sender, "show.footer", pageCurrent, pageTotal, balance.entrySet().size());
         return true;

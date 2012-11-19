@@ -1,7 +1,7 @@
 logLevel: ALL
 kits:
-    Sponge:
-        items:
+    Donator:
+        contents:
             SPONGE: 1
 messages:
     colorCode: '§'

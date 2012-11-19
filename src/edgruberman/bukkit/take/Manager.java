@@ -27,8 +27,8 @@ public class Manager {
         this.plugin.getLogger().log(Level.CONFIG, "Registered \"{0}\" kit: [{1}]", new Object[] { kit.getName(), kit.describe() });
     }
 
-    public Kit getKit(final String kit) {
-        return this.kits.get(kit.toLowerCase());
+    public Kit getKit(final String name) {
+        return this.kits.get(name.toLowerCase());
     }
 
     public void give(final Player player, final Kit kit, final int quantity, final String reason) {
@@ -44,6 +44,7 @@ public class Manager {
         if (!players.isConfigurationSection(player)) players.createSection(player);
         final ConfigurationSection ledgerPlayer = players.getConfigurationSection(player);
 
+        // adjust balance
         if (!ledgerPlayer.isConfigurationSection("balance")) ledgerPlayer.createSection("balance");
         final ConfigurationSection balance = ledgerPlayer.getConfigurationSection("balance");
 

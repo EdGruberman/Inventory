@@ -1,9 +1,11 @@
 package edgruberman.bukkit.take;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
 
 import edgruberman.bukkit.take.commands.Add;
 import edgruberman.bukkit.take.commands.Log;
@@ -13,6 +15,7 @@ import edgruberman.bukkit.take.commands.Take;
 import edgruberman.bukkit.take.messaging.ConfigurationCourier;
 import edgruberman.bukkit.take.util.BufferedYamlConfiguration;
 import edgruberman.bukkit.take.util.CustomPlugin;
+import edgruberman.bukkit.take.util.ItemData;
 
 public final class Main extends CustomPlugin {
 
@@ -23,8 +26,6 @@ public final class Main extends CustomPlugin {
 
     @Override
     public void onEnable() {
-        Bukkit.getOfflinePlayers(); // set casing for offline player names based on previous connections
-
         this.reloadConfig();
         Main.courier = ConfigurationCourier.Factory.create(this).setPath("messages").setColorCode("colorCode").build();
 
@@ -33,15 +34,11 @@ public final class Main extends CustomPlugin {
 
         final ConfigurationSection kitsConfig = this.getConfig().getConfigurationSection("kits");
         for (final String name : kitsConfig.getKeys(false)) {
-            final ConfigurationSection items = kitsConfig.getConfigurationSection(name).getConfigurationSection("items");
-            final Kit kit = new Kit(name);
-            for (final String materialData : items.getKeys(false)) {
-                try { kit.add(materialData, items.getInt(materialData));
-                } catch (final Exception e) {
-                    this.getLogger().warning("Unable to add \"" + materialData + "\" to kit \"" + name + "\"; " + e);
-                }
+            try {
+                manager.registerKit(Main.parseKit(kitsConfig.getConfigurationSection(name)));
+            } catch (final Exception e) {
+                this.getLogger().warning("Unable to add \"" + name + "\" kit; " + e);
             }
-            manager.registerKit(kit);
         }
 
         final Show show = new Show(manager);
@@ -64,6 +61,19 @@ public final class Main extends CustomPlugin {
         } catch (final Exception e) {
             throw new IllegalStateException("Unable to load configuration file: " + source, e);
         }
+    }
+
+    private static Kit parseKit(final ConfigurationSection kit) {
+        final ConfigurationSection contents = kit.getConfigurationSection("contents");
+        final List<ItemStack> parsed = new ArrayList<ItemStack>();
+        for (final String key : contents.getKeys(false)) {
+            final ItemData data = ItemData.parse(key);
+            final Integer amount = contents.getInt(key);
+            final ItemStack stack = data.toItemStack(amount);
+            parsed.add(stack);
+        }
+
+        return new Kit(kit.getName(), parsed);
     }
 
 }
