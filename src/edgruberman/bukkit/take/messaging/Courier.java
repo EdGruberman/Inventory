@@ -12,7 +12,7 @@ import org.bukkit.plugin.Plugin;
  * handles message delivery and logging
  *
  * @author EdGruberman (ed@rjump.com)
- * @version 4.0.0
+ * @version 4.1.0
  */
 public class Courier {
 
@@ -47,7 +47,7 @@ public class Courier {
 
     /** preliminary Message construction before formatting for target recipient (timestamp argument prepended if configured) */
     public Message draft(final String pattern, final Object... arguments) {
-        final Message.Factory factory = Message.Factory.create(this.colorize(pattern), arguments);
+        final Message.Factory factory = Message.create(this.colorize(pattern), arguments);
         if (this.timestamp) factory.timestamp();
         return factory.build();
     }
@@ -92,6 +92,10 @@ public class Courier {
     }
 
 
+
+    public static Factory create(final Plugin plugin) {
+        return Factory.create(plugin);
+    }
 
     public static class Factory {
 

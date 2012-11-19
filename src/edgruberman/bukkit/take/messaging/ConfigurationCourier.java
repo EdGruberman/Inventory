@@ -15,7 +15,7 @@ import org.bukkit.plugin.Plugin;
  * uses message patterns stored in a {@link org.bukkit.configuration.ConfigurationSection ConfigurationSection}
  *
  * @author EdGruberman (ed@rjump.com)
- * @version 4.1.0
+ * @version 4.2.0
  */
 public class ConfigurationCourier extends Courier {
 
@@ -94,6 +94,10 @@ public class ConfigurationCourier extends Courier {
     }
 
 
+
+    public static Factory create(final Plugin plugin) {
+        return Factory.create(plugin);
+    }
 
     public static class Factory extends Courier.Factory {
 

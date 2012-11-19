@@ -14,7 +14,7 @@ messages:
         footer: '-> §7To receive: §5/kit §2§o<Kit>' # 1 = Current Page, 2 = Total Page Count, 3 = Total Kit Count
     showNone: '-> §eNo kits §7are available for §o{1}' # 1 = Player
     showDenied: '-> §cPermission denied§7 to view kits for §o{1}' # 1 = <Player>
-    takeUnavailable: '-> §7Kit §enot available§7: §7§o{1}{3,choice,0#|1# §8(§7{2}''<''{3}§8)}' # 1 = Kit, 2 = Balance, 3 = Requested
+    takeUnavailable: '-> §7Kit §enot available§7: §f§o{1}{3,choice,0#|1# §8(§7{2}''<''{3}§8)}' # 1 = Kit, 2 = Balance, 3 = Requested
     log:
         header: '-> §7Kit log for §o{1}' # 1 = Player
         line: '-> §7{1,date,yyyy MMM dd HH:mm} §2{2}§8(§7{3,choice,0#|1#+}{3}§8)§7: {4}' # 1 = When, 2 = Kit, 3 = Quantity, 4 = Reason
@@ -22,10 +22,10 @@ messages:
     logNone: '-> §eNo kit log§7 entries recorded for §o{1}' # 1 = Player
     logDenied: '-> §cPermission denied§7 to view kit log for §o{1}' # 1 = <Player>
     adjust: '-> §7{1} now has §2{5} {2}§7 kit{5,choice,0#s|1#|2#s} after adjusting by {3,choice,0#|1#+}{3} for §r{4}' # 1 = Player, 2 = Kit, 3 = Quantity, 4 = Reason, 5 = Balance
-    unknownKit: '-> §eUnrecognized kit§7: §7§o{1}' # 1 = Kit
-    unknownPage: '-> §ePage not available§7: §o{1}'
-    requiresPlayer: '-> §cOnly in-game players§r can use the {1} command' # 1 = Command Label
+    unknownKit: '-> §eUnrecognized§7 kit: §f§o{1}' # 1 = Kit
+    unknownPage: '-> e§7Page §enot available§7: §o{1}'
+    requiresPlayer: '-> §cOnly in-game players§7 can use the {1} command' # 1 = Command Label
     requiresArgument: '-> §7Required §cargument missing§7: §7§o{1}' # 1 = Argument Name
-    unknownArgument: '-> §eUnable to determine §o{1}§7: §7§o{2}' # 1 = Argument Name, 2 = Argument Value
+    unknownArgument: '-> §eUnable to determine §o{1}§7: §f§o{2}' # 1 = Argument Name, 2 = Argument Value
     reload: '-> §7{1} plugin §2reloaded' # 1 = Plugin Name
 version: @VERSION@

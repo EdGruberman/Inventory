@@ -22,12 +22,12 @@ public final class Main extends CustomPlugin {
     public static ConfigurationCourier courier;
 
     @Override
-    public void onLoad() { this.putConfigMinimum(CustomPlugin.CONFIGURATION_FILE, "2.0.0a0"); }
+    public void onLoad() { this.putConfigMinimum(CustomPlugin.CONFIGURATION_FILE, "2.0.0"); }
 
     @Override
     public void onEnable() {
         this.reloadConfig();
-        Main.courier = ConfigurationCourier.Factory.create(this).setPath("messages").setColorCode("colorCode").build();
+        Main.courier = ConfigurationCourier.create(this).setPath("messages").setColorCode("colorCode").build();
 
         final BufferedYamlConfiguration ledger = this.loadConfig(new File(this.getDataFolder(), "ledger.yml"));
         final Manager manager = new Manager(this, ledger);
