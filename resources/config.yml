@@ -10,7 +10,7 @@ messages:
         +delimiter: '§8,'
     show:
         header: '-> §7Kits available to §o{1}' # 1 = Player
-        line: '-> §2{1} §7(§f{2}§7) §8[{3}§8]' # 1 = Kit, 2 = Balance, 3 = Contents
+        line: '-> §2{1} §7(§f{2}§7): §8{3}' # 1 = Kit, 2 = Balance, 3 = Contents
         footer: '-> §7To receive: §5/take §2§o<Kit>' # 1 = Current Page, 2 = Total Page Count, 3 = Total Kit Count
     showNone: '-> §eNo kits §7are available for §o{1}' # 1 = Player
     showDenied: '-> §cPermission denied§7 to view kits for §o{1}' # 1 = <Player>
