@@ -23,7 +23,7 @@ messages:
     logDenied: '-> §cPermission denied§7 to view kit log for §o{1}' # 1 = <Player>
     adjust: '-> §7{1} now has §2{5} {2}§7 kit{5,choice,0#s|1#|2#s} after adjusting by {3,choice,0#|1#+}{3} for §r{4}' # 1 = Player, 2 = Kit, 3 = Quantity, 4 = Reason, 5 = Balance
     unknownKit: '-> §eUnrecognized§7 kit: §f§o{1}' # 1 = Kit
-    unknownPage: '-> e§7Page §enot available§7: §o{1}'
+    unknownPage: '-> §7Page §enot available§7: §o{1}'
     requiresPlayer: '-> §cOnly in-game players§7 can use the {1} command' # 1 = Command Label
     requiresArgument: '-> §7Required §cargument missing§7: §7§o{1}' # 1 = Argument Name
     unknownArgument: '-> §eUnable to determine §o{1}§7: §f§o{2}' # 1 = Argument Name, 2 = Argument Value
