@@ -9,7 +9,7 @@ public class ItemData {
      * @param text [#](Name|ID)[/(Data)] (e.g. "DIRT", "POTION/32767", "#0357/16", "17", "17/8")
      * @throws IllegalArgumentException if (Name|ID) is unable to be matched to a Material
      * @throws NumberFormatException if Data is unable to be parsed to a short
-     **/
+     */
     public static ItemData parse(final String text) {
         final String[] tokens = text.split("/");
         final Material material = Material.matchMaterial( tokens[0].startsWith("#") ? tokens[0].substring(1) : tokens[0] );
