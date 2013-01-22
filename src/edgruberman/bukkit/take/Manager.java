@@ -1,5 +1,8 @@
 package edgruberman.bukkit.take;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -12,6 +15,8 @@ import org.bukkit.plugin.Plugin;
 import edgruberman.bukkit.take.util.BufferedYamlConfiguration;
 
 public class Manager {
+
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
 
     private final Plugin plugin;
     private final Map<String, Kit> kits = new HashMap<String, Kit>();
@@ -60,7 +65,7 @@ public class Manager {
         if (!ledgerPlayer.isConfigurationSection("log")) ledgerPlayer.createSection("log");
         final ConfigurationSection log = ledgerPlayer.getConfigurationSection("log");
 
-        final ConfigurationSection transaction = log.createSection(String.valueOf(System.currentTimeMillis()));
+        final ConfigurationSection transaction = log.createSection(Manager.DATE_FORMAT.format(new Date()));
         transaction.set("kit", kit.getName());
         transaction.set("quantity", quantity);
         transaction.set("reason", reason);
@@ -114,6 +119,11 @@ public class Manager {
         if (ledgerPlayer == null) return null;
 
         return ledgerPlayer.getConfigurationSection("log");
+    }
+
+    public static Date parseDate(final String s) {
+        try { return Manager.DATE_FORMAT.parse(s);
+        } catch (final ParseException e) { return null; }
     }
 
 }

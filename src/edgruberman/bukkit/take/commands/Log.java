@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -69,7 +68,7 @@ public final class Log extends Executor {
 
         for (int i = first; i <= last; i++) {
             final ConfigurationSection entry = history.getConfigurationSection(keys.get(i));
-            Main.courier.send(sender, "log.line", new Date(Long.parseLong(keys.get(i))), entry.getString("kit"), entry.getInt("quantity"), entry.getString("reason"));
+            Main.courier.send(sender, "log.line", Manager.parseDate(keys.get(i)), entry.getString("kit"), entry.getInt("quantity"), entry.getString("reason"));
         }
 
         Main.courier.send(sender, "log.footer", pageCurrent, pageTotal, keys.size());
