@@ -1,4 +1,4 @@
-package edgruberman.bukkit.take.messaging;
+package edgruberman.bukkit.parcelservice.messaging;
 
 import java.util.logging.Level;
 import java.util.logging.LogRecord;

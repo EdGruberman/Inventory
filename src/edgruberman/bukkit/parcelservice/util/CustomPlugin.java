@@ -1,4 +1,4 @@
-package edgruberman.bukkit.take.util;
+package edgruberman.bukkit.parcelservice.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

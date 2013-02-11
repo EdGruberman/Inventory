@@ -1,4 +1,4 @@
-package edgruberman.bukkit.take.util;
+package edgruberman.bukkit.parcelservice.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;

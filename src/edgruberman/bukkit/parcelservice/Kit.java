@@ -1,4 +1,4 @@
-package edgruberman.bukkit.take;
+package edgruberman.bukkit.parcelservice;
 
 import java.util.ArrayList;
 import java.util.Collection;

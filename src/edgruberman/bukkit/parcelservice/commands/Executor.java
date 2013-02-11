@@ -1,4 +1,4 @@
-package edgruberman.bukkit.take.commands;
+package edgruberman.bukkit.parcelservice.commands;
 
 import java.util.Arrays;
 import java.util.List;

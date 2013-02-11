@@ -1,4 +1,4 @@
-package edgruberman.bukkit.take.commands;
+package edgruberman.bukkit.parcelservice.commands;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,9 +12,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import edgruberman.bukkit.take.Main;
-import edgruberman.bukkit.take.Manager;
-import edgruberman.bukkit.take.messaging.Message;
+import edgruberman.bukkit.parcelservice.Main;
+import edgruberman.bukkit.parcelservice.Manager;
+import edgruberman.bukkit.parcelservice.messaging.Message;
 
 public final class Log extends Executor {
 

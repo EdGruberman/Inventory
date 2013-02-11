@@ -1,68 +1,68 @@
-name: Take
+name: ParcelService
 version: @VERSION@
-description: Queue and track  items given to players
+description: Queue and track items given to players
 author: EdGruberman (ed@rjump.com)
-main: edgruberman.bukkit.take.Main
+main: edgruberman.bukkit.parcelservice.Main
 commands:
-  'take:take':
-    aliases: [take, take.take]
+  'parcelservice:take':
+    aliases: [take, parcelservice.take]
     description: Receive a kit
-    permission: take.take
+    permission: parcelservice.take
     usage: /<command>[ <Kit>[ <Quantity>]]
-  'take:show':
-    aliases: ['take?', take.show]
+  'parcelservice:show':
+    aliases: ['take?', parcelservice.show]
     description: View available kits
-    permission: take.show
+    permission: parcelservice.show
     usage: /<command>
-  'take:log':
-    aliases: [take.log]
+  'parcelservice:log':
+    aliases: [parcelservice.log]
     description: View kit history
-    permission: take.log
+    permission: parcelservice.log
     usage: /<command>[ <Page>]
-  'take:add':
-    aliases: [take.add]
+  'parcelservice:add':
+    aliases: [parcelservice.add]
     description: Add or remove kits
-    permission: take.add
+    permission: parcelservice.add
     usage: /<command> <Kit> <Player> <Quantity>[ <Reason>]
-  'take:reload':
-    description: Reload Take plugin
-    permission: take.reload
+  'parcelservice:reload':
+    description: Reload ParcelService plugin
+    permission: parcelservice.reload
     usage: /<command>
 permissions:
-  take.admin:
+  parcelservice.admin:
     description: Can use all commands
     default: op
     children:
-      take.user: true
-      take.add: true
-      take.show.all: true
-      take.log.all: true
-      take.reload: true
-  take.user:
+      parcelservice.user: true
+      parcelservice.add: true
+      parcelservice.show.all: true
+      parcelservice.log.all: true
+      parcelservice.reload: true
+  parcelservice.user:
     description: Can use basic commands
     default: true
     children:
-      take.take: true
-      take.show: true
-      take.log: true
-  take.take:
+      parcelservice.take: true
+      parcelservice.show: true
+      parcelservice.log: true
+  parcelservice.take:
     description: Can use take command
     default: false
-  take.show:
+  parcelservice.show:
     description: Can use show command
     default: false
-  take.log:
+  parcelservice.log:
     description: Can use log command
     default: false
-  take.add:
+  parcelservice.add:
     description: Can use add command
     default: false
-  take.reload:
+  parcelservice.reload:
     description: Can use reload command
     default: false
-  take.show.all:
+  parcelservice.show.all:
     description: Can use show command to view the balance for any player
     default: false
-  take.log.all:
+  parcelservice.log.all:
     description: Can use log command to view the log for any player
     default: false

@@ -1,4 +1,4 @@
-package edgruberman.bukkit.take.util;
+package edgruberman.bukkit.parcelservice.util;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

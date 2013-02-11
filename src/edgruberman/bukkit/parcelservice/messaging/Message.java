@@ -1,4 +1,4 @@
-package edgruberman.bukkit.take.messaging;
+package edgruberman.bukkit.parcelservice.messaging;
 
 import java.text.DateFormat;
 import java.text.Format;

@@ -1,4 +1,4 @@
-package edgruberman.bukkit.take.commands;
+package edgruberman.bukkit.parcelservice.commands;
 
 import java.util.List;
 
@@ -7,9 +7,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import edgruberman.bukkit.take.Kit;
-import edgruberman.bukkit.take.Main;
-import edgruberman.bukkit.take.Manager;
+import edgruberman.bukkit.parcelservice.Kit;
+import edgruberman.bukkit.parcelservice.Main;
+import edgruberman.bukkit.parcelservice.Manager;
 
 public final class Add extends Executor {
 

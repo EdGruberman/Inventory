@@ -1,11 +1,11 @@
-package edgruberman.bukkit.take.commands;
+package edgruberman.bukkit.parcelservice.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
-import edgruberman.bukkit.take.Main;
+import edgruberman.bukkit.parcelservice.Main;
 
 public final class Reload implements CommandExecutor {
 

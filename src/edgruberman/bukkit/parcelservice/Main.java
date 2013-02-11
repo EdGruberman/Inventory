@@ -1,4 +1,4 @@
-package edgruberman.bukkit.take;
+package edgruberman.bukkit.parcelservice;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -7,15 +7,15 @@ import java.util.List;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import edgruberman.bukkit.take.commands.Add;
-import edgruberman.bukkit.take.commands.Log;
-import edgruberman.bukkit.take.commands.Reload;
-import edgruberman.bukkit.take.commands.Show;
-import edgruberman.bukkit.take.commands.Take;
-import edgruberman.bukkit.take.messaging.ConfigurationCourier;
-import edgruberman.bukkit.take.util.BufferedYamlConfiguration;
-import edgruberman.bukkit.take.util.CustomPlugin;
-import edgruberman.bukkit.take.util.ItemData;
+import edgruberman.bukkit.parcelservice.commands.Add;
+import edgruberman.bukkit.parcelservice.commands.Log;
+import edgruberman.bukkit.parcelservice.commands.Reload;
+import edgruberman.bukkit.parcelservice.commands.Show;
+import edgruberman.bukkit.parcelservice.commands.Take;
+import edgruberman.bukkit.parcelservice.messaging.ConfigurationCourier;
+import edgruberman.bukkit.parcelservice.util.BufferedYamlConfiguration;
+import edgruberman.bukkit.parcelservice.util.CustomPlugin;
+import edgruberman.bukkit.parcelservice.util.ItemData;
 
 public final class Main extends CustomPlugin {
 
@@ -42,11 +42,11 @@ public final class Main extends CustomPlugin {
         }
 
         final Show show = new Show(manager);
-        this.getCommand("take:show").setExecutor(show);
-        this.getCommand("take:take").setExecutor(new Take(manager, show));
-        this.getCommand("take:log").setExecutor(new Log(manager));
-        this.getCommand("take:add").setExecutor(new Add(manager));
-        this.getCommand("take:reload").setExecutor(new Reload(this));
+        this.getCommand("parcelservice:show").setExecutor(show);
+        this.getCommand("parcelservice:take").setExecutor(new Take(manager, show));
+        this.getCommand("parcelservice:log").setExecutor(new Log(manager));
+        this.getCommand("parcelservice:add").setExecutor(new Add(manager));
+        this.getCommand("parcelservice:reload").setExecutor(new Reload(this));
     }
 
     @Override

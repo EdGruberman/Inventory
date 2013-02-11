@@ -1,4 +1,4 @@
-package edgruberman.bukkit.take;
+package edgruberman.bukkit.parcelservice;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,7 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import edgruberman.bukkit.take.util.BufferedYamlConfiguration;
+import edgruberman.bukkit.parcelservice.util.BufferedYamlConfiguration;
 
 public class Manager {
 
