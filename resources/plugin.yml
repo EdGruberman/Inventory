@@ -4,65 +4,65 @@ description: Queue and track  items given to players
 author: EdGruberman (ed@rjump.com)
 main: edgruberman.bukkit.take.Main
 commands:
-    'take:take':
-        aliases: [take, take.take]
-        description: Receive a kit
-        permission: take.take
-        usage: /<command>[ <Kit>[ <Quantity>]]
-    'take:show':
-        aliases: ['take?', take.show]
-        description: View available kits
-        permission: take.show
-        usage: /<command>
-    'take:log':
-        aliases: [take.log]
-        description: View kit history
-        permission: take.log
-        usage: /<command>[ <Page>]
-    'take:add':
-        aliases: [take.add]
-        description: Add or remove kits
-        permission: take.add
-        usage: /<command> <Kit> <Player> <Quantity>[ <Reason>]
-    'take:reload':
-        description: Reload Take plugin
-        permission: take.reload
-        usage: /<command>
+  'take:take':
+    aliases: [take, take.take]
+    description: Receive a kit
+    permission: take.take
+    usage: /<command>[ <Kit>[ <Quantity>]]
+  'take:show':
+    aliases: ['take?', take.show]
+    description: View available kits
+    permission: take.show
+    usage: /<command>
+  'take:log':
+    aliases: [take.log]
+    description: View kit history
+    permission: take.log
+    usage: /<command>[ <Page>]
+  'take:add':
+    aliases: [take.add]
+    description: Add or remove kits
+    permission: take.add
+    usage: /<command> <Kit> <Player> <Quantity>[ <Reason>]
+  'take:reload':
+    description: Reload Take plugin
+    permission: take.reload
+    usage: /<command>
 permissions:
-    take.admin:
-        description: Can use all commands
-        default: op
-        children:
-            take.user: true
-            take.add: true
-            take.show.all: true
-            take.log.all: true
-            take.reload: true
-    take.user:
-        description: Can use basic commands
-        default: true
-        children:
-            take.take: true
-            take.show: true
-            take.log: true
-    take.take:
-        description: Can use take command
-        default: false
-    take.show:
-        description: Can use show command
-        default: false
-    take.log:
-        description: Can use log command
-        default: false
-    take.add:
-        description: Can use add command
-        default: false
-    take.reload:
-        description: Can use reload command
-        default: false
-    take.show.all:
-        description: Can use show command to view the balance for any player
-        default: false
-    take.log.all:
-        description: Can use log command to view the log for any player
-        default: false
+  take.admin:
+    description: Can use all commands
+    default: op
+    children:
+      take.user: true
+      take.add: true
+      take.show.all: true
+      take.log.all: true
+      take.reload: true
+  take.user:
+    description: Can use basic commands
+    default: true
+    children:
+      take.take: true
+      take.show: true
+      take.log: true
+  take.take:
+    description: Can use take command
+    default: false
+  take.show:
+    description: Can use show command
+    default: false
+  take.log:
+    description: Can use log command
+    default: false
+  take.add:
+    description: Can use add command
+    default: false
+  take.reload:
+    description: Can use reload command
+    default: false
+  take.show.all:
+    description: Can use show command to view the balance for any player
+    default: false
+  take.log.all:
+    description: Can use log command to view the log for any player
+    default: false
