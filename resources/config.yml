@@ -1,4 +1,4 @@
-logLevel: ALL
+log-level: ALL
 kits:
   Donator:
     contents:
