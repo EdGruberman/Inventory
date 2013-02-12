@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 
 import edgruberman.bukkit.parcelservice.Main;
 import edgruberman.bukkit.parcelservice.Manager;
-import edgruberman.bukkit.parcelservice.messaging.Message;
 
 public final class Log extends Executor {
 
@@ -30,12 +29,12 @@ public final class Log extends Executor {
     @Override
     protected boolean execute(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (args.size() < 2 && !(sender instanceof Player)) {
-            Main.courier.send(sender, "requiresPlayer", label);
+            Main.courier.send(sender, "requires-player", label);
             return true;
         }
 
         if (args.size() >= 2 && !sender.hasPermission("take.log.all")) {
-            Main.courier.send(sender, "logDenied", args.get(1));
+            Main.courier.send(sender, "log-denied", args.get(1));
             return true;
         }
 
@@ -43,21 +42,21 @@ public final class Log extends Executor {
 
         final ConfigurationSection history = this.manager.log(target);
         if (history == null) {
-            Main.courier.send(sender, "logNone", target);
+            Main.courier.send(sender, "log-none", target);
             return true;
         }
 
         // index accessible, newest to oldest
         final List<String> keys = Log.asSortedList(history.getKeys(false), Collections.reverseOrder());
 
-        final List<Message> header = Main.courier.compose("log.header", target);
-        final int footerSize = Main.courier.compose("log.footer").size();
-        final int lineCount = Log.PAGE_SIZE - header.size() - footerSize;
+        final int headerSize = Main.courier.compose("log.header", target).toString().split("\\n").length;
+        final int footerSize = Main.courier.compose("log.footer").toString().split("\\n").length;
+        final int lineCount = Log.PAGE_SIZE - headerSize - footerSize;
 
         final int pageTotal = (keys.size() / lineCount) + ( keys.size() % lineCount > 0 ? 1 : 0 );
         final int pageCurrent = ( args.size() >= 1 ? Log.parseInt(args.get(0), 1) : 1 );
         if (pageCurrent <= 0 || pageCurrent > pageTotal) {
-            Main.courier.send(sender, "unknownPage", pageCurrent);
+            Main.courier.send(sender, "unknown-page", pageCurrent);
             return false;
         }
 

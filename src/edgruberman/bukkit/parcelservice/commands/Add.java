@@ -23,29 +23,29 @@ public final class Add extends Executor {
     @Override
     protected boolean execute(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (args.size() < 1) {
-            Main.courier.send(sender, "requiresArgument", "<Kit>");
+            Main.courier.send(sender, "requires-argument", "<Kit>");
             return false;
         }
 
         if (args.size() < 2) {
-            Main.courier.send(sender, "requiresArgument", "<Player>");
+            Main.courier.send(sender, "requires-argument", "<Player>");
             return false;
         }
 
         if (args.size() < 3) {
-            Main.courier.send(sender, "requiresArgument", "<Quantity>");
+            Main.courier.send(sender, "requires-argument", "<Quantity>");
             return false;
         }
 
         final Kit kit = this.manager.getKit(args.get(0));
         if (kit == null) {
-            Main.courier.send(sender, "unknownKit", args.get(0));
+            Main.courier.send(sender, "unknown-kit", args.get(0));
             return false;
         }
 
         final Integer quantity = Add.parseInt(args.get(2), null);
         if (quantity == null) {
-            Main.courier.send(sender, "unknownArgument", "<Quantity>", args.get(2));
+            Main.courier.send(sender, "unknown-argument", "<Quantity>", args.get(2));
             return false;
         }
 

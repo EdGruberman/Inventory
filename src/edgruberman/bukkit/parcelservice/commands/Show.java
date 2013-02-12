@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import edgruberman.bukkit.parcelservice.Kit;
 import edgruberman.bukkit.parcelservice.Main;
 import edgruberman.bukkit.parcelservice.Manager;
-import edgruberman.bukkit.parcelservice.messaging.Message;
 
 public final class Show extends Executor {
 
@@ -28,12 +27,12 @@ public final class Show extends Executor {
     @Override
     protected boolean execute(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (args.size() < 2 && !(sender instanceof Player)) {
-            Main.courier.send(sender, "requiresPlayer", label);
+            Main.courier.send(sender, "requires-player", label);
             return true;
         }
 
         if (args.size() >= 2 && !sender.hasPermission("take.show.all")) {
-            Main.courier.send(sender, "showDenied", args.get(1));
+            Main.courier.send(sender, "show-denied", args.get(1));
             return true;
         }
 
@@ -41,18 +40,18 @@ public final class Show extends Executor {
 
         final Map<Kit, Integer> balance = this.manager.balance(target);
         if (balance.size() == 0) {
-            Main.courier.send(sender, "showNone", target);
+            Main.courier.send(sender, "show-none", target);
             return true;
         }
 
-        final List<Message> header = Main.courier.compose("show.header", target);
-        final int footerSize = Main.courier.compose("show.footer").size();
-        final int lineCount = Show.PAGE_SIZE - header.size() - footerSize;
+        final int headerSize = Main.courier.compose("show.header", target).toString().split("\\n").length;
+        final int footerSize = Main.courier.compose("show.footer").toString().split("\\n").length;
+        final int lineCount = Show.PAGE_SIZE - headerSize - footerSize;
 
         final int pageTotal = (balance.size() / lineCount)  + ( balance.size() % lineCount > 0 ? 1 : 0 );
         final int pageCurrent = ( args.size() >= 1 ? Show.parseInt(args.get(0), 1) : 1 );
         if (pageCurrent <= 0 || pageCurrent > pageTotal) {
-            Main.courier.send(sender, "unknownPage", pageCurrent);
+            Main.courier.send(sender, "unknown-page", pageCurrent);
             return false;
         }
 
