@@ -9,8 +9,9 @@ import org.bukkit.entity.Player;
 import edgruberman.bukkit.parcelservice.Kit;
 import edgruberman.bukkit.parcelservice.Main;
 import edgruberman.bukkit.parcelservice.Manager;
+import edgruberman.bukkit.parcelservice.util.TokenizedExecutor;
 
-public final class Take extends Executor {
+public final class Take extends TokenizedExecutor {
 
     private final Manager manager;
     private final Show show;
@@ -22,13 +23,13 @@ public final class Take extends Executor {
 
     // usage: /<command> <Kit>[ <Quantity>]
     @Override
-    protected boolean execute(final CommandSender sender, final Command command, final String label, final List<String> args) {
+    protected boolean onCommand(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (!(sender instanceof Player)) {
             Main.courier.send(sender, "requires-player", label);
             return true;
         }
 
-        if (args.size() < 1) return this.show.execute(sender, command, label, args);
+        if (args.size() < 1) return this.show.onCommand(sender, command, label, args);
 
         final Kit kit = this.manager.getKit(args.get(0));
         if (kit == null) {

@@ -12,8 +12,9 @@ import org.bukkit.entity.Player;
 import edgruberman.bukkit.parcelservice.Kit;
 import edgruberman.bukkit.parcelservice.Main;
 import edgruberman.bukkit.parcelservice.Manager;
+import edgruberman.bukkit.parcelservice.util.TokenizedExecutor;
 
-public final class Show extends Executor {
+public final class Show extends TokenizedExecutor {
 
     private static final int PAGE_SIZE = 10;
 
@@ -25,7 +26,7 @@ public final class Show extends Executor {
 
     // usage: /<command>[ <Page>[ <Player>]]
     @Override
-    protected boolean execute(final CommandSender sender, final Command command, final String label, final List<String> args) {
+    protected boolean onCommand(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (args.size() < 2 && !(sender instanceof Player)) {
             Main.courier.send(sender, "requires-player", label);
             return true;

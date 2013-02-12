@@ -10,8 +10,9 @@ import org.bukkit.command.CommandSender;
 import edgruberman.bukkit.parcelservice.Kit;
 import edgruberman.bukkit.parcelservice.Main;
 import edgruberman.bukkit.parcelservice.Manager;
+import edgruberman.bukkit.parcelservice.util.TokenizedExecutor;
 
-public final class Add extends Executor {
+public final class Add extends TokenizedExecutor {
 
     private final Manager manager;
 
@@ -21,7 +22,7 @@ public final class Add extends Executor {
 
     // usage: /<command> <Kit> <Player> <Quantity>[ <Reason>]
     @Override
-    protected boolean execute(final CommandSender sender, final Command command, final String label, final List<String> args) {
+    protected boolean onCommand(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (args.size() < 1) {
             Main.courier.send(sender, "requires-argument", "<Kit>");
             return false;
