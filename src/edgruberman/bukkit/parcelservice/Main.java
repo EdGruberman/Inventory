@@ -22,12 +22,15 @@ public final class Main extends CustomPlugin {
     public static ConfigurationCourier courier;
 
     @Override
-    public void onLoad() { this.putConfigMinimum("3.0.0a0"); }
+    public void onLoad() {
+        this.putConfigMinimum("3.0.0a0");
+        this.putConfigMinimum("language.yml", "3.0.0a0");
+    }
 
     @Override
     public void onEnable() {
         this.reloadConfig();
-        Main.courier = ConfigurationCourier.create(this).setPath("language").setFormatCode("format-code").build();
+        Main.courier = ConfigurationCourier.create(this).setBase(this.loadConfig("language.yml")).setFormatCode("format-code").build();
 
         final BufferedYamlConfiguration ledger = this.loadConfig(new File(this.getDataFolder(), "ledger.yml"));
         final Manager manager = new Manager(this, ledger);
