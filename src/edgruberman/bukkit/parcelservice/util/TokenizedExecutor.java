@@ -40,6 +40,10 @@ public abstract class TokenizedExecutor implements CommandExecutor {
         return Arrays.asList(this.tokenizer.getTokenArray());
     }
 
+    protected static String join(final List<String> args) {
+        return TokenizedExecutor.join(args.toArray(new String[args.size()]), " ");
+    }
+
     protected static String join(final String[] args, final String delim) {
         if (args == null || args.length == 0) return "";
 

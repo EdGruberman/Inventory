@@ -1,68 +1,56 @@
 name: ParcelService
 version: @VERSION@
-description: Queue and track items given to players
+description: Provide and track items given to players
 author: EdGruberman (ed@rjump.com)
+website: http://github.com/EdGruberman/ParcelService
 main: edgruberman.bukkit.parcelservice.Main
 commands:
-  'parcelservice:take':
-    aliases: [take, parcelservice.take]
-    description: Receive a kit
-    permission: parcelservice.take
-    usage: /<command>[ <Kit>[ <Quantity>]]
-  'parcelservice:show':
-    aliases: ['take?', parcelservice.show]
-    description: View available kits
-    permission: parcelservice.show
-    usage: /<command>
-  'parcelservice:log':
-    aliases: [parcelservice.log]
-    description: View kit history
-    permission: parcelservice.log
-    usage: /<command>[ <Page>]
-  'parcelservice:add':
-    aliases: [parcelservice.add]
-    description: Add or remove kits
-    permission: parcelservice.add
-    usage: /<command> <Kit> <Player> <Quantity>[ <Reason>]
+  'parcelservice:define':
+    aliases: [mps.define]
+    description: Create, edit, or delete a kit
+    permission: parcelservice.define
+    usage: '§f-> §7Usage: §b/<command> §o<Kit>'
+  'parcelservice:kit':
+    aliases: [mps.kit]
+    description: Issue or recall a kit
+    permission: parcelservice.kit
+    usage: '§f-> §7Usage: §b/<command> <Kit>§3[ §b§o<Player>§3[ §b§o<Quantity>§3[ §b§o<Reason>§3]]]'
+  'parcelservice:edit':
+    aliases: [mps.edit]
+    description: Modify inventory pallet
+    permission: parcelservice.edit
+    usage: '§f-> §7Usage: §b/<command> <Player>§3[ §b§o<Reason>§3]'
   'parcelservice:reload':
     description: Reload ParcelService plugin
     permission: parcelservice.reload
-    usage: /<command>
+    usage: '§f-> §7Usage: §b/<command>'
 permissions:
   parcelservice.admin:
     description: Can use all commands
     default: op
     children:
       parcelservice.user: true
-      parcelservice.add: true
-      parcelservice.show.all: true
-      parcelservice.log.all: true
+      parcelservice.define: true
+      parcelservice.kit: true
+      parcelservice.edit: true
       parcelservice.reload: true
   parcelservice.user:
     description: Can use basic commands
     default: true
     children:
-      parcelservice.take: true
-      parcelservice.show: true
-      parcelservice.log: true
-  parcelservice.take:
-    description: Can use take command
+      parcelservice.open: true
+  parcelservice.open:
+    description: Can open pallet for self
     default: false
-  parcelservice.show:
-    description: Can use show command
+  parcelservice.define:
+    description: Can use define command
     default: false
-  parcelservice.log:
-    description: Can use log command
+  parcelservice.kit:
+    description: Can use kit command
     default: false
-  parcelservice.add:
-    description: Can use add command
+  parcelservice.edit:
+    description: Can use edit command
     default: false
   parcelservice.reload:
     description: Can use reload command
-    default: false
-  parcelservice.show.all:
-    description: Can use show command to view the balance for any player
-    default: false
-  parcelservice.log.all:
-    description: Can use log command to view the log for any player
     default: false

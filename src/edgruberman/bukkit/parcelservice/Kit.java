@@ -1,55 +1,53 @@
 package edgruberman.bukkit.parcelservice;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 
-/** collection of stacks of items **/
-public class Kit {
+/** collection of ItemStacks */
+@SerializableAs("Kit")
+public class Kit implements ConfigurationSerializable {
 
     private final String name;
-    private final List<ItemStack> contents = new ArrayList<ItemStack>();
+    private final Pallet contents;
 
-    public Kit(final String name, final List<ItemStack> contents) {
+    public Kit(final String name) {
         this.name = name;
-        this.contents.addAll(contents);
+        this.contents = new Pallet();
+        this.relabel();
+    }
+
+    private Kit(final String name, final Pallet contents) {
+        this.name = name;
+        this.contents = contents;
     }
 
     public String getName() {
         return this.name;
     }
 
-    public List<ItemStack> getContents() {
-        return Collections.unmodifiableList(this.contents);
+    public Pallet getContents() {
+        return this.contents;
     }
 
-    /** add directly to inventory, throw items that don't fit onto ground in front of player **/
-    public void give(final Player player) {
-        for (final ItemStack item : this.contents) {
-            final Collection<ItemStack> ungiven = player.getInventory().addItem(item).values();
-            if (ungiven.size() >= 0)
-                for (final ItemStack remaining : ungiven)
-                    player.getOpenInventory().setItem(InventoryView.OUTSIDE, remaining);
-        }
-    }
-
-    public StringBuilder describe() {
-        final StringBuilder description = new StringBuilder();
-        for (final ItemStack item : this.contents) {
-            if (description.length() != 0) description.append(Main.courier.format("+contents.+delimiter"));
-            description.append(Main.courier.format("+contents.+item", item.getType().name(), item.getDurability(), item.getAmount()));
-        }
-        return description;
+    public void relabel() {
+        this.contents.label(Main.courier.format("box-kit", "{0}", "{1}", this.name));
     }
 
     @Override
-    public String toString() {
-        return this.describe().toString();
+    public Map<String, Object> serialize() {
+        final Map<String, Object> result = new LinkedHashMap<String, Object>();
+        result.put("name", this.getName());
+        result.put("contents", this.contents);
+        return result;
+    }
+
+    public static Kit deserialize(final Map<String, Object> serialized) {
+        final String name = (String) serialized.get("name");
+        final Pallet contents = (Pallet) serialized.get("contents");
+        return new Kit(name, contents);
     }
 
 }

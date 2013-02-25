@@ -1,82 +1,90 @@
 package edgruberman.bukkit.parcelservice;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Level;
 
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
-import edgruberman.bukkit.parcelservice.commands.Add;
-import edgruberman.bukkit.parcelservice.commands.Log;
+import edgruberman.bukkit.parcelservice.commands.Define;
+import edgruberman.bukkit.parcelservice.commands.Edit;
 import edgruberman.bukkit.parcelservice.commands.Reload;
-import edgruberman.bukkit.parcelservice.commands.Show;
-import edgruberman.bukkit.parcelservice.commands.Take;
+import edgruberman.bukkit.parcelservice.craftbukkit.CraftBukkit;
 import edgruberman.bukkit.parcelservice.messaging.ConfigurationCourier;
-import edgruberman.bukkit.parcelservice.util.BufferedYamlConfiguration;
+import edgruberman.bukkit.parcelservice.repositories.BufferedYamlRepository;
+import edgruberman.bukkit.parcelservice.repositories.KitRepository;
+import edgruberman.bukkit.parcelservice.repositories.LedgerRepository;
+import edgruberman.bukkit.parcelservice.sessions.Clerk;
 import edgruberman.bukkit.parcelservice.util.CustomPlugin;
-import edgruberman.bukkit.parcelservice.util.ItemData;
+import edgruberman.bukkit.parcelservice.util.ItemStackUtil;
 
 public final class Main extends CustomPlugin {
 
     public static ConfigurationCourier courier;
+    public static CraftBukkit craftBukkit = null;
+
+    private KitRepository kits = null;
+    private LedgerRepository ledgers = null;
 
     @Override
     public void onLoad() {
-        this.putConfigMinimum("3.0.0a0");
-        this.putConfigMinimum("language.yml", "3.0.0a0");
+        this.putConfigMinimum("config.yml", "3.0.0b0");
+        this.putConfigMinimum("language.yml", "3.0.0b0");
     }
 
     @Override
     public void onEnable() {
-        this.reloadConfig();
-        Main.courier = ConfigurationCourier.create(this).setBase(this.loadConfig("language.yml")).setFormatCode("format-code").build();
-
-        final BufferedYamlConfiguration ledger = this.loadConfig(new File(this.getDataFolder(), "ledger.yml"));
-        final Manager manager = new Manager(this, ledger);
-
-        final ConfigurationSection kitsConfig = this.getConfig().getConfigurationSection("kits");
-        for (final String name : kitsConfig.getKeys(false)) {
-            try {
-                manager.registerKit(Main.parseKit(kitsConfig.getConfigurationSection(name)));
-            } catch (final Exception e) {
-                this.getLogger().warning("Unable to add \"" + name + "\" kit; " + e);
-            }
+        try {
+            Main.craftBukkit = CraftBukkit.create();
+        } catch (final Exception e) {
+            this.getLogger().log(Level.SEVERE, "Unsupported CraftBukkit version {0}; {1}", new Object[] { Bukkit.getVersion(), e });
+            this.getLogger().log(Level.SEVERE, "Disabling plugin; Dependencies not met; Check for updates at: {0}", this.getDescription().getWebsite());
+            this.setEnabled(false);
+            return;
         }
 
-        final Show show = new Show(manager);
-        this.getCommand("parcelservice:show").setExecutor(show);
-        this.getCommand("parcelservice:take").setExecutor(new Take(manager, show));
-        this.getCommand("parcelservice:log").setExecutor(new Log(manager));
-        this.getCommand("parcelservice:add").setExecutor(new Add(manager));
+        this.reloadConfig();
+        Main.courier = ConfigurationCourier.create(this).setBase(this.loadConfig("language.yml")).setFormatCode("format-code").build();
+        ItemStackUtil.setFormat(Main.courier.getSection("items-summary"));
+
+        final BufferedYamlRepository<Kit> yamlKits = this.initializeRepository("kits.yml");
+        this.kits = ( yamlKits != null ? new KitRepository(yamlKits) : null);
+
+        final BufferedYamlRepository<Ledger> yamlLedgers = this.initializeRepository("ledgers.yml");
+        this.ledgers = ( yamlLedgers != null ? new LedgerRepository(yamlLedgers) : null);
+
+        if (this.kits == null || this.ledgers == null) {
+            this.getLogger().log(Level.SEVERE, "Disabling plugin; Unusable repository");
+            this.setEnabled(false);
+            return;
+        }
+
+        final Clerk clerk = new Clerk(this.ledgers, this.getConfig().getBoolean("record-withdrawals"), this);
+        Bukkit.getPluginManager().registerEvents(clerk, this);
+
+        this.getCommand("parcelservice:define").setExecutor(new Define(this.kits, this));
+        this.getCommand("parcelservice:kit").setExecutor(new edgruberman.bukkit.parcelservice.commands.Kit(this.kits, this.ledgers));
+        this.getCommand("parcelservice:edit").setExecutor(new Edit(this.ledgers, this));
         this.getCommand("parcelservice:reload").setExecutor(new Reload(this));
     }
 
     @Override
     public void onDisable() {
+        if (this.kits != null) this.kits.destroy();
+        if (this.ledgers != null) this.ledgers.destroy();
         Main.courier = null;
+        Main.craftBukkit = null;
     }
 
-    private BufferedYamlConfiguration loadConfig(final File source) {
-        final BufferedYamlConfiguration config = new BufferedYamlConfiguration(this, source, 5000);
+    private <T extends ConfigurationSerializable> BufferedYamlRepository<T> initializeRepository(final String file) {
+        final File source = new File(this.getDataFolder(), file);
         try {
-            return config.load();
+            return new BufferedYamlRepository<T>(this, source, 30000);
+
         } catch (final Exception e) {
-            throw new IllegalStateException("Unable to load configuration file: " + source, e);
+            this.getLogger().log(Level.SEVERE, "Unable to load repository YAML file {0}; {1}", new Object[] { file, e });
+            return null;
         }
-    }
-
-    private static Kit parseKit(final ConfigurationSection kit) {
-        final ConfigurationSection contents = kit.getConfigurationSection("contents");
-        final List<ItemStack> parsed = new ArrayList<ItemStack>();
-        for (final String key : contents.getKeys(false)) {
-            final ItemData data = ItemData.parse(key);
-            final Integer amount = contents.getInt(key);
-            final ItemStack stack = data.toItemStack(amount);
-            parsed.add(stack);
-        }
-
-        return new Kit(kit.getName(), parsed);
     }
 
 }

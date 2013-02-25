@@ -1,6 +1,3 @@
-log-level: ALL
-kits:
-  Donator:
-    contents:
-      SPONGE: 1
+log-level: INFO
+record-withdrawals: false
 version: @VERSION@

@@ -11,34 +11,45 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 /**
- * @author EdGruberman
- * @version 1.2.0
+ * Queues save requests to prevent occurring more than a maximum rate.
+ *
+ * @author EdGruberman (ed@rjump.com)
+ * @version 2.1.1
  */
 public class BufferedYamlConfiguration extends YamlConfiguration implements Runnable {
 
-    private static final int TICKS_PER_SECOND = 20;
+    protected static final int TICKS_PER_SECOND = 20;
 
-    private final Plugin plugin;
-    private File file;
-    private final long minSave;
+    protected final Plugin owner;
+    protected File file;
+    protected long rate;
+    protected long lastSaveAttempt = -1;
+    protected int taskSave = -1;
 
-    private long lastSaveAttempt = -1;
-    private int taskSave = -1;
-
-    /** @param minSave minimum time between saves (milliseconds) */
-    public BufferedYamlConfiguration(final Plugin plugin, final File file, final long minSave) {
-        this.plugin = plugin;
+    /** @param rate minimum time between saves (milliseconds) */
+    public BufferedYamlConfiguration(final Plugin owner, final File file, final long rate) {
+        this.owner = owner;
         this.file = file;
-        this.minSave = minSave;
-        this.options().indent(4);
+        this.rate = rate;
+    }
+
+    public Plugin getOwner() {
+        return this.owner;
     }
 
     public File getFile() {
         return this.file;
     }
 
-    public long getMinSave() {
-        return this.minSave;
+    public long getRate() {
+        return this.rate;
+    }
+
+    public void setRate(final int rate) {
+        this.rate = rate;
+        if (!this.isQueued()) return;
+        Bukkit.getScheduler().cancelTask(this.taskSave);
+        this.queueSave();
     }
 
     public long getLastSaveAttempt() {
@@ -59,7 +70,7 @@ public class BufferedYamlConfiguration extends YamlConfiguration implements Runn
     }
 
     @Override
-    public void load(final File file) throws IOException, InvalidConfigurationException {
+    public void load(final File file) throws FileNotFoundException, IOException, InvalidConfigurationException {
         this.file = file;
         this.load();
     }
@@ -82,31 +93,34 @@ public class BufferedYamlConfiguration extends YamlConfiguration implements Runn
             super.save(this.file);
 
         } catch (final IOException e) {
-            this.plugin.getLogger().severe("Unable to save configuration file: " + this.file + "; " + e.getClass().getName() + ": " + e.getMessage());
+            this.owner.getLogger().log(Level.SEVERE, "Unable to save configuration file: {0}; {1}", new Object[] { this.file, e });
             return;
 
         } finally {
             this.lastSaveAttempt = System.currentTimeMillis();
         }
 
-        this.plugin.getLogger().finest("Saved configuration file: " + this.file);
+        this.owner.getLogger().log(Level.FINEST, "Saved configuration file: {0}", this.file);
     }
 
-    /** @param immediate true to force a save of the configuration file immediately */
     public void queueSave() {
         final long elapsed = System.currentTimeMillis() - this.lastSaveAttempt;
 
-        if (elapsed < this.minSave) {
-            final long delay = this.minSave - elapsed;
+        if (elapsed < this.rate) {
+            final long delay = this.rate - elapsed;
 
             if (this.isQueued()) {
-                this.plugin.getLogger().log(Level.FINEST, "Queue request already will run in {0} seconds for configuration file: {1} (Last save was attempted {2} seconds ago)", new Object[]{delay / 1000, this.getFile(), elapsed});
+                this.owner.getLogger().log(Level.FINEST
+                        , "Save request already queued to run in {0} seconds for file: {1} (Last attempted {2} seconds ago)"
+                        , new Object[] { delay / 1000, this.getFile(), elapsed / 1000 });
                 return;
             }
 
             // schedule task to flush cache to file system
-            this.taskSave = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, this, delay * BufferedYamlConfiguration.TICKS_PER_SECOND);
-            this.plugin.getLogger().log(Level.FINEST, "Queued save request to run in {0} seconds for configuration file: {1} (Last save was attempted {2} seconds ago)", new Object[]{delay / 1000, this.getFile(), elapsed});
+            this.taskSave = Bukkit.getScheduler().scheduleSyncDelayedTask(this.owner, this, delay / 1000 * BufferedYamlConfiguration.TICKS_PER_SECOND);
+            this.owner.getLogger().log(Level.FINEST
+                    , "Queued save request to run in {0} seconds for configuration file: {1} (Last attempted {2} seconds ago)"
+                    , new Object[] { delay / 1000, this.getFile(), elapsed / 1000 });
             return;
         }
 
@@ -114,7 +128,7 @@ public class BufferedYamlConfiguration extends YamlConfiguration implements Runn
     }
 
     public boolean isQueued() {
-        return (this.taskSave != -1 && Bukkit.getScheduler().isQueued(this.taskSave));
+        return Bukkit.getScheduler().isQueued(this.taskSave);
     }
 
 }
