@@ -55,7 +55,6 @@ public abstract class Session implements Listener {
         if (current != this.index) this.pallet.getBoxes().get(this.index).open(this.customer);
     }
 
-    /** @return true if event applies to this customer, false otherwise */
     @EventHandler(ignoreCancelled = true)
     public void click(final InventoryClickEvent click) {
         if (!this.customer.equals(click.getWhoClicked())) return; // ignore when not this customer
