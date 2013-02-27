@@ -55,9 +55,7 @@ public final class Box implements ConfigurationSerializable, Cloneable {
     public Box clone() {
         final Inventory inventory = Bukkit.createInventory(this.inventory.getHolder(), this.inventory.getSize(), this.inventory.getTitle());
         inventory.setContents(this.inventory.getContents());
-        final Box cloned = new Box(inventory);
-        cloned.label(this.getInventory().getTitle());
-        return cloned;
+        return new Box(inventory);
     }
 
     @Override
