@@ -1,56 +1,56 @@
-name: ParcelService
+name: Delivery
 version: @VERSION@
-description: Provide and track items given to players
+description: Provide items to players
 author: EdGruberman (ed@rjump.com)
-website: http://github.com/EdGruberman/ParcelService
-main: edgruberman.bukkit.parcelservice.Main
+website: http://github.com/EdGruberman/Delivery
+main: edgruberman.bukkit.delivery.Main
 commands:
-  'parcelservice:define':
-    aliases: [mps.define]
-    description: Create, edit, or delete a kit
-    permission: parcelservice.define
-    usage: '§f-> §7Usage: §b/<command> §o<Kit>'
-  'parcelservice:kit':
-    aliases: [mps.kit]
-    description: Issue or recall a kit
-    permission: parcelservice.kit
-    usage: '§f-> §7Usage: §b/<command> <Kit>§3[ §b§o<Player>§3[ §b§o<Quantity>§3[ §b§o<Reason>§3]]]'
-  'parcelservice:edit':
-    aliases: [mps.edit]
-    description: Modify inventory pallet
-    permission: parcelservice.edit
+  'delivery:edit':
+    aliases: [delivery, delivery.edit]
+    description: Modify player specific box inventory
+    permission: delivery.edit
     usage: '§f-> §7Usage: §b/<command> <Player>§3[ §b§o<Reason>§3]'
-  'parcelservice:reload':
-    description: Reload ParcelService plugin
-    permission: parcelservice.reload
+  'delivery:define':
+    aliases: [kit.define, delivery.define]
+    description: Create, edit, or delete a kit
+    permission: delivery.define
+    usage: '§f-> §7Usage: §b/<command> §o<Kit>'
+  'delivery:kit':
+    aliases: [kit, delivery.kit]
+    description: Issue or recall a kit
+    permission: delivery.kit
+    usage: '§f-> §7Usage: §b/<command> <Kit>§3[ §b§o<Player>§3[ §b§o<Quantity>§3[ §b§o<Reason>§3]]]'
+  'delivery:reload':
+    description: Reload Delivery plugin
+    permission: delivery.reload
     usage: '§f-> §7Usage: §b/<command>'
 permissions:
-  parcelservice.admin:
+  delivery.admin:
     description: Can use all commands
     default: op
     children:
-      parcelservice.user: true
-      parcelservice.define: true
-      parcelservice.kit: true
-      parcelservice.edit: true
-      parcelservice.reload: true
-  parcelservice.user:
+      delivery.user: true
+      delivery.define: true
+      delivery.kit: true
+      delivery.edit: true
+      delivery.reload: true
+  delivery.user:
     description: Can use basic commands
     default: true
     children:
-      parcelservice.open: true
-  parcelservice.open:
+      delivery.open: true
+  delivery.open:
     description: Can open pallet for self
     default: false
-  parcelservice.define:
+  delivery.define:
     description: Can use define command
     default: false
-  parcelservice.kit:
+  delivery.kit:
     description: Can use kit command
     default: false
-  parcelservice.edit:
+  delivery.edit:
     description: Can use edit command
     default: false
-  parcelservice.reload:
+  delivery.reload:
     description: Can use reload command
     default: false
