@@ -1,15 +1,11 @@
 package edgruberman.bukkit.delivery.sessions;
 
-import java.util.Collection;
-
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import edgruberman.bukkit.delivery.Kit;
 import edgruberman.bukkit.delivery.Main;
 import edgruberman.bukkit.delivery.Transaction;
 import edgruberman.bukkit.delivery.repositories.KitRepository;
-import edgruberman.bukkit.delivery.util.ItemStackUtil;
 
 /** indirect interaction with kit contents that allows automatic expansion */
 public class KitDefine extends Session {
@@ -36,17 +32,14 @@ public class KitDefine extends Session {
 
     @Override
     protected void onEnd(final Transaction transaction) {
-        if (transaction.getChanges().isEmpty()) {
-            if (this.active.getContents().empty()) this.kits.delete(this.active);
+        if (this.pallet.empty()) {
+            this.kits.delete(this.active);
             return;
         }
 
-        final Collection<ItemStack> failures = this.active.getContents().modify(transaction.getChanges());
-        transaction.getFailures().addAll(ItemStackUtil.multiplyAmount(failures , -1));
-        if (!transaction.getFailures().isEmpty()) Main.courier.send(this.customer, "failures", transaction.getFailures().size(), this.active.getName(), ItemStackUtil.summarize(transaction.getFailures()));
-
-        if (this.active.getContents().empty()) this.kits.delete(this.active);
+        this.active.getContents().setBoxes(this.pallet.getBoxes());
         this.kits.save(this.active);
+        this.active.setDefiner(null);
     }
 
 }

@@ -7,6 +7,7 @@ withdraw-reason: 'Withdrawal'
 kit-reason-format: '{2} Kit{3,choice,0# x{3}|1#|2# x{3}} ({0}: {1})' # 0 = Sender, 1 = Reason, 2 = Kit, 3 = Quantity
 kit-default-reason: 'Command'
 kit: '§f-> §7Kit §f{1}{3,choice,-1# §7x§f-{3}|0#|2# §7x§f{3}} {3,choice,-1#§2recalled §7from|0#§2issued §7to} {2}§8: "§f§o{4}§8"' # 1 = Kit, 2 = Player, 3 = Quantity, 4 = Reason, 5 = hasFailures(0|1)
+define-wait: '§f-> Kit {1} §ccan not be defined§7 as {2} is currently defining it' # 1 = Kit, 2 = Definer
 failures: '§f-> §eFailed to recall§7 {1} item types from {2}: {3}' # 1 = Types Count, 2 = Target, 3 = Failures Summary
 items-summary:
   +item: '§7{0}'
