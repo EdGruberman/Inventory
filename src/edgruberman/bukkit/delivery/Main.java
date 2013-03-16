@@ -5,6 +5,7 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.event.HandlerList;
 
 import edgruberman.bukkit.delivery.commands.Define;
 import edgruberman.bukkit.delivery.commands.Edit;
@@ -25,6 +26,7 @@ public final class Main extends CustomPlugin {
 
     private KitRepository kits = null;
     private LedgerRepository ledgers = null;
+    private Clerk clerk = null;
 
     @Override
     public void onLoad() {
@@ -59,8 +61,8 @@ public final class Main extends CustomPlugin {
             return;
         }
 
-        final Clerk clerk = new Clerk(this.ledgers, this.getConfig().getBoolean("record-withdrawals"), this);
-        Bukkit.getPluginManager().registerEvents(clerk, this);
+        this.clerk = new Clerk(this.ledgers, this.getConfig().getBoolean("record-withdrawals"), this);
+        Bukkit.getPluginManager().registerEvents(this.clerk, this);
 
         this.getCommand("delivery:edit").setExecutor(new Edit(this.ledgers, this));
         this.getCommand("delivery:define").setExecutor(new Define(this.kits, this));
@@ -72,6 +74,7 @@ public final class Main extends CustomPlugin {
     public void onDisable() {
         if (this.kits != null) this.kits.destroy();
         if (this.ledgers != null) this.ledgers.destroy();
+        if (this.clerk != null) HandlerList.unregisterAll(this.clerk);
         Main.courier = null;
         Main.craftBukkit = null;
     }
