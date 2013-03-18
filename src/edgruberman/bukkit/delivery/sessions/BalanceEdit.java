@@ -42,7 +42,8 @@ public class BalanceEdit extends Session {
         }
 
         final Collection<ItemStack> failures = this.active.modifyBalance(transaction.getChanges());
-        transaction.getFailures().addAll(ItemStackUtil.multiplyAmount(failures , -1));
+        for (final ItemStack stack : failures) stack.setAmount(stack.getAmount() * -1);
+        transaction.getFailures().addAll(failures);
         if (!transaction.getFailures().isEmpty()) Main.courier.send(this.customer, "failures", transaction.getFailures().size(), this.active.getPlayer(), ItemStackUtil.summarize(transaction.getFailures()));
 
         this.active.record(transaction);

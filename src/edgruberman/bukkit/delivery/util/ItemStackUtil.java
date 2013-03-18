@@ -13,13 +13,6 @@ public class ItemStackUtil {
         ItemStackUtil.format = format;
     }
 
-    public static Collection<ItemStack> multiplyAmount(final Collection<ItemStack> stacks, final int factor) {
-        for (final ItemStack stack : stacks)
-            stack.setAmount(stack.getAmount() * factor);
-
-        return stacks;
-    }
-
     public static JoinList summarize(final Collection<ItemStack> stacks) {
         final JoinList joined = new JoinList(ItemStackUtil.format);
         for (final ItemStack stack : stacks) joined.add(ItemStackUtil.summarize(stack));

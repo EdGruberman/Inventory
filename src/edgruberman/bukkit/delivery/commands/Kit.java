@@ -69,7 +69,8 @@ public final class Kit extends TokenizedExecutor {
         final Transaction transaction = new Transaction(new Date(), reason, changes);
 
         final Collection<ItemStack> failures = target.modifyBalance(transaction.getChanges());
-        transaction.getFailures().addAll(ItemStackUtil.multiplyAmount(failures , -1));
+        for (final ItemStack stack : failures) stack.setAmount(stack.getAmount() * -1);
+        transaction.getFailures().addAll(failures);
         target.record(transaction);
         this.ledgers.save(target);
 
