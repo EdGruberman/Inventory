@@ -1,5 +1,6 @@
 package edgruberman.bukkit.delivery.commands;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -59,8 +60,20 @@ public final class Kit extends TokenizedExecutor {
                 return false;
             }
         }
-        final List<ItemStack> changes = kit.getContents().joined();
-        if (quantity != 1) ItemStackUtil.multiplyAmount(changes, quantity);
+
+        final List<ItemStack> changes = kit.getContents().items();
+        if (quantity != 1) {
+            // clone contents stack by stack to respect stack sizes provided
+            final List<ItemStack> multiplied = new ArrayList<ItemStack>();
+            for (int i = 0; i < Math.abs(quantity) - 1; i++) {
+                for (final ItemStack change : changes) {
+                    final ItemStack clone = change.clone();
+                    clone.setAmount(clone.getAmount() * (int) Math.signum(quantity));
+                    multiplied.add(clone);
+                }
+            }
+            changes.addAll(multiplied);
+        }
 
         final String provided = ( args.size() >= 4 ? TokenizedExecutor.join(args.subList(3, args.size())) : Main.courier.format("kit-default-reason") );
         final String reason = Main.courier.format("kit-reason-format", sender.getName(), provided, kit.getName(), quantity);

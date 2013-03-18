@@ -4,14 +4,17 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /** collection of Boxes */
@@ -30,6 +33,11 @@ public final class Pallet implements ConfigurationSerializable, Cloneable {
 
     public List<Box> getBoxes() {
         return this.boxes;
+    }
+
+    public void setBoxes(final List<Box> boxes) {
+        this.boxes.clear();
+        this.boxes.addAll(boxes);
     }
 
     public Box addBox() {
@@ -66,11 +74,30 @@ public final class Pallet implements ConfigurationSerializable, Cloneable {
 
     }
 
-    /** automatically add boxes as necessary */
+    /**
+     * automatically add boxes as necessary<p>
+     * stacks that comply with Material max size will attempt to be added to
+     * existing stacks<p>
+     * stacks that exceed Material max size will be added to the first empty
+     * slot
+     */
     public void add(final ItemStack stack) {
-        final ItemStack clone = stack.clone(); // TODO not clone for recursive calls
+        final ItemStack clone = stack.clone();
 
-        final Map<Integer, ItemStack> remaining = this.boxes.get(this.boxes.size() - 1).getInventory().addItem(clone);
+        final Inventory inventory = this.boxes.get(this.boxes.size() - 1).getInventory();
+        final Map<Integer, ItemStack> remaining;
+        if (stack.getAmount() <= stack.getMaxStackSize()) {
+            remaining = inventory.addItem(clone);
+        } else {
+            final int empty = inventory.firstEmpty();
+            if (empty != -1) {
+                inventory.setItem(empty, clone);
+                remaining = Collections.emptyMap();
+            } else {
+                remaining = new HashMap<Integer, ItemStack>();
+                remaining.put(0, clone);
+            }
+        }
         if (remaining.size() == 0) return;
 
         this.boxes.add(new Box());
@@ -94,6 +121,16 @@ public final class Pallet implements ConfigurationSerializable, Cloneable {
 
         this.trim();
         return remaining.values();
+    }
+
+    public List<ItemStack> items() {
+        final List<ItemStack> result = new ArrayList<ItemStack>();
+        for (final Box box : this.boxes) {
+            for (final ItemStack stack : box.getInventory().getContents()) {
+                if (stack != null && stack.getTypeId() != Material.AIR.getId()) result.add(stack);
+            }
+        }
+        return result;
     }
 
     public List<ItemStack> joined() {
