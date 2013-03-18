@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -62,7 +63,7 @@ public abstract class Session implements Listener {
         if (click.isCancelled()) return;
 
         // left or right click outside with nothing to navigate boxes forwards or backwards
-        if (click.getRawSlot() == -999) { // TODO Fix SlotType.OUTSIDE not being properly identified; BUKKIT-2768
+        if (click.getRawSlot() == -999 && click.getCursor().getTypeId() == Material.AIR.getId()) { // TODO Fix SlotType.OUTSIDE not being properly identified; BUKKIT-2768
             // TODO organize pallet (remove empty spaces, sort?)
             if (click.isLeftClick()) {
                 this.next();
