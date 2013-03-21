@@ -13,19 +13,19 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
 
 /** a player account with transaction and balance tracking */
-@SerializableAs("Ledger")
-public final class Ledger implements ConfigurationSerializable {
+@SerializableAs("Delivery")
+public final class Delivery implements ConfigurationSerializable {
 
     private final String player;
     private final Pallet balance;
     private final List<Transaction> log;
 
-    public Ledger(final String player) {
+    public Delivery(final String player) {
         this(player, new Pallet(), new ArrayList<Transaction>());
         this.relabel();
     }
 
-    private Ledger(final String player, final Pallet balance, final List<Transaction> log) {
+    private Delivery(final String player, final Pallet balance, final List<Transaction> log) {
         this.player = player;
         this.balance = balance;
         this.log = log;
@@ -44,7 +44,7 @@ public final class Ledger implements ConfigurationSerializable {
     }
 
     public void relabel() {
-        this.balance.label(Main.courier.format("box-balance", "{0}", "{1}", this.player));
+        this.balance.label(Main.courier.format("box-delivery", "{0}", "{1}", this.player));
     }
 
     public Collection<ItemStack> modifyBalance(final Collection<ItemStack> items) {
@@ -71,7 +71,7 @@ public final class Ledger implements ConfigurationSerializable {
         return result;
     }
 
-    public static Ledger deserialize(final Map<String, Object> serialized) {
+    public static Delivery deserialize(final Map<String, Object> serialized) {
         // TODO move check for updated case information for player name to somewhere more appropriate (whenever open pallet?) relabel is necessary to
         final String player = Bukkit.getOfflinePlayer((String) serialized.get("player")).getName();
 
@@ -80,7 +80,7 @@ public final class Ledger implements ConfigurationSerializable {
         @SuppressWarnings("unchecked")
         final List<Transaction> log = (List<Transaction>) serialized.get("log");
 
-        return new Ledger(player, balance, log);
+        return new Delivery(player, balance, log);
     }
 
 }

@@ -14,8 +14,8 @@ import edgruberman.bukkit.inventory.commands.Reload;
 import edgruberman.bukkit.inventory.craftbukkit.CraftBukkit;
 import edgruberman.bukkit.inventory.messaging.ConfigurationCourier;
 import edgruberman.bukkit.inventory.repositories.BufferedYamlRepository;
+import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 import edgruberman.bukkit.inventory.repositories.KitRepository;
-import edgruberman.bukkit.inventory.repositories.LedgerRepository;
 import edgruberman.bukkit.inventory.sessions.Clerk;
 import edgruberman.bukkit.inventory.util.CustomPlugin;
 import edgruberman.bukkit.inventory.util.ItemStackUtil;
@@ -26,7 +26,7 @@ public final class Main extends CustomPlugin {
     public static CraftBukkit craftBukkit = null;
 
     private KitRepository kits = null;
-    private LedgerRepository ledgers = null;
+    private DeliveryRepository deliveries = null;
     private Clerk clerk = null;
 
     @Override
@@ -53,21 +53,21 @@ public final class Main extends CustomPlugin {
         final BufferedYamlRepository<Kit> yamlKits = this.initializeRepository("kits.yml");
         this.kits = ( yamlKits != null ? new KitRepository(yamlKits) : null);
 
-        final BufferedYamlRepository<Ledger> yamlLedgers = this.initializeRepository("ledgers.yml");
-        this.ledgers = ( yamlLedgers != null ? new LedgerRepository(yamlLedgers) : null);
+        final BufferedYamlRepository<Delivery> yamlDeliveries = this.initializeRepository("deliveries.yml");
+        this.deliveries = ( yamlDeliveries != null ? new DeliveryRepository(yamlDeliveries) : null);
 
-        if (this.kits == null || this.ledgers == null) {
+        if (this.kits == null || this.deliveries == null) {
             this.getLogger().log(Level.SEVERE, "Disabling plugin; Unusable repository");
             this.setEnabled(false);
             return;
         }
 
-        this.clerk = new Clerk(this.ledgers, this.getConfig().getBoolean("record-withdrawals"), this);
+        this.clerk = new Clerk(this.deliveries, this.getConfig().getBoolean("record-withdrawals"), this);
         Bukkit.getPluginManager().registerEvents(this.clerk, this);
 
-        this.getCommand("inventory:edit").setExecutor(new Edit(this.ledgers, this));
+        this.getCommand("inventory:edit").setExecutor(new Edit(this.deliveries, this));
         this.getCommand("inventory:define").setExecutor(new Define(this.kits, this));
-        this.getCommand("inventory:kit").setExecutor(new edgruberman.bukkit.inventory.commands.Kit(this.kits, this.ledgers));
+        this.getCommand("inventory:kit").setExecutor(new edgruberman.bukkit.inventory.commands.Kit(this.kits, this.deliveries));
         this.getCommand("inventory:delete").setExecutor(new Delete(this.kits));
         this.getCommand("inventory:reload").setExecutor(new Reload(this));
     }
@@ -75,7 +75,7 @@ public final class Main extends CustomPlugin {
     @Override
     public void onDisable() {
         if (this.kits != null) this.kits.destroy();
-        if (this.ledgers != null) this.ledgers.destroy();
+        if (this.deliveries != null) this.deliveries.destroy();
         if (this.clerk != null) HandlerList.unregisterAll(this.clerk);
         Main.courier = null;
         Main.craftBukkit = null;

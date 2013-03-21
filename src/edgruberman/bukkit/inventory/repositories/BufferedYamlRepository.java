@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin;
 
 import edgruberman.bukkit.inventory.Box;
 import edgruberman.bukkit.inventory.Kit;
-import edgruberman.bukkit.inventory.Ledger;
+import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Pallet;
 import edgruberman.bukkit.inventory.Transaction;
 import edgruberman.bukkit.inventory.util.BufferedYamlConfiguration;
@@ -20,7 +20,7 @@ public class BufferedYamlRepository<V extends ConfigurationSerializable> impleme
     static {
         ConfigurationSerialization.registerClass(Box.class);
         ConfigurationSerialization.registerClass(Kit.class);
-        ConfigurationSerialization.registerClass(Ledger.class);
+        ConfigurationSerialization.registerClass(Delivery.class);
         ConfigurationSerialization.registerClass(Pallet.class);
         ConfigurationSerialization.registerClass(Transaction.class);
     }

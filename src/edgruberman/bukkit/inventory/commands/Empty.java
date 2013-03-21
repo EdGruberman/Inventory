@@ -7,18 +7,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import edgruberman.bukkit.inventory.Ledger;
+import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.Transaction;
-import edgruberman.bukkit.inventory.repositories.LedgerRepository;
+import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 
 public final class Empty extends TokenizedExecutor {
 
-    private final LedgerRepository ledgers;
+    private final DeliveryRepository deliveries;
 
-    public Empty(final LedgerRepository ledgers) {
-        this.ledgers = ledgers;
+    public Empty(final DeliveryRepository deliveries) {
+        this.deliveries = deliveries;
     }
 
     // usage: /<command> <Player>[ <Reason>]
@@ -31,7 +31,7 @@ public final class Empty extends TokenizedExecutor {
 
         final String reason = ( args.size() >= 2 ? TokenizedExecutor.join(args.subList(1, args.size())) : Main.courier.format("reason-default") );
         final String player = Bukkit.getOfflinePlayer(args.get(0)).getName();
-        final Ledger active = this.ledgers.load(player);
+        final Delivery active = this.deliveries.load(player);
         if (active != null && !active.getBalance().isEmpty()) {
             active.record(new Transaction(new Date(), sender, reason, active.getBalance().joined()));
             active.getBalance().clear();

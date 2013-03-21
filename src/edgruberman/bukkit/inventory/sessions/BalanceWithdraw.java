@@ -4,21 +4,21 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-import edgruberman.bukkit.inventory.Ledger;
+import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.Transaction;
-import edgruberman.bukkit.inventory.repositories.LedgerRepository;
+import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 
-/** direct interaction with ledger balance that prevents any additions */
+/** direct interaction with delivery balance that prevents any additions */
 public class BalanceWithdraw extends Session {
 
-    private final LedgerRepository ledgers;
-    private final Ledger active;
+    private final DeliveryRepository deliveries;
+    private final Delivery active;
     private final boolean record;
 
-    public BalanceWithdraw(final Player customer, final LedgerRepository ledgers, final Ledger active, final String reason, final boolean record) {
+    public BalanceWithdraw(final Player customer, final DeliveryRepository deliveries, final Delivery active, final String reason, final boolean record) {
         super(customer, active.getBalance(), reason);
-        this.ledgers = ledgers;
+        this.deliveries = deliveries;
         this.active = active;
         this.record = record;
     }
@@ -43,15 +43,15 @@ public class BalanceWithdraw extends Session {
 
     @Override
     protected void onEnd(final Transaction transaction) {
-        if (this.pallet.trim()) this.pallet.label(Main.courier.format("box-balance", "{0}", "{1}", this.active.getPlayer()));
+        if (this.pallet.trim()) this.pallet.label(Main.courier.format("box-delivery", "{0}", "{1}", this.active.getPlayer()));
 
         if (transaction.getChanges().isEmpty()) {
-            if (this.active.empty()) this.ledgers.delete(this.active);
+            if (this.active.empty()) this.deliveries.delete(this.active);
             return;
         }
 
         if (this.record) this.active.record(transaction);
-        this.ledgers.save(this.active);
+        this.deliveries.save(this.active);
     }
 
 }

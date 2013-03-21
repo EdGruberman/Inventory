@@ -8,19 +8,19 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 
-import edgruberman.bukkit.inventory.Ledger;
+import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.repositories.LedgerRepository;
+import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 
 /** withdrawal manager */
 public class Clerk implements Listener {
 
-    private final LedgerRepository ledgers;
+    private final DeliveryRepository deliveries;
     private final boolean record;
     private final Plugin plugin;
 
-    public Clerk(final LedgerRepository ledgers, final boolean record, final Plugin plugin) {
-        this.ledgers = ledgers;
+    public Clerk(final DeliveryRepository deliveries, final boolean record, final Plugin plugin) {
+        this.deliveries = deliveries;
         this.record = record;
         this.plugin = plugin;
     }
@@ -32,14 +32,14 @@ public class Clerk implements Listener {
         if (!interact.getPlayer().hasPermission("inventory.delivery")) return; // ignore if not allowed
         interact.setCancelled(true);
 
-        final Ledger requested = this.ledgers.load(interact.getPlayer().getName());
+        final Delivery requested = this.deliveries.load(interact.getPlayer().getName());
         if (requested == null || requested.getBalance().isEmpty()) {
             Main.courier.send(interact.getPlayer(), "empty-balance", interact.getPlayer().getName());
             return;
         }
 
         final String reason = Main.courier.format("reason-withdraw");
-        final BalanceWithdraw withdraw = new BalanceWithdraw(interact.getPlayer(), this.ledgers, requested, reason, this.record);
+        final BalanceWithdraw withdraw = new BalanceWithdraw(interact.getPlayer(), this.deliveries, requested, reason, this.record);
         Bukkit.getPluginManager().registerEvents(withdraw, this.plugin);
     }
 

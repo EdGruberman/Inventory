@@ -1,5 +1,5 @@
 format-code: '§'
-box-balance: 'Box {0} of {1} ({2})' # 0 = Index, 1 = Total, 2 = Owner
+box-delivery: 'Box {0} of {1} ({2})' # 0 = Index, 1 = Total, 2 = Owner
 box-kit: '{0}/{1} (Kit: {2})' # 0 = Index, 1 = Total, 2 = Kit
 reason-default: '(No reason)'
 reason-withdraw: 'Withdrawal'

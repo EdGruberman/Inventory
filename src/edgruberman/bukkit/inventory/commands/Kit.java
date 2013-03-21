@@ -11,22 +11,22 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import edgruberman.bukkit.inventory.Ledger;
+import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.Transaction;
+import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 import edgruberman.bukkit.inventory.repositories.KitRepository;
-import edgruberman.bukkit.inventory.repositories.LedgerRepository;
 import edgruberman.bukkit.inventory.util.ItemStackUtil;
 import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 
 public final class Kit extends TokenizedExecutor {
 
     private final KitRepository kits;
-    private final LedgerRepository ledgers;
+    private final DeliveryRepository deliveries;
 
-    public Kit(final KitRepository kits, final LedgerRepository ledgers) {
+    public Kit(final KitRepository kits, final DeliveryRepository deliveries) {
         this.kits = kits;
-        this.ledgers = ledgers;
+        this.deliveries = deliveries;
     }
 
     // usage: /<command> <Kit>[ <Player>[ <Quantity>[ <Reason>]]]
@@ -48,7 +48,7 @@ public final class Kit extends TokenizedExecutor {
             return false;
         }
 
-        // try to ensure proper case for player name since new Ledger could be created
+        // try to ensure proper case for player name since new Delivery could be created
         final String player = ( args.size() >= 2 ? Bukkit.getOfflinePlayer(args.get(1)).getName() : sender.getName() );
 
         int quantity = 1;
@@ -79,12 +79,12 @@ public final class Kit extends TokenizedExecutor {
         final String reason = Main.courier.format("reason-kit", provided, kit.getName(), quantity);
         final Transaction transaction = new Transaction(new Date(), sender, reason, changes);
 
-        final Ledger target = this.ledgers.create(player);
+        final Delivery target = this.deliveries.create(player);
         final Collection<ItemStack> failures = target.modifyBalance(transaction.getChanges());
         for (final ItemStack stack : failures) stack.setAmount(stack.getAmount() * -1);
         transaction.getFailures().addAll(failures);
         target.record(transaction);
-        this.ledgers.save(target);
+        this.deliveries.save(target);
 
         Main.courier.send(sender, "kit", kit.getName(), target.getPlayer(), quantity, reason, transaction.getFailures().isEmpty()?0:1 );
         if (!transaction.getFailures().isEmpty()) Main.courier.send(sender, "failures", transaction.getFailures().size(), target.getPlayer(), ItemStackUtil.summarize(transaction.getFailures()));
