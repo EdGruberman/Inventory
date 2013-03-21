@@ -8,8 +8,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /** record of item stack flow */
@@ -24,11 +26,11 @@ public class Transaction implements ConfigurationSerializable {
     private final List<ItemStack> changes;
     private final List<ItemStack> failures;
 
-    public Transaction(final Date occurred, final String source, final String reason, final List<ItemStack> changes) {
-        this(occurred, source, reason, changes, new ArrayList<ItemStack>());
+    public Transaction(final Date occurred, final CommandSender source, final String reason, final List<ItemStack> changes) {
+        this(occurred, Transaction.formatSource(source), reason, changes, new ArrayList<ItemStack>());
     }
 
-    public Transaction(final Date occurred, final String source, final String reason, final List<ItemStack> changes, final List<ItemStack> failures) {
+    private Transaction(final Date occurred, final String source, final String reason, final List<ItemStack> changes, final List<ItemStack> failures) {
         this.occurred = occurred;
         this.source = source;
         this.reason = reason;
@@ -94,6 +96,10 @@ public class Transaction implements ConfigurationSerializable {
         final List<ItemStack> failures = ( serialized.containsKey("failures") ? (List<ItemStack>) serialized.get("failures") : new ArrayList<ItemStack>() );
 
         return new Transaction(occurred, source, reason, changes, failures);
+    }
+
+    private static String formatSource(final CommandSender source) {
+        return ( source instanceof Player ? source.getName() : "{" + source.getName() + "}" );
     }
 
 }

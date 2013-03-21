@@ -33,7 +33,7 @@ public final class Empty extends TokenizedExecutor {
         final String player = Bukkit.getOfflinePlayer(args.get(0)).getName();
         final Ledger active = this.ledgers.load(player);
         if (active != null && !active.getBalance().isEmpty()) {
-            active.record(new Transaction(new Date(), sender.getName(), reason, active.getBalance().joined()));
+            active.record(new Transaction(new Date(), sender, reason, active.getBalance().joined()));
             active.getBalance().clear();
         }
 
