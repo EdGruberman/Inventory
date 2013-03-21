@@ -8,6 +8,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.event.HandlerList;
 
 import edgruberman.bukkit.deliver.commands.Define;
+import edgruberman.bukkit.deliver.commands.Delete;
 import edgruberman.bukkit.deliver.commands.Edit;
 import edgruberman.bukkit.deliver.commands.Reload;
 import edgruberman.bukkit.deliver.craftbukkit.CraftBukkit;
@@ -67,6 +68,7 @@ public final class Main extends CustomPlugin {
         this.getCommand("deliver:edit").setExecutor(new Edit(this.ledgers, this));
         this.getCommand("deliver:define").setExecutor(new Define(this.kits, this));
         this.getCommand("deliver:kit").setExecutor(new edgruberman.bukkit.deliver.commands.Kit(this.kits, this.ledgers));
+        this.getCommand("deliver:delete").setExecutor(new Delete(this.kits));
         this.getCommand("deliver:reload").setExecutor(new Reload(this));
     }
 

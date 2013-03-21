@@ -9,17 +9,22 @@ commands:
     aliases: [deliver, deliver.edit]
     description: Modify player specific box inventory
     permission: deliver.edit
-    usage: '§f-> §7Usage: §b/<command> <Player>§3[ §b§o<Reason>§3]'
+    usage: '§f-> §7Usage: §b/<command> §o<Player>§3[ §b§o<Reason>§3]'
   'deliver:define':
-    aliases: [kit.define, deliver.define]
+    aliases: [kit.define]
     description: Create, edit, or delete a kit
     permission: deliver.define
     usage: '§f-> §7Usage: §b/<command> §o<Kit>'
   'deliver:kit':
-    aliases: [kit, deliver.kit]
+    aliases: [kit]
     description: Issue or recall a kit
     permission: deliver.kit
-    usage: '§f-> §7Usage: §b/<command> <Kit>§3[ §b§o<Player>§3[ §b§o<Quantity>§3[ §b§o<Reason>§3]]]'
+    usage: '§f-> §7Usage: §b/<command> §o<Kit>§3[ §b§o<Player>§3[ §b§o<Quantity>§3[ §b§o<Reason>§3]]]'
+  'deliver:delete':
+    aliases: [kit.delete]
+    description: Delete a kit from command line (no GUI)
+    permission: deliver.delete
+    usage: '§f-> §7Usage: §b/<command> §o<Kit>'
   'deliver:reload':
     description: Reload Deliver plugin
     permission: deliver.reload
@@ -32,6 +37,7 @@ permissions:
       deliver.user: true
       deliver.define: true
       deliver.kit: true
+      deliver.delete: true
       deliver.edit: true
       deliver.reload: true
   deliver.user:
@@ -47,6 +53,9 @@ permissions:
     default: false
   deliver.kit:
     description: Can use kit command
+    default: false
+  deliver.delete:
+    description: Can use delete command
     default: false
   deliver.edit:
     description: Can use edit command
