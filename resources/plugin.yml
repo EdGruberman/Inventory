@@ -1,56 +1,56 @@
-name: Delivery
+name: Deliver
 version: @VERSION@
 description: Provide items to players
 author: EdGruberman (ed@rjump.com)
-website: http://github.com/EdGruberman/Delivery
-main: edgruberman.bukkit.delivery.Main
+website: http://github.com/EdGruberman/Deliver
+main: edgruberman.bukkit.deliver.Main
 commands:
-  'delivery:edit':
-    aliases: [delivery, delivery.edit]
+  'deliver:edit':
+    aliases: [deliver, deliver.edit]
     description: Modify player specific box inventory
-    permission: delivery.edit
+    permission: deliver.edit
     usage: '§f-> §7Usage: §b/<command> <Player>§3[ §b§o<Reason>§3]'
-  'delivery:define':
-    aliases: [kit.define, delivery.define]
+  'deliver:define':
+    aliases: [kit.define, deliver.define]
     description: Create, edit, or delete a kit
-    permission: delivery.define
+    permission: deliver.define
     usage: '§f-> §7Usage: §b/<command> §o<Kit>'
-  'delivery:kit':
-    aliases: [kit, delivery.kit]
+  'deliver:kit':
+    aliases: [kit, deliver.kit]
     description: Issue or recall a kit
-    permission: delivery.kit
+    permission: deliver.kit
     usage: '§f-> §7Usage: §b/<command> <Kit>§3[ §b§o<Player>§3[ §b§o<Quantity>§3[ §b§o<Reason>§3]]]'
-  'delivery:reload':
-    description: Reload Delivery plugin
-    permission: delivery.reload
+  'deliver:reload':
+    description: Reload Deliver plugin
+    permission: deliver.reload
     usage: '§f-> §7Usage: §b/<command>'
 permissions:
-  delivery.admin:
+  deliver.admin:
     description: Can use all commands
     default: op
     children:
-      delivery.user: true
-      delivery.define: true
-      delivery.kit: true
-      delivery.edit: true
-      delivery.reload: true
-  delivery.user:
+      deliver.user: true
+      deliver.define: true
+      deliver.kit: true
+      deliver.edit: true
+      deliver.reload: true
+  deliver.user:
     description: Can use basic commands
     default: true
     children:
-      delivery.open: true
-  delivery.open:
+      deliver.open: true
+  deliver.open:
     description: Can open pallet for self
     default: false
-  delivery.define:
+  deliver.define:
     description: Can use define command
     default: false
-  delivery.kit:
+  deliver.kit:
     description: Can use kit command
     default: false
-  delivery.edit:
+  deliver.edit:
     description: Can use edit command
     default: false
-  delivery.reload:
+  deliver.reload:
     description: Can use reload command
     default: false
