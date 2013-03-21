@@ -26,7 +26,7 @@ public class BalanceEdit extends Session {
     @Override
     public void next() {
         if (this.index == this.pallet.getBoxes().size() - 1
-                && this.pallet.getBoxes().get(this.index).full()) {
+                && this.pallet.getBoxes().get(this.index).isFull()) {
             this.pallet.addBox();
             this.pallet.label(Main.courier.format("box-balance", "{0}", "{1}", this.active.getPlayer()));
         }

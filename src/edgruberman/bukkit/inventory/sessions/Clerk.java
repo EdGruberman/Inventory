@@ -33,7 +33,7 @@ public class Clerk implements Listener {
         interact.setCancelled(true);
 
         final Ledger requested = this.ledgers.load(interact.getPlayer().getName());
-        if (requested == null || requested.getBalance().empty()) {
+        if (requested == null || requested.getBalance().isEmpty()) {
             Main.courier.send(interact.getPlayer(), "empty-balance", interact.getPlayer().getName());
             return;
         }

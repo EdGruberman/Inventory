@@ -40,14 +40,18 @@ public final class Box implements ConfigurationSerializable, Cloneable {
         return player.openInventory(this.inventory);
     }
 
-    public boolean empty() {
+    public void clear() {
+        this.inventory.clear();
+    }
+
+    public boolean isEmpty() {
         for (final ItemStack content : this.inventory.getContents())
             if (content != null) return false;
 
         return true;
     }
 
-    public boolean full() {
+    public boolean isFull() {
         return this.inventory.firstEmpty() == -1;
     }
 

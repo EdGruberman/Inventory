@@ -156,9 +156,14 @@ public final class Pallet implements ConfigurationSerializable, Cloneable {
         return result;
     }
 
-    public boolean empty() {
+    public void clear() {
         for (final Box box : this.boxes)
-            if (!box.empty()) return false;
+            box.clear();
+    }
+
+    public boolean isEmpty() {
+        for (final Box box : this.boxes)
+            if (!box.isEmpty()) return false;
 
         return true;
     }

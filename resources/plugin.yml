@@ -10,6 +10,11 @@ commands:
     description: Add or remove items in delivery
     permission: inventory.edit
     usage: '§f-> §7Usage: §b/<command> §o<Player>§3[ §b§o<Reason>§3]'
+  'inventory:empty':
+    aliases: [delivery.empty]
+    description: Remove all items from delivery
+    permission: inventory.empty
+    usage: '§f-> §7Usage: §b/<command> §o<Player>§3[ §b§o<Reason>§3]'
   'inventory:define':
     aliases: [kit.define]
     description: Create, edit, or delete a kit
@@ -22,7 +27,7 @@ commands:
     usage: '§f-> §7Usage: §b/<command> §o<Kit>§3[ §b§o<Player>§3[ §b§o<Quantity>§3[ §b§o<Reason>§3]]]'
   'inventory:delete':
     aliases: [kit.delete]
-    description: Delete a kit from command line (no GUI)
+    description: Delete a kit
     permission: inventory.delete
     usage: '§f-> §7Usage: §b/<command> §o<Kit>'
   'inventory:reload':
@@ -36,6 +41,7 @@ permissions:
     children:
       inventory.user: true
       inventory.edit: true
+      inventory.empty: true
       inventory.define: true
       inventory.kit: true
       inventory.delete: true
@@ -50,6 +56,9 @@ permissions:
     default: false
   inventory.edit:
     description: Can use edit command
+    default: false
+  inventory.empty:
+    description: Can use empty command
     default: false
   inventory.define:
     description: Can use define command

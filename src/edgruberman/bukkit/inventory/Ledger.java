@@ -59,7 +59,7 @@ public final class Ledger implements ConfigurationSerializable {
     }
 
     public boolean empty() {
-        return (this.log.size() == 0) && this.balance.empty();
+        return (this.log.size() == 0) && this.balance.isEmpty();
     }
 
     @Override

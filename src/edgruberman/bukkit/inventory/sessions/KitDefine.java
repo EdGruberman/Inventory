@@ -22,7 +22,7 @@ public class KitDefine extends Session {
     @Override
     public void next() {
         if (this.index == this.pallet.getBoxes().size() - 1
-                && this.pallet.getBoxes().get(this.index).full()) {
+                && this.pallet.getBoxes().get(this.index).isFull()) {
             this.pallet.addBox();
             this.pallet.label(Main.courier.format("box-kit", "{0}", "{1}", this.active.getName()));
         }
@@ -32,7 +32,7 @@ public class KitDefine extends Session {
 
     @Override
     protected void onEnd(final Transaction transaction) {
-        if (this.pallet.empty()) {
+        if (this.pallet.isEmpty()) {
             this.kits.delete(this.active);
             return;
         }

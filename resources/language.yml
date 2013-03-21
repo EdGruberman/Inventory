@@ -12,7 +12,8 @@ items-summary:
   delimiter: '§8, '
 empty-balance: '§f-> §eNo items §7are currently available for you' # 1 = Player
 withdraw-only: '' # '-> §7Item §caddition denied§7, only withdrawals are allowed'
-delete: '§f-> §7Kit §2deleted§7: §f{1} ' # 1 = Kit
+delete: '§f-> §7Kit §2deleted§7: §f{1}' # 1 = Kit
+empty: '§f-> §7Delivery §2cleared§7 for §f{1}' # 1 = Player
 requires-player: '§f-> §cOnly in-game players§7 can use the §b/{1} §7command' # 1 = Command Label
 requires-argument: '§f-> §cMissing §7required argument: §b§o{1}' # 1 = Argument Name
 unknown-argument: '§f-> §eUnknown§f value for §b§o{1}§7: §f{2}' # 1 = Argument Name, 2 = Argument Value
