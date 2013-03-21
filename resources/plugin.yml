@@ -1,65 +1,65 @@
-name: Deliver
+name: Inventory
 version: @VERSION@
 description: Provide items to players
 author: EdGruberman (ed@rjump.com)
-website: http://github.com/EdGruberman/Deliver
-main: edgruberman.bukkit.deliver.Main
+website: http://github.com/EdGruberman/Inventory
+main: edgruberman.bukkit.inventory.Main
 commands:
-  'deliver:edit':
-    aliases: [deliver, deliver.edit]
-    description: Modify player specific box inventory
-    permission: deliver.edit
+  'inventory:edit':
+    aliases: [delivery.edit]
+    description: Add or remove items in delivery
+    permission: inventory.edit
     usage: '§f-> §7Usage: §b/<command> §o<Player>§3[ §b§o<Reason>§3]'
-  'deliver:define':
+  'inventory:define':
     aliases: [kit.define]
     description: Create, edit, or delete a kit
-    permission: deliver.define
+    permission: inventory.define
     usage: '§f-> §7Usage: §b/<command> §o<Kit>'
-  'deliver:kit':
+  'inventory:kit':
     aliases: [kit]
     description: Issue or recall a kit
-    permission: deliver.kit
+    permission: inventory.kit
     usage: '§f-> §7Usage: §b/<command> §o<Kit>§3[ §b§o<Player>§3[ §b§o<Quantity>§3[ §b§o<Reason>§3]]]'
-  'deliver:delete':
+  'inventory:delete':
     aliases: [kit.delete]
     description: Delete a kit from command line (no GUI)
-    permission: deliver.delete
+    permission: inventory.delete
     usage: '§f-> §7Usage: §b/<command> §o<Kit>'
-  'deliver:reload':
-    description: Reload Deliver plugin
-    permission: deliver.reload
+  'inventory:reload':
+    description: Reload Inventory plugin
+    permission: inventory.reload
     usage: '§f-> §7Usage: §b/<command>'
 permissions:
-  deliver.admin:
-    description: Can use all commands
+  inventory.admin:
+    description: Can use all features
     default: op
     children:
-      deliver.user: true
-      deliver.define: true
-      deliver.kit: true
-      deliver.delete: true
-      deliver.edit: true
-      deliver.reload: true
-  deliver.user:
-    description: Can use basic commands
+      inventory.user: true
+      inventory.edit: true
+      inventory.define: true
+      inventory.kit: true
+      inventory.delete: true
+      inventory.reload: true
+  inventory.user:
+    description: Can use basic features
     default: true
     children:
-      deliver.open: true
-  deliver.open:
-    description: Can open pallet for self
+      inventory.delivery: true
+  inventory.delivery:
+    description: Can open delivery for self
     default: false
-  deliver.define:
-    description: Can use define command
-    default: false
-  deliver.kit:
-    description: Can use kit command
-    default: false
-  deliver.delete:
-    description: Can use delete command
-    default: false
-  deliver.edit:
+  inventory.edit:
     description: Can use edit command
     default: false
-  deliver.reload:
+  inventory.define:
+    description: Can use define command
+    default: false
+  inventory.kit:
+    description: Can use kit command
+    default: false
+  inventory.delete:
+    description: Can use delete command
+    default: false
+  inventory.reload:
     description: Can use reload command
     default: false
