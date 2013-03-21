@@ -13,8 +13,8 @@ public class ItemStackUtil {
         ItemStackUtil.format = format;
     }
 
-    public static JoinList summarize(final Collection<ItemStack> stacks) {
-        final JoinList joined = new JoinList(ItemStackUtil.format);
+    public static JoinList<StringBuilder> summarize(final Collection<ItemStack> stacks) {
+        final JoinList<StringBuilder> joined = new JoinList<StringBuilder>(ItemStackUtil.format);
         for (final ItemStack stack : stacks) joined.add(ItemStackUtil.summarize(stack));
         return joined;
     }
