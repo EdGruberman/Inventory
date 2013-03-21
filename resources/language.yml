@@ -1,11 +1,9 @@
 format-code: '§'
 box-balance: 'Box {0} of {1} ({2})' # 0 = Index, 1 = Total, 2 = Owner
 box-kit: '{0}/{1} (Kit: {2})' # 0 = Index, 1 = Total, 2 = Kit
-edit-reason-format: '{0}: {1}' # 0 = Editor, 1 = Reason
-edit-default-reason: 'Edited'
-withdraw-reason: 'Withdrawal'
-kit-reason-format: '{2} Kit{3,choice,0# x{3}|1#|2# x{3}} ({0}: {1})' # 0 = Sender, 1 = Reason, 2 = Kit, 3 = Quantity
-kit-default-reason: 'Command'
+reason-default: '(No reason)'
+reason-withdraw: 'Withdrawal'
+reason-kit: '{2,choice,0#Recall|1#Issue} {1} Kit{2,choice,-2# x{2}|-1#|2# x{2}}: {0}' # 0 = Reason, 1 = Kit, 2 = Quantity
 kit: '§f-> §7Kit §f{1}{3,choice,-1# §7x§f-{3}|0#|2# §7x§f{3}} {3,choice,-1#§2recalled §7from|0#§2issued §7to} {2}§8: "§f§o{4}§8"' # 1 = Kit, 2 = Player, 3 = Quantity, 4 = Reason, 5 = hasFailures(0|1)
 define-wait: '§f-> Kit {1} §ccan not be modified§7 as {2} is currently defining it' # 1 = Kit, 2 = Definer
 failures: '§f-> §eFailed to recall§7 {1} item types from {2}: {3}' # 1 = Types Count, 2 = Target, 3 = Failures Summary

@@ -75,12 +75,12 @@ public final class Kit extends TokenizedExecutor {
             changes.addAll(multiplied);
         }
 
-        final String provided = ( args.size() >= 4 ? TokenizedExecutor.join(args.subList(3, args.size())) : Main.courier.format("kit-default-reason") );
-        final String reason = Main.courier.format("kit-reason-format", sender.getName(), provided, kit.getName(), quantity);
+        final String provided = ( args.size() >= 4 ? TokenizedExecutor.join(args.subList(3, args.size())) : Main.courier.format("reason-default") );
+        final String source = sender.getName();
+        final String reason = Main.courier.format("reason-kit", provided, kit.getName(), quantity);
+        final Transaction transaction = new Transaction(new Date(), source, reason, changes);
 
         final Ledger target = this.ledgers.create(player);
-        final Transaction transaction = new Transaction(new Date(), reason, changes);
-
         final Collection<ItemStack> failures = target.modifyBalance(transaction.getChanges());
         for (final ItemStack stack : failures) stack.setAmount(stack.getAmount() * -1);
         transaction.getFailures().addAll(failures);

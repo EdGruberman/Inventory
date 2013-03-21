@@ -19,16 +19,18 @@ public class Transaction implements ConfigurationSerializable {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
 
     private final Date occurred;
+    private final String source;
     private final String reason;
     private final List<ItemStack> changes;
     private final List<ItemStack> failures;
 
-    public Transaction(final Date occurred, final String reason, final List<ItemStack> changes) {
-        this(occurred, reason, changes, new ArrayList<ItemStack>());
+    public Transaction(final Date occurred, final String source, final String reason, final List<ItemStack> changes) {
+        this(occurred, source, reason, changes, new ArrayList<ItemStack>());
     }
 
-    public Transaction(final Date occurred, final String reason, final List<ItemStack> changes, final List<ItemStack> failures) {
+    public Transaction(final Date occurred, final String source, final String reason, final List<ItemStack> changes, final List<ItemStack> failures) {
         this.occurred = occurred;
+        this.source = source;
         this.reason = reason;
         this.changes = changes;
         this.failures = failures;
@@ -36,6 +38,10 @@ public class Transaction implements ConfigurationSerializable {
 
     public Date getOccurred() {
         return this.occurred;
+    }
+
+    public String getSource() {
+        return this.source;
     }
 
     public String getReason() {
@@ -62,7 +68,8 @@ public class Transaction implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         final Map<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("occurred", Transaction.DATE_FORMAT.format(this.occurred));
-        result.put("reason", this.getReason());
+        result.put("source", this.source);
+        result.put("reason", this.reason);
         result.put("changes", this.changes);
         if (!this.failures.isEmpty()) result.put("failures", this.failures);
         return result;
@@ -76,6 +83,8 @@ public class Transaction implements ConfigurationSerializable {
             throw new IllegalArgumentException(e);
         }
 
+        final String source = (String) serialized.get("source");
+
         final String reason = (String) serialized.get("reason");
 
         @SuppressWarnings("unchecked")
@@ -84,7 +93,7 @@ public class Transaction implements ConfigurationSerializable {
         @SuppressWarnings("unchecked")
         final List<ItemStack> failures = ( serialized.containsKey("failures") ? (List<ItemStack>) serialized.get("failures") : new ArrayList<ItemStack>() );
 
-        return new Transaction(occurred, reason, changes, failures);
+        return new Transaction(occurred, source, reason, changes, failures);
     }
 
 }

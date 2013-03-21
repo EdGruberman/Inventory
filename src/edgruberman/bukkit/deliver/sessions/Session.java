@@ -96,7 +96,7 @@ public abstract class Session implements Listener {
     protected abstract void onEnd(Transaction transaction);
 
     public Transaction toTransaction() {
-        return new Transaction(new Date(), this.reason, this.difference(this.pallet.joined()));
+        return new Transaction(new Date(), this.customer.getName(), this.reason, this.difference(this.pallet.joined()));
     }
 
     /** @param stacks set of similar items, single instance of items excluding amount */

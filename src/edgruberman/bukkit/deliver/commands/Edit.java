@@ -37,9 +37,7 @@ public final class Edit extends TokenizedExecutor {
             return false;
         }
 
-        final String provided = ( args.size() >= 2 ? TokenizedExecutor.join(args.subList(1, args.size())) : Main.courier.format("edit-default-reason") );
-        final String reason = Main.courier.format("edit-reason-format", sender.getName(), provided);
-
+        final String reason = ( args.size() >= 2 ? TokenizedExecutor.join(args.subList(1, args.size())) : Main.courier.format("reason-default") );
         final String player = Bukkit.getOfflinePlayer(args.get(0)).getName();
         final Ledger active = this.ledgers.create(player);
         Bukkit.getPluginManager().registerEvents(new BalanceEdit((Player) sender, this.ledgers, active, reason), this.plugin);
