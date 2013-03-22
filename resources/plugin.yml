@@ -14,12 +14,12 @@ commands:
     aliases: [delivery, delivery.edit]
     description: Add or remove items in delivery
     permission: inventory.edit
-    usage: '§f-> §7Usage: §b/<command> §o<Player>§3[ §b§o<Reason>§3]'
+    usage: '§f-> §7Usage: §b/<command> §o<Player>'
   'inventory:empty':
     aliases: [delivery.empty]
     description: Remove all items from delivery
     permission: inventory.empty
-    usage: '§f-> §7Usage: §b/<command> §o<Player>§3[ §b§o<Reason>§3]'
+    usage: '§f-> §7Usage: §b/<command> §o<Player>'
   'inventory:define':
     aliases: [kit.define]
     description: Create, edit, or delete a kit
@@ -29,7 +29,7 @@ commands:
     aliases: [kit]
     description: Issue or recall a kit
     permission: inventory.kit
-    usage: '§f-> §7Usage: §b/<command> §o<Kit>§3[ §b§o<Player>§3[ §b§o<Quantity>§3[ §b§o<Reason>§3]]]'
+    usage: '§f-> §7Usage: §b/<command> §o<Kit>§3[ §b§o<Player>§3[ §b§o<Quantity>§3]]'
   'inventory:delete':
     aliases: [kit.delete]
     description: Delete a kit

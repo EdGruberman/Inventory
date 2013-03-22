@@ -37,13 +37,6 @@ public final class Define extends TokenizedExecutor {
         }
 
         final edgruberman.bukkit.inventory.Kit kit = this.kits.create(args.get(0));
-        final Player definer = kit.getDefiner();
-        if (definer != null) {
-            Main.courier.send(sender, "define-wait", kit.getName(), kit.getDefiner().getDisplayName());
-            return true;
-        }
-
-        kit.setDefiner((Player) sender);
         Bukkit.getPluginManager().registerEvents(new KitDefine((Player) sender, this.kits, kit), this.plugin);
         return true;
     }

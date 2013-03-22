@@ -19,7 +19,7 @@ import edgruberman.bukkit.inventory.craftbukkit.CraftBukkit;
 import edgruberman.bukkit.inventory.messaging.ConfigurationCourier;
 import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 import edgruberman.bukkit.inventory.repositories.KitRepository;
-import edgruberman.bukkit.inventory.repositories.SplitYamlRepository;
+import edgruberman.bukkit.inventory.repositories.YamlRepository;
 import edgruberman.bukkit.inventory.util.CustomPlugin;
 import edgruberman.bukkit.inventory.util.ItemStackUtil;
 
@@ -33,7 +33,6 @@ public final class Main extends CustomPlugin {
         ConfigurationSerialization.registerClass(Delivery.class);
         ConfigurationSerialization.registerClass(Pallet.class);
         ConfigurationSerialization.registerClass(Box.class);
-        ConfigurationSerialization.registerClass(Transaction.class);
     }
 
     private KitRepository kits = null;
@@ -61,11 +60,11 @@ public final class Main extends CustomPlugin {
         ItemStackUtil.setFormat(Main.courier.getSection("items-summary"));
 
         final File kitFolder = new File(this.getDataFolder(), this.getConfig().getString("kit-folder"));
-        final SplitYamlRepository<Kit> yamlKits = new SplitYamlRepository<Kit>(this, kitFolder, 30000);
+        final YamlRepository<Kit> yamlKits = new YamlRepository<Kit>(this, kitFolder, 30000);
         this.kits = ( yamlKits != null ? new KitRepository(yamlKits) : null);
 
         final File deliveryFolder = new File(this.getDataFolder(), this.getConfig().getString("delivery-folder"));
-        final SplitYamlRepository<Delivery> yamlDeliveries = new SplitYamlRepository<Delivery>(this, deliveryFolder, 30000);
+        final YamlRepository<Delivery> yamlDeliveries = new YamlRepository<Delivery>(this, deliveryFolder, 30000);
         this.deliveries = ( yamlDeliveries != null ? new DeliveryRepository(yamlDeliveries) : null);
 
         if (this.kits == null || this.deliveries == null) {
@@ -74,8 +73,7 @@ public final class Main extends CustomPlugin {
             return;
         }
 
-        final boolean record = this.getConfig().getBoolean("record-withdrawals");
-        final Withdraw withdraw = new Withdraw(this.deliveries, this, record);
+        final Withdraw withdraw = new Withdraw(this.deliveries, this);
         Bukkit.getPluginManager().registerEvents(withdraw, this);
 
         this.getCommand("inventory:withdraw").setExecutor(withdraw);

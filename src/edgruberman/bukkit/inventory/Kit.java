@@ -3,10 +3,8 @@ package edgruberman.bukkit.inventory;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.entity.Player;
 
 /** collection of ItemStacks */
 @SerializableAs("Kit")
@@ -14,8 +12,6 @@ public class Kit implements ConfigurationSerializable {
 
     private final String name;
     private final Pallet contents;
-
-    private String definer = null;
 
     public Kit(final String name) {
         this.name = name;
@@ -38,24 +34,6 @@ public class Kit implements ConfigurationSerializable {
 
     public void relabel() {
         this.contents.label("box-kit", this.name);
-    }
-
-    public boolean beingDefined() {
-        return this.getDefiner() != null;
-    }
-
-    public Player getDefiner() {
-        if (this.definer == null) return null;
-        return Bukkit.getPlayerExact(this.definer);
-    }
-
-    public void setDefiner(final Player definer) {
-        if (definer == null) {
-            this.definer = null;
-            return;
-        }
-
-        this.definer = definer.getName();
     }
 
     @Override

@@ -114,6 +114,8 @@ public final class Pallet implements ConfigurationSerializable, Cloneable {
         final ItemStack clone = stack.clone();
         clone.setAmount(Math.abs(stack.getAmount()));
 
+        // TODO check for exact stack matches to remove first
+
         Map<Integer, ItemStack> remaining = Collections.emptyMap();
         for (final Box box : this.boxes) {
             remaining = box.getInventory().removeItem(clone);

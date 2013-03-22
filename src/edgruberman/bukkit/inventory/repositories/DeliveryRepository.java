@@ -9,10 +9,12 @@ public class DeliveryRepository extends CachedRepository<String, Delivery>{
     }
 
     public Delivery create(final String player) {
-        final Delivery result = this.load(player);
+        Delivery result = this.load(player);
         if (result != null) return result;
 
-        return new Delivery(player);
+        result = new Delivery(player);
+        this.cache.put(player.toLowerCase(), result);
+        return result;
     }
 
     @Override

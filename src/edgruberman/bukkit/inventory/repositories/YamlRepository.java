@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin;
 import edgruberman.bukkit.inventory.util.BufferedYamlConfiguration;
 
 /** individual buffered YAML files for each key */
-public class SplitYamlRepository<V extends ConfigurationSerializable> implements Repository<String, V> {
+public class YamlRepository<V extends ConfigurationSerializable> implements Repository<String, V> {
 
     protected final Plugin plugin;
     protected final File folder;
@@ -18,7 +18,7 @@ public class SplitYamlRepository<V extends ConfigurationSerializable> implements
 
     protected final Map<String, BufferedYamlConfiguration> loaded = new HashMap<String, BufferedYamlConfiguration>();
 
-    public SplitYamlRepository(final Plugin plugin, final File folder, final int rate) {
+    public YamlRepository(final Plugin plugin, final File folder, final int rate) {
         this.plugin = plugin;
         this.folder = folder;
         this.rate = rate;
@@ -28,7 +28,10 @@ public class SplitYamlRepository<V extends ConfigurationSerializable> implements
     public V load(final String key) {
         BufferedYamlConfiguration buffer = this.loaded.get(key);
         if (buffer == null) {
-            buffer = new BufferedYamlConfiguration(this.plugin, new File(this.folder, key + ".yml"), this.rate);
+            final File file = new File(this.folder, key + ".yml");
+            if (!file.exists()) return null;
+
+            buffer = new BufferedYamlConfiguration(this.plugin, file, this.rate);
             try {
                 buffer.load();
             } catch (final Exception e) {
@@ -60,7 +63,7 @@ public class SplitYamlRepository<V extends ConfigurationSerializable> implements
 
     @Override
     public void delete(final String key) {
-        final BufferedYamlConfiguration buffer = this.loaded.get(key);
+        final BufferedYamlConfiguration buffer = this.loaded.remove(key);
         if (buffer != null) {
             if (buffer.isQueued()) buffer.cancelSave();
             buffer.getFile().delete();

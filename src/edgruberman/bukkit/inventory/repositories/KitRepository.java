@@ -9,10 +9,12 @@ public class KitRepository extends CachedRepository<String, Kit>{
     }
 
     public Kit create(final String name) {
-        final Kit result = this.load(name);
+        Kit result = this.load(name);
         if (result != null) return result;
 
-        return new Kit(name);
+        result = new Kit(name);
+        this.cache.put(name.toLowerCase(), result);
+        return result;
     }
 
     @Override

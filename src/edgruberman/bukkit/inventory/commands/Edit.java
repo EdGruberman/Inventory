@@ -24,7 +24,7 @@ public final class Edit extends TokenizedExecutor {
         this.plugin = plugin;
     }
 
-    // usage: /<command> <Player>[ <Reason>]
+    // usage: /<command> <Player>
     @Override
     protected boolean onCommand(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (!(sender instanceof Player)) {
@@ -37,10 +37,9 @@ public final class Edit extends TokenizedExecutor {
             return false;
         }
 
-        final String reason = ( args.size() >= 2 ? TokenizedExecutor.join(args.subList(1, args.size())) : Main.courier.format("reason-default") );
         final String player = Bukkit.getOfflinePlayer(args.get(0)).getName();
         final Delivery active = this.deliveries.create(player);
-        Bukkit.getPluginManager().registerEvents(new DeliveryEdit((Player) sender, this.deliveries, active, reason), this.plugin);
+        Bukkit.getPluginManager().registerEvents(new DeliveryEdit((Player) sender, this.deliveries, active), this.plugin);
         return true;
     }
 

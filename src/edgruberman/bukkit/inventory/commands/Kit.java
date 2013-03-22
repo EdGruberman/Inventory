@@ -2,7 +2,6 @@ package edgruberman.bukkit.inventory.commands;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -13,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 
 import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.Transaction;
 import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 import edgruberman.bukkit.inventory.repositories.KitRepository;
 import edgruberman.bukkit.inventory.util.ItemStackUtil;
@@ -29,7 +27,7 @@ public final class Kit extends TokenizedExecutor {
         this.deliveries = deliveries;
     }
 
-    // usage: /<command> <Kit>[ <Player>[ <Quantity>[ <Reason>]]]
+    // usage: /<command> <Kit>[ <Player>[ <Quantity>]]
     @Override
     protected boolean onCommand(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (args.size() == 0) {
@@ -75,20 +73,13 @@ public final class Kit extends TokenizedExecutor {
             changes.addAll(multiplied);
         }
 
-        final String provided = ( args.size() >= 4 ? TokenizedExecutor.join(args.subList(3, args.size())) : Main.courier.format("reason-default") );
-        final String reason = Main.courier.format("reason-kit", provided, kit.getName(), quantity);
-        final Transaction transaction = new Transaction(new Date(), sender, reason, changes);
-
         final Delivery target = this.deliveries.create(player);
-        final Collection<ItemStack> failures = target.modifyBalance(transaction.getChanges());
+        final Collection<ItemStack> failures = target.modifyBalance(changes);
         for (final ItemStack stack : failures) stack.setAmount(stack.getAmount() * -1);
-        transaction.getFailures().addAll(failures);
-        target.record(transaction);
         this.deliveries.save(target);
 
-        Main.courier.send(sender, "kit", kit.getName(), target.getPlayer(), quantity, reason, transaction.getFailures().isEmpty()?0:1 );
-        if (!transaction.getFailures().isEmpty()) Main.courier.send(sender, "failures", transaction.getFailures().size(), target.getPlayer(), ItemStackUtil.summarize(transaction.getFailures()));
-
+        Main.courier.send(sender, "kit", kit.getName(), target.getPlayer(), quantity, failures.size());
+        if (!failures.isEmpty()) Main.courier.send(sender, "failures", failures.size(), target.getPlayer(), ItemStackUtil.summarize(failures));
         return true;
     }
 

@@ -1,5 +1,4 @@
 log-level: INFO
-record-withdrawals: false
 kit-folder: kits
 delivery-folder: deliveries
 version: @VERSION@

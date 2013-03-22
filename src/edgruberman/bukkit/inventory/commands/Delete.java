@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.repositories.KitRepository;
@@ -29,12 +28,6 @@ public final class Delete extends TokenizedExecutor {
         final edgruberman.bukkit.inventory.Kit kit = this.kits.load(args.get(0));
         if (kit == null) {
             Main.courier.send(sender, "unknown-argument", "<Kit>", args.get(0));
-            return true;
-        }
-
-        final Player definer = kit.getDefiner();
-        if (definer != null) {
-            Main.courier.send(sender, "define-wait", kit.getName(), kit.getDefiner().getDisplayName());
             return true;
         }
 

@@ -1,10 +1,7 @@
 package edgruberman.bukkit.inventory;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -18,17 +15,15 @@ public final class Delivery implements ConfigurationSerializable {
 
     private final String player;
     private final Pallet balance;
-    private final List<Transaction> log;
 
     public Delivery(final String player) {
-        this(player, new Pallet(), new ArrayList<Transaction>());
+        this(player, new Pallet());
         this.relabel();
     }
 
-    private Delivery(final String player, final Pallet balance, final List<Transaction> log) {
+    private Delivery(final String player, final Pallet balance) {
         this.player = player;
         this.balance = balance;
-        this.log = log;
     }
 
     public String getPlayer() {
@@ -37,10 +32,6 @@ public final class Delivery implements ConfigurationSerializable {
 
     public Pallet getBalance() {
         return this.balance;
-    }
-
-    public List<Transaction> getLog() {
-        return Collections.unmodifiableList(this.log);
     }
 
     public void relabel() {
@@ -54,33 +45,19 @@ public final class Delivery implements ConfigurationSerializable {
         return failures;
     }
 
-    public void record(final Transaction transaction) {
-        this.log.add(transaction);
-    }
-
-    public boolean empty() {
-        return (this.log.size() == 0) && this.balance.isEmpty();
-    }
-
     @Override
     public Map<String, Object> serialize() {
         final Map<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("player", this.player);
         result.put("balance", this.balance);
-        result.put("log", this.log);
         return result;
     }
 
     public static Delivery deserialize(final Map<String, Object> serialized) {
         // TODO move check for updated case information for player name to somewhere more appropriate (whenever open pallet?) relabel is necessary to
         final String player = Bukkit.getOfflinePlayer((String) serialized.get("player")).getName();
-
         final Pallet balance = (Pallet) serialized.get("balance");
-
-        @SuppressWarnings("unchecked")
-        final List<Transaction> log = (List<Transaction>) serialized.get("log");
-
-        return new Delivery(player, balance, log);
+        return new Delivery(player, balance);
     }
 
 }

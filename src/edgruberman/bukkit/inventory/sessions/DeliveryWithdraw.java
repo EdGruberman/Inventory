@@ -1,26 +1,30 @@
 package edgruberman.bukkit.inventory.sessions;
 
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import edgruberman.bukkit.inventory.Box;
 import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.Transaction;
 import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 
-/** direct interaction with delivery balance that prevents any additions */
-public class DeliveryWithdraw extends Session {
+/** prevents any additions */
+public class DeliveryWithdraw extends DeliveryEdit {
 
-    private final DeliveryRepository deliveries;
-    private final Delivery active;
-    private final boolean record;
+    public DeliveryWithdraw(final Player customer, final DeliveryRepository deliveries, final Delivery active) {
+        super(customer, deliveries, active);
+    }
 
-    public DeliveryWithdraw(final Player customer, final DeliveryRepository deliveries, final Delivery active, final String reason, final boolean record) {
-        super(customer, active.getBalance(), reason);
-        this.deliveries = deliveries;
-        this.active = active;
-        this.record = record;
+    /** do not add a box if full */
+    @Override
+    public void next() {
+        final List<Box> boxes = this.pallet.getBoxes();
+        final int current = this.index++;
+        if (this.index > boxes.size() - 1) this.index = 0;
+        if (current != this.index) boxes.get(this.index).open(this.customer);
     }
 
     @Override
@@ -39,19 +43,6 @@ public class DeliveryWithdraw extends Session {
             ((Player) click.getWhoClicked()).updateInventory();
             Main.courier.send((Player) click.getWhoClicked(), "withdraw-only");
         }
-    }
-
-    @Override
-    protected void onEnd(final Transaction transaction) {
-        if (this.pallet.trim()) this.pallet.label("box-delivery", this.active.getPlayer());
-
-        if (transaction.getChanges().isEmpty()) {
-            if (this.active.empty()) this.deliveries.delete(this.active);
-            return;
-        }
-
-        if (this.record) this.active.record(transaction);
-        this.deliveries.save(this.active);
     }
 
 }

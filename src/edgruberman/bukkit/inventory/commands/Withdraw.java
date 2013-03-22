@@ -23,12 +23,10 @@ public final class Withdraw extends TokenizedExecutor implements Listener {
 
     private final DeliveryRepository deliveries;
     private final Plugin plugin;
-    private final boolean record;
 
-    public Withdraw(final DeliveryRepository deliveries, final Plugin plugin, final boolean record) {
+    public Withdraw(final DeliveryRepository deliveries, final Plugin plugin) {
         this.deliveries = deliveries;
         this.plugin = plugin;
-        this.record = record;
     }
 
     // usage: /<command>
@@ -45,8 +43,7 @@ public final class Withdraw extends TokenizedExecutor implements Listener {
             return true;
         }
 
-        final String reason = Main.courier.format("reason-withdraw");
-        final DeliveryWithdraw withdraw = new DeliveryWithdraw((Player) sender, this.deliveries, requested, reason, this.record);
+        final DeliveryWithdraw withdraw = new DeliveryWithdraw((Player) sender, this.deliveries, requested);
         Bukkit.getPluginManager().registerEvents(withdraw, this.plugin);
         return true;
     }
