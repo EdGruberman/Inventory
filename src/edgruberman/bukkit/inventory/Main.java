@@ -10,6 +10,7 @@ import org.bukkit.event.HandlerList;
 import edgruberman.bukkit.inventory.commands.Define;
 import edgruberman.bukkit.inventory.commands.Delete;
 import edgruberman.bukkit.inventory.commands.Edit;
+import edgruberman.bukkit.inventory.commands.Empty;
 import edgruberman.bukkit.inventory.commands.Reload;
 import edgruberman.bukkit.inventory.craftbukkit.CraftBukkit;
 import edgruberman.bukkit.inventory.messaging.ConfigurationCourier;
@@ -65,6 +66,7 @@ public final class Main extends CustomPlugin {
         Bukkit.getPluginManager().registerEvents(this.clerk, this);
 
         this.getCommand("inventory:edit").setExecutor(new Edit(this.deliveries, this));
+        this.getCommand("inventory:empty").setExecutor(new Empty(this.deliveries));
         this.getCommand("inventory:define").setExecutor(new Define(this.kits, this));
         this.getCommand("inventory:kit").setExecutor(new edgruberman.bukkit.inventory.commands.Kit(this.kits, this.deliveries));
         this.getCommand("inventory:delete").setExecutor(new Delete(this.kits));
