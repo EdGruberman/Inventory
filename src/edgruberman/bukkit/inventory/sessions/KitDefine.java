@@ -18,7 +18,7 @@ public class KitDefine extends Session {
     }
 
     @Override
-    public void onExpand() {
+    protected void onExpand() {
         this.pallet.label("box-kit", this.active.getName());
     }
 

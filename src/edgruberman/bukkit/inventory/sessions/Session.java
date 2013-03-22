@@ -58,7 +58,7 @@ public class Session extends Observable implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    protected void click(final InventoryClickEvent click) {
+    public void click(final InventoryClickEvent click) {
         if (!this.customer.equals(click.getWhoClicked())) return; // ignore when not this customer
         this.onClick(click);
         if (click.isCancelled()) return;
@@ -77,13 +77,13 @@ public class Session extends Observable implements Listener {
     protected void onClick(final InventoryClickEvent click) {};
 
     @EventHandler
-    protected void close(final InventoryCloseEvent close) {
+    public void close(final InventoryCloseEvent close) {
         if (!this.customer.equals(close.getPlayer())) return; // ignore when not this customer
         this.end();
     }
 
     @EventHandler
-    protected void quit(final PlayerQuitEvent quit) {
+    public void quit(final PlayerQuitEvent quit) {
         if (!this.customer.equals(quit.getPlayer())) return; // ignore when not this customer
         this.end();
     }

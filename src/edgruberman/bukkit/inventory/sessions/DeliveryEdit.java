@@ -17,7 +17,7 @@ public class DeliveryEdit extends Session {
     }
 
     @Override
-    public void onExpand() {
+    protected void onExpand() {
         this.pallet.label("box-delivery", this.active.getPlayer());
     }
 
