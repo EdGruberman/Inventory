@@ -1,6 +1,6 @@
 format-code: '§'
-box-delivery: 'Box {0} of {1} ({2})' # 0 = Index, 1 = Total, 2 = Owner
-box-kit: '{0}/{1} (Kit: {2})' # 0 = Index, 1 = Total, 2 = Kit
+box-delivery: 'Delivery {1,choice,1#|2#{0}/{1} }({2})' # 0 = Index, 1 = Total, 2 = Owner
+box-kit: '{2} Kit{1,choice,1#|2# ({0} of {1})}' # 0 = Index, 1 = Total, 2 = Kit
 reason-default: '(No reason)'
 reason-withdraw: 'Withdrawal'
 reason-kit: '{2,choice,0#Recall|1#Issue} {1} Kit{2,choice,-2# x{2}|-1#|2# x{2}}: {0}' # 0 = Reason, 1 = Kit, 2 = Quantity
@@ -10,7 +10,7 @@ failures: '§f-> §eFailed to recall§7 {1} item types from {2}: {3}' # 1 = Type
 items-summary:
   item: '§7{0}'
   delimiter: '§8, '
-empty-balance: '§f-> §eNo items §7are currently available for you' # 1 = Player
+withdraw-empty: '§f-> §eNo items §7are currently available for you' # 1 = Player
 withdraw-only: '' # '-> §7Item §caddition denied§7, only withdrawals are allowed'
 delete: '§f-> §7Kit §2deleted§7: §f{1}' # 1 = Kit
 empty: '§f-> §7Delivery §2cleared§7 for §f{1}' # 1 = Player

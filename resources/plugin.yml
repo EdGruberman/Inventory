@@ -11,7 +11,7 @@ commands:
     permission: inventory.withdraw
     usage: '§f-> §7Usage: §b/<command>'
   'inventory:edit':
-    aliases: [delivery.edit]
+    aliases: [delivery, delivery.edit]
     description: Add or remove items in delivery
     permission: inventory.edit
     usage: '§f-> §7Usage: §b/<command> §o<Player>§3[ §b§o<Reason>§3]'

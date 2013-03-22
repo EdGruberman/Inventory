@@ -41,7 +41,7 @@ public final class Withdraw extends TokenizedExecutor implements Listener {
 
         final Delivery requested = this.deliveries.load(sender.getName());
         if (requested == null || requested.getBalance().isEmpty()) {
-            Main.courier.send(sender, "empty-balance", sender.getName());
+            Main.courier.send(sender, "withdraw-empty", sender.getName());
             return true;
         }
 
