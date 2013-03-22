@@ -2,7 +2,6 @@ package edgruberman.bukkit.inventory.commands;
 
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -11,7 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.Plugin;
 
 import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Main;
@@ -22,9 +20,9 @@ import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 public final class Withdraw extends TokenizedExecutor implements Listener {
 
     private final DeliveryRepository deliveries;
-    private final Plugin plugin;
+    private final Main plugin;
 
-    public Withdraw(final DeliveryRepository deliveries, final Plugin plugin) {
+    public Withdraw(final DeliveryRepository deliveries, final Main plugin) {
         this.deliveries = deliveries;
         this.plugin = plugin;
     }
@@ -43,8 +41,7 @@ public final class Withdraw extends TokenizedExecutor implements Listener {
             return true;
         }
 
-        final DeliveryWithdraw withdraw = new DeliveryWithdraw((Player) sender, this.deliveries, requested);
-        Bukkit.getPluginManager().registerEvents(withdraw, this.plugin);
+        this.plugin.register(new DeliveryWithdraw((Player) sender, this.deliveries, requested));
         return true;
     }
 

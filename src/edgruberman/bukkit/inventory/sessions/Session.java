@@ -1,6 +1,7 @@
 package edgruberman.bukkit.inventory.sessions;
 
 import java.util.List;
+import java.util.Observable;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,7 +16,7 @@ import edgruberman.bukkit.inventory.Box;
 import edgruberman.bukkit.inventory.Pallet;
 
 /** pallet inventory interaction */
-public class Session implements Listener {
+public class Session extends Observable implements Listener {
 
     protected final Player customer;
     protected final Pallet pallet;
@@ -57,7 +58,7 @@ public class Session implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void click(final InventoryClickEvent click) {
+    protected void click(final InventoryClickEvent click) {
         if (!this.customer.equals(click.getWhoClicked())) return; // ignore when not this customer
         this.onClick(click);
         if (click.isCancelled()) return;
@@ -76,13 +77,13 @@ public class Session implements Listener {
     protected void onClick(final InventoryClickEvent click) {};
 
     @EventHandler
-    public void close(final InventoryCloseEvent close) {
+    protected void close(final InventoryCloseEvent close) {
         if (!this.customer.equals(close.getPlayer())) return; // ignore when not this customer
         this.end();
     }
 
     @EventHandler
-    public void quit(final PlayerQuitEvent quit) {
+    protected void quit(final PlayerQuitEvent quit) {
         if (!this.customer.equals(quit.getPlayer())) return; // ignore when not this customer
         this.end();
     }
@@ -93,5 +94,10 @@ public class Session implements Listener {
     }
 
     protected void onEnd() {};
+
+    public void destroy() {
+        this.end();
+        this.customer.getOpenInventory().close();
+    }
 
 }

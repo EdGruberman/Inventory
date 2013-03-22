@@ -1,6 +1,10 @@
 package edgruberman.bukkit.inventory;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -20,10 +24,11 @@ import edgruberman.bukkit.inventory.messaging.ConfigurationCourier;
 import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 import edgruberman.bukkit.inventory.repositories.KitRepository;
 import edgruberman.bukkit.inventory.repositories.YamlRepository;
+import edgruberman.bukkit.inventory.sessions.Session;
 import edgruberman.bukkit.inventory.util.CustomPlugin;
 import edgruberman.bukkit.inventory.util.ItemStackUtil;
 
-public final class Main extends CustomPlugin {
+public final class Main extends CustomPlugin implements Observer {
 
     public static ConfigurationCourier courier;
     public static CraftBukkit craftBukkit = null;
@@ -37,11 +42,12 @@ public final class Main extends CustomPlugin {
 
     private KitRepository kits = null;
     private DeliveryRepository deliveries = null;
+    private final List<Session> sessions = new ArrayList<Session>();
 
     @Override
     public void onLoad() {
-        this.putConfigMinimum("config.yml", "3.0.0");
-        this.putConfigMinimum("language.yml", "4.0.0a1");
+        this.putConfigMinimum("config.yml", "4.0.0a13");
+        this.putConfigMinimum("language.yml", "4.0.0a13");
     }
 
     @Override
@@ -89,11 +95,30 @@ public final class Main extends CustomPlugin {
 
     @Override
     public void onDisable() {
+        this.clearSessions();
         if (this.kits != null) this.kits.destroy();
         if (this.deliveries != null) this.deliveries.destroy();
         Main.courier = null;
         Main.craftBukkit = null;
         HandlerList.unregisterAll(this);
+    }
+
+    // ---- session manager ----
+
+    public void register(final Session session) {
+        this.sessions.add(session);
+        session.addObserver(this);
+        Bukkit.getPluginManager().registerEvents(session, this);
+    }
+
+    @Override
+    public void update(final Observable o, final Object arg) {
+        this.sessions.remove(o);
+    }
+
+    public void clearSessions() {
+        for (final Session session : this.sessions) session.destroy();
+        this.sessions.clear();
     }
 
 }

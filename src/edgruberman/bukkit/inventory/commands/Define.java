@@ -2,11 +2,9 @@ package edgruberman.bukkit.inventory.commands;
 
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.repositories.KitRepository;
@@ -16,9 +14,9 @@ import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 public final class Define extends TokenizedExecutor {
 
     private final KitRepository kits;
-    private final Plugin plugin;
+    private final Main plugin;
 
-    public Define(final KitRepository kits, final Plugin plugin) {
+    public Define(final KitRepository kits, final Main plugin) {
         this.kits = kits;
         this.plugin = plugin;
     }
@@ -37,7 +35,7 @@ public final class Define extends TokenizedExecutor {
         }
 
         final edgruberman.bukkit.inventory.Kit kit = this.kits.create(args.get(0));
-        Bukkit.getPluginManager().registerEvents(new KitDefine((Player) sender, this.kits, kit), this.plugin);
+        this.plugin.register(new KitDefine((Player) sender, this.kits, kit));
         return true;
     }
 
