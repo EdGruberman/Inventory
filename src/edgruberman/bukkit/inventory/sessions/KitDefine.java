@@ -3,7 +3,6 @@ package edgruberman.bukkit.inventory.sessions;
 import org.bukkit.entity.Player;
 
 import edgruberman.bukkit.inventory.Kit;
-import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.Transaction;
 import edgruberman.bukkit.inventory.repositories.KitRepository;
 
@@ -24,7 +23,7 @@ public class KitDefine extends Session {
         if (this.index == this.pallet.getBoxes().size() - 1
                 && this.pallet.getBoxes().get(this.index).isFull()) {
             this.pallet.addBox();
-            this.pallet.label(Main.courier.format("box-kit", "{0}", "{1}", this.active.getName()));
+            this.pallet.label("box-kit", this.active.getName());
         }
 
         super.next();

@@ -28,7 +28,7 @@ public class DeliveryEdit extends Session {
         if (this.index == this.pallet.getBoxes().size() - 1
                 && this.pallet.getBoxes().get(this.index).isFull()) {
             this.pallet.addBox();
-            this.pallet.label(Main.courier.format("box-delivery", "{0}", "{1}", this.active.getPlayer()));
+            this.pallet.label("box-delivery", this.active.getPlayer());
         }
 
         super.next();

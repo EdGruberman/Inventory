@@ -37,7 +37,7 @@ public class Kit implements ConfigurationSerializable {
     }
 
     public void relabel() {
-        this.contents.label(Main.courier.format("box-kit", "{0}", "{1}", this.name));
+        this.contents.label("box-kit", this.name);
     }
 
     public boolean beingDefined() {

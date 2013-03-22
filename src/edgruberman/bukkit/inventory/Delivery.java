@@ -44,7 +44,7 @@ public final class Delivery implements ConfigurationSerializable {
     }
 
     public void relabel() {
-        this.balance.label(Main.courier.format("box-delivery", "{0}", "{1}", this.player));
+        this.balance.label("box-delivery", this.player);
     }
 
     public Collection<ItemStack> modifyBalance(final Collection<ItemStack> items) {

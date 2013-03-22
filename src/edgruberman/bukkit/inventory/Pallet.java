@@ -1,13 +1,14 @@
 package edgruberman.bukkit.inventory;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -47,11 +48,11 @@ public final class Pallet implements ConfigurationSerializable, Cloneable {
     }
 
     /** @param format 0 = index, 1 = total */
-    public void label(final String format) {
+    public void label(final String key, final String name) {
         final int total = this.boxes.size();
         for (int i = 0; i < total; i++) {
             final Box box = this.boxes.get(i);
-            box.label(MessageFormat.format(format, i + 1, total));
+            box.label(Main.courier.format(key, i + 1, total, name));
         }
     }
 
@@ -181,8 +182,8 @@ public final class Pallet implements ConfigurationSerializable, Cloneable {
         return removed;
     }
 
-    public List<Player> viewers() {
-        final List<Player> result = new ArrayList<Player>();
+    public Set<Player> viewers() {
+        final Set<Player> result = new HashSet<Player>();
 
         for (final Box box : this.boxes)
             for (final HumanEntity viewer : box.getInventory().getViewers())

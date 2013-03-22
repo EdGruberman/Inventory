@@ -43,7 +43,7 @@ public class DeliveryWithdraw extends Session {
 
     @Override
     protected void onEnd(final Transaction transaction) {
-        if (this.pallet.trim()) this.pallet.label(Main.courier.format("box-delivery", "{0}", "{1}", this.active.getPlayer()));
+        if (this.pallet.trim()) this.pallet.label("box-delivery", this.active.getPlayer());
 
         if (transaction.getChanges().isEmpty()) {
             if (this.active.empty()) this.deliveries.delete(this.active);
