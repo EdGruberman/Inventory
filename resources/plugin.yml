@@ -5,6 +5,11 @@ author: EdGruberman (ed@rjump.com)
 website: http://github.com/EdGruberman/Inventory
 main: edgruberman.bukkit.inventory.Main
 commands:
+  'inventory:withdraw':
+    aliases: [withdraw, delivery.withdraw]
+    description: Open delivery for self
+    permission: inventory.withdraw
+    usage: '§f-> §7Usage: §b/<command>'
   'inventory:edit':
     aliases: [delivery.edit]
     description: Add or remove items in delivery
@@ -50,9 +55,15 @@ permissions:
     description: Can use basic features
     default: true
     children:
-      inventory.delivery: true
-  inventory.delivery:
-    description: Can open delivery for self
+      inventory.withdraw: true
+      inventory.withdraw.chest: true
+  inventory.withdraw:
+    description: Can open delivery for self using a chest item
+    default: false
+    children:
+      inventory.withdraw.chest: true
+  inventory.withdraw.chest:
+    description: Can open delivery for self using a chest item
     default: false
   inventory.edit:
     description: Can use edit command

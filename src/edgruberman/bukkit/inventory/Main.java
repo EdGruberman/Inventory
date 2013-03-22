@@ -5,13 +5,13 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.event.HandlerList;
 
 import edgruberman.bukkit.inventory.commands.Define;
 import edgruberman.bukkit.inventory.commands.Delete;
 import edgruberman.bukkit.inventory.commands.Edit;
 import edgruberman.bukkit.inventory.commands.Empty;
 import edgruberman.bukkit.inventory.commands.Reload;
+import edgruberman.bukkit.inventory.commands.Withdraw;
 import edgruberman.bukkit.inventory.craftbukkit.CraftBukkit;
 import edgruberman.bukkit.inventory.messaging.ConfigurationCourier;
 import edgruberman.bukkit.inventory.repositories.BufferedYamlRepository;
@@ -27,7 +27,6 @@ public final class Main extends CustomPlugin {
 
     private KitRepository kits = null;
     private DeliveryRepository deliveries = null;
-    private Clerk clerk = null;
 
     @Override
     public void onLoad() {
@@ -62,9 +61,11 @@ public final class Main extends CustomPlugin {
             return;
         }
 
-        this.clerk = new Clerk(this.deliveries, this.getConfig().getBoolean("record-withdrawals"), this);
-        Bukkit.getPluginManager().registerEvents(this.clerk, this);
+        final boolean record = this.getConfig().getBoolean("record-withdrawals");
+        final Withdraw withdraw = new Withdraw(this.deliveries, this, record);
+        Bukkit.getPluginManager().registerEvents(withdraw, this);
 
+        this.getCommand("inventory:withdraw").setExecutor(withdraw);
         this.getCommand("inventory:edit").setExecutor(new Edit(this.deliveries, this));
         this.getCommand("inventory:empty").setExecutor(new Empty(this.deliveries));
         this.getCommand("inventory:define").setExecutor(new Define(this.kits, this));
@@ -77,7 +78,6 @@ public final class Main extends CustomPlugin {
     public void onDisable() {
         if (this.kits != null) this.kits.destroy();
         if (this.deliveries != null) this.deliveries.destroy();
-        if (this.clerk != null) HandlerList.unregisterAll(this.clerk);
         Main.courier = null;
         Main.craftBukkit = null;
     }
