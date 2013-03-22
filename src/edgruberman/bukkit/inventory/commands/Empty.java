@@ -30,6 +30,7 @@ public final class Empty extends TokenizedExecutor {
         final String player = Bukkit.getOfflinePlayer(args.get(0)).getName();
         final Delivery active = this.deliveries.load(player);
         if (active != null && !active.getBalance().isEmpty()) active.getBalance().clear();
+        this.deliveries.save(active);
         Main.courier.send(sender, "empty", player);
         return true;
     }
