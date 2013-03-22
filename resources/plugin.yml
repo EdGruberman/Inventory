@@ -35,6 +35,11 @@ commands:
     description: Delete a kit
     permission: inventory.delete
     usage: '§f-> §7Usage: §b/<command> §o<Kit>'
+  'inventory:move':
+    aliases: [move]
+    description: Move held item to player
+    permission: inventory.move
+    usage: '§f-> §7Usage: §b/<command> §o<Player>'
   'inventory:reload':
     description: Reload Inventory plugin
     permission: inventory.reload
@@ -50,6 +55,7 @@ permissions:
       inventory.define: true
       inventory.kit: true
       inventory.delete: true
+      inventory.move: true
       inventory.reload: true
   inventory.user:
     description: Can use basic features
@@ -79,6 +85,9 @@ permissions:
     default: false
   inventory.delete:
     description: Can use delete command
+    default: false
+  inventory.move:
+    description: Can use move command
     default: false
   inventory.reload:
     description: Can use reload command

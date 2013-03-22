@@ -10,6 +10,7 @@ import edgruberman.bukkit.inventory.commands.Define;
 import edgruberman.bukkit.inventory.commands.Delete;
 import edgruberman.bukkit.inventory.commands.Edit;
 import edgruberman.bukkit.inventory.commands.Empty;
+import edgruberman.bukkit.inventory.commands.Move;
 import edgruberman.bukkit.inventory.commands.Reload;
 import edgruberman.bukkit.inventory.commands.Withdraw;
 import edgruberman.bukkit.inventory.craftbukkit.CraftBukkit;
@@ -71,6 +72,7 @@ public final class Main extends CustomPlugin {
         this.getCommand("inventory:define").setExecutor(new Define(this.kits, this));
         this.getCommand("inventory:kit").setExecutor(new edgruberman.bukkit.inventory.commands.Kit(this.kits, this.deliveries));
         this.getCommand("inventory:delete").setExecutor(new Delete(this.kits));
+        this.getCommand("inventory:move").setExecutor(new Move());
         this.getCommand("inventory:reload").setExecutor(new Reload(this));
     }
 
