@@ -40,6 +40,11 @@ commands:
     description: Move held item to player
     permission: inventory.move
     usage: '§f-> §7Usage: §b/<command> §o<Player>'
+  'inventory:copy':
+    aliases: [copy]
+    description: Copy held item and optionally move to player
+    permission: inventory.copy
+    usage: '§f-> §7Usage: §b/<command>§3[ §b§o<Player>§3]'
   'inventory:reload':
     description: Reload Inventory plugin
     permission: inventory.reload

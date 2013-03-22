@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
+import edgruberman.bukkit.inventory.commands.Copy;
 import edgruberman.bukkit.inventory.commands.Define;
 import edgruberman.bukkit.inventory.commands.Delete;
 import edgruberman.bukkit.inventory.commands.Edit;
@@ -73,6 +74,7 @@ public final class Main extends CustomPlugin {
         this.getCommand("inventory:kit").setExecutor(new edgruberman.bukkit.inventory.commands.Kit(this.kits, this.deliveries));
         this.getCommand("inventory:delete").setExecutor(new Delete(this.kits));
         this.getCommand("inventory:move").setExecutor(new Move());
+        this.getCommand("inventory:copy").setExecutor(new Copy());
         this.getCommand("inventory:reload").setExecutor(new Reload(this));
     }
 
