@@ -39,7 +39,7 @@ public class Clerk implements Listener {
         }
 
         final String reason = Main.courier.format("reason-withdraw");
-        final BalanceWithdraw withdraw = new BalanceWithdraw(interact.getPlayer(), this.deliveries, requested, reason, this.record);
+        final DeliveryWithdraw withdraw = new DeliveryWithdraw(interact.getPlayer(), this.deliveries, requested, reason, this.record);
         Bukkit.getPluginManager().registerEvents(withdraw, this.plugin);
     }
 

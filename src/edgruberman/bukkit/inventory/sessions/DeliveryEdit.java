@@ -12,12 +12,12 @@ import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 import edgruberman.bukkit.inventory.util.ItemStackUtil;
 
 /** indirect interaction with delivery balance that allows automatic expansion */
-public class BalanceEdit extends Session {
+public class DeliveryEdit extends Session {
 
     private final DeliveryRepository deliveries;
     private final Delivery active;
 
-    public BalanceEdit(final Player customer, final DeliveryRepository deliveries, final Delivery active, final String reason) {
+    public DeliveryEdit(final Player customer, final DeliveryRepository deliveries, final Delivery active, final String reason) {
         super(customer, active.getBalance().clone(), reason);
         this.deliveries = deliveries;
         this.active = active;

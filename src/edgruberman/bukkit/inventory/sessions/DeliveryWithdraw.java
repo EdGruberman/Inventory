@@ -10,13 +10,13 @@ import edgruberman.bukkit.inventory.Transaction;
 import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 
 /** direct interaction with delivery balance that prevents any additions */
-public class BalanceWithdraw extends Session {
+public class DeliveryWithdraw extends Session {
 
     private final DeliveryRepository deliveries;
     private final Delivery active;
     private final boolean record;
 
-    public BalanceWithdraw(final Player customer, final DeliveryRepository deliveries, final Delivery active, final String reason, final boolean record) {
+    public DeliveryWithdraw(final Player customer, final DeliveryRepository deliveries, final Delivery active, final String reason, final boolean record) {
         super(customer, active.getBalance(), reason);
         this.deliveries = deliveries;
         this.active = active;

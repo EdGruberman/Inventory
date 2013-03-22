@@ -11,7 +11,7 @@ import org.bukkit.plugin.Plugin;
 import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
-import edgruberman.bukkit.inventory.sessions.BalanceEdit;
+import edgruberman.bukkit.inventory.sessions.DeliveryEdit;
 import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 
 public final class Edit extends TokenizedExecutor {
@@ -40,7 +40,7 @@ public final class Edit extends TokenizedExecutor {
         final String reason = ( args.size() >= 2 ? TokenizedExecutor.join(args.subList(1, args.size())) : Main.courier.format("reason-default") );
         final String player = Bukkit.getOfflinePlayer(args.get(0)).getName();
         final Delivery active = this.deliveries.create(player);
-        Bukkit.getPluginManager().registerEvents(new BalanceEdit((Player) sender, this.deliveries, active, reason), this.plugin);
+        Bukkit.getPluginManager().registerEvents(new DeliveryEdit((Player) sender, this.deliveries, active, reason), this.plugin);
         return true;
     }
 
