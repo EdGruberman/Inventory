@@ -1,4 +1,4 @@
-package edgruberman.bukkit.inventory.sessions;
+package edgruberman.bukkit.inventory;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -8,9 +8,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 
-import edgruberman.bukkit.inventory.Delivery;
-import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
+import edgruberman.bukkit.inventory.sessions.DeliveryWithdraw;
 
 /** withdrawal manager */
 public class Clerk implements Listener {

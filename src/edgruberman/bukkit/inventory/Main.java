@@ -16,7 +16,6 @@ import edgruberman.bukkit.inventory.messaging.ConfigurationCourier;
 import edgruberman.bukkit.inventory.repositories.BufferedYamlRepository;
 import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 import edgruberman.bukkit.inventory.repositories.KitRepository;
-import edgruberman.bukkit.inventory.sessions.Clerk;
 import edgruberman.bukkit.inventory.util.CustomPlugin;
 import edgruberman.bukkit.inventory.util.ItemStackUtil;
 
