@@ -11,10 +11,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Queues save requests to prevent occurring more than a maximum rate.
+ * queues save requests to prevent occurring more than a maximum rate
  *
  * @author EdGruberman (ed@rjump.com)
- * @version 2.1.1
+ * @version 2.2.0
  */
 public class BufferedYamlConfiguration extends YamlConfiguration implements Runnable {
 
@@ -70,7 +70,7 @@ public class BufferedYamlConfiguration extends YamlConfiguration implements Runn
     }
 
     @Override
-    public void load(final File file) throws FileNotFoundException, IOException, InvalidConfigurationException {
+    public void load(final File file) throws IOException, InvalidConfigurationException {
         this.file = file;
         this.load();
     }
@@ -129,6 +129,10 @@ public class BufferedYamlConfiguration extends YamlConfiguration implements Runn
 
     public boolean isQueued() {
         return Bukkit.getScheduler().isQueued(this.taskSave);
+    }
+
+    public void cancelSave() {
+        Bukkit.getScheduler().cancelTask(this.taskSave);
     }
 
 }
