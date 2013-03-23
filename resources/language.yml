@@ -2,17 +2,19 @@ format-code: '§'
 box-delivery: 'Delivery {1,choice,1#|2#{0}/{1} }({2})' # 0 = Index, 1 = Total, 2 = Owner
 box-kit: '{2} Kit{1,choice,1#|2# ({0} of {1})}' # 0 = Index, 1 = Total, 2 = Kit
 kit: '§f-> §7Kit §f{1}{3,choice,-1# §7x§f-{3}|0#|2# §7x§f{3}} {3,choice,-1#§2recalled §7from|0#§2issued §7to} {2}§8' # 1 = Kit, 2 = Player, 3 = Quantity, 4 = Failure Count
-failures: '§f-> §eFailed to recall§7 {1} item types from {2}: {3}' # 1 = Types Count, 2 = Target, 3 = Failures Summary
+failures: '§f-> §cFailed to recall§7 {1} item types from {2}: {3}' # 1 = Types Count, 2 = Target, 3 = Failures Summary
 items-summary:
   item: '§7{0}'
   delimiter: '§8, '
 withdraw-empty: '§f-> §eNo items §7are currently available for you' # 1 = Player
 withdraw-only: '' # '-> §7Item §caddition denied§7, only withdrawals are allowed'
 delete: '§f-> §7Kit §2deleted§7: §f{1}' # 1 = Kit
-empty: '§f-> §7Delivery §2cleared§7 for §f{1}' # 1 = Player
-full: '§f-> §eInventory full§7; §f{1}§7 does not have a free slot' # 1 = Target
+empty: '§f-> §7Delivery §2emptied§7 for §f{1}' # 1 = Player
+full: '§f-> §cInventory full§7; §f{1}§7 does not have a free slot' # 1 = Target
 move: '§f-> §7Item §2moved§7 to §f{1}§7: §f{2}' # 1 = Target, 2 = Item
 copy: '§f-> §7Item §2copied§7 to §f{1}§7: §f{2}' # 1 = Target, 2 = Item
+session-destroy: '§8{0,time,HH:mm:ss} §f-> §7Inventory session §esaved and closed §8({1})' # 1 = Reason
+session-destroy-reload: 'Plugin reload'
 requires-player: '§f-> §cOnly in-game players§7 can use the §b/{1} §7command' # 1 = Command Label
 requires-argument: '§f-> §cMissing §7required argument: §b§o{1}' # 1 = Argument Name
 unknown-argument: '§f-> §eUnknown§f value for §b§o{1}§7: §f{2}' # 1 = Argument Name, 2 = Argument Value

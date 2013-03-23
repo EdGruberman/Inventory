@@ -13,6 +13,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import edgruberman.bukkit.inventory.Box;
+import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.Pallet;
 
 /** pallet inventory interaction */
@@ -95,9 +96,10 @@ public class Session extends Observable implements Listener {
 
     protected void onEnd() {};
 
-    public void destroy() {
+    public void destroy(final String reason) {
         this.end();
         this.customer.getOpenInventory().close();
+        Main.courier.send(this.customer, "session-destroy", reason);
     }
 
 }

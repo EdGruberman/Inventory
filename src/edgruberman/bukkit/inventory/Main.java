@@ -47,7 +47,7 @@ public final class Main extends CustomPlugin implements Observer {
     @Override
     public void onLoad() {
         this.putConfigMinimum("config.yml", "4.0.0a13");
-        this.putConfigMinimum("language.yml", "4.0.0a13");
+        this.putConfigMinimum("language.yml", "4.0.0a18");
     }
 
     @Override
@@ -117,7 +117,7 @@ public final class Main extends CustomPlugin implements Observer {
     }
 
     public void clearSessions() {
-        for (final Session session : this.sessions) session.destroy();
+        for (final Session session : this.sessions) session.destroy(Main.courier.format("session-destroy-reload"));
         this.sessions.clear();
     }
 
