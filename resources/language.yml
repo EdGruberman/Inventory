@@ -14,7 +14,7 @@ full: '§f-> §cInventory full§7; §f{1}§7 does not have a free slot' # 1 = Ta
 move: '§f-> §7Item §2moved§7 to §f{1}§7: §f{2}' # 1 = Target, 2 = Item
 copy: '§f-> §7Item §2copied§7 to §f{1}§7: §f{2}' # 1 = Target, 2 = Item
 session-destroy: '§8{0,time,HH:mm:ss} §f-> §7Inventory session §esaved and closed §8({1})' # 1 = Reason
-session-destroy-reload: 'Plugin reload'
+session-destroy-disable: 'Plugin disabled'
 requires-player: '§f-> §cOnly in-game players§7 can use the §b/{1} §7command' # 1 = Command Label
 requires-argument: '§f-> §cMissing §7required argument: §b§o{1}' # 1 = Argument Name
 unknown-argument: '§f-> §eUnknown§f value for §b§o{1}§7: §f{2}' # 1 = Argument Name, 2 = Argument Value

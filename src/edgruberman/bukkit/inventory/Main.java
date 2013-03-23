@@ -1,14 +1,9 @@
 package edgruberman.bukkit.inventory;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.HandlerList;
 
 import edgruberman.bukkit.inventory.commands.Copy;
@@ -21,33 +16,20 @@ import edgruberman.bukkit.inventory.commands.Reload;
 import edgruberman.bukkit.inventory.commands.Withdraw;
 import edgruberman.bukkit.inventory.craftbukkit.CraftBukkit;
 import edgruberman.bukkit.inventory.messaging.ConfigurationCourier;
-import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
-import edgruberman.bukkit.inventory.repositories.KitRepository;
-import edgruberman.bukkit.inventory.repositories.YamlRepository;
-import edgruberman.bukkit.inventory.sessions.Session;
 import edgruberman.bukkit.inventory.util.CustomPlugin;
 import edgruberman.bukkit.inventory.util.ItemStackUtil;
 
-public final class Main extends CustomPlugin implements Observer {
+public final class Main extends CustomPlugin {
 
     public static ConfigurationCourier courier;
     public static CraftBukkit craftBukkit = null;
 
-    static {
-        ConfigurationSerialization.registerClass(Kit.class);
-        ConfigurationSerialization.registerClass(Delivery.class);
-        ConfigurationSerialization.registerClass(Pallet.class);
-        ConfigurationSerialization.registerClass(Box.class);
-    }
-
-    private KitRepository kits = null;
-    private DeliveryRepository deliveries = null;
-    private final List<Session> sessions = new ArrayList<Session>();
+    private Clerk clerk = null;
 
     @Override
     public void onLoad() {
         this.putConfigMinimum("config.yml", "4.0.0a13");
-        this.putConfigMinimum("language.yml", "4.0.0a18");
+        this.putConfigMinimum("language.yml", "4.0.0a25");
     }
 
     @Override
@@ -65,29 +47,19 @@ public final class Main extends CustomPlugin implements Observer {
         Main.courier = ConfigurationCourier.create(this).setBase(this.loadConfig("language.yml")).setFormatCode("format-code").build();
         ItemStackUtil.setFormat(Main.courier.getSection("items-summary"));
 
-        final File kitFolder = new File(this.getDataFolder(), this.getConfig().getString("kit-folder"));
-        final YamlRepository<Kit> yamlKits = new YamlRepository<Kit>(this, kitFolder, 30000);
-        this.kits = ( yamlKits != null ? new KitRepository(yamlKits) : null);
+        final File kits = new File(this.getDataFolder(), this.getConfig().getString("kit-folder"));
+        final File deliveries = new File(this.getDataFolder(), this.getConfig().getString("delivery-folder"));
+        this.clerk = new Clerk(this, kits, deliveries);
 
-        final File deliveryFolder = new File(this.getDataFolder(), this.getConfig().getString("delivery-folder"));
-        final YamlRepository<Delivery> yamlDeliveries = new YamlRepository<Delivery>(this, deliveryFolder, 30000);
-        this.deliveries = ( yamlDeliveries != null ? new DeliveryRepository(yamlDeliveries) : null);
-
-        if (this.kits == null || this.deliveries == null) {
-            this.getLogger().log(Level.SEVERE, "Disabling plugin; Unusable repository");
-            this.setEnabled(false);
-            return;
-        }
-
-        final Withdraw withdraw = new Withdraw(this.deliveries, this);
+        final Withdraw withdraw = new Withdraw(this.clerk);
         Bukkit.getPluginManager().registerEvents(withdraw, this);
 
         this.getCommand("inventory:withdraw").setExecutor(withdraw);
-        this.getCommand("inventory:edit").setExecutor(new Edit(this.deliveries, this));
-        this.getCommand("inventory:empty").setExecutor(new Empty(this.deliveries));
-        this.getCommand("inventory:define").setExecutor(new Define(this.kits, this));
-        this.getCommand("inventory:kit").setExecutor(new edgruberman.bukkit.inventory.commands.Kit(this.kits, this.deliveries));
-        this.getCommand("inventory:delete").setExecutor(new Delete(this.kits));
+        this.getCommand("inventory:edit").setExecutor(new Edit(this.clerk));
+        this.getCommand("inventory:empty").setExecutor(new Empty(this.clerk));
+        this.getCommand("inventory:define").setExecutor(new Define(this.clerk));
+        this.getCommand("inventory:kit").setExecutor(new edgruberman.bukkit.inventory.commands.Kit(this.clerk.getKitRepository(), this.clerk.getDeliveryRepository()));
+        this.getCommand("inventory:delete").setExecutor(new Delete(this.clerk));
         this.getCommand("inventory:move").setExecutor(new Move());
         this.getCommand("inventory:copy").setExecutor(new Copy());
         this.getCommand("inventory:reload").setExecutor(new Reload(this));
@@ -95,30 +67,10 @@ public final class Main extends CustomPlugin implements Observer {
 
     @Override
     public void onDisable() {
-        this.clearSessions();
-        if (this.kits != null) this.kits.destroy();
-        if (this.deliveries != null) this.deliveries.destroy();
+        if (this.clerk != null) this.clerk.destroy(Main.courier.format("session-destroy-disable"));
         Main.courier = null;
         Main.craftBukkit = null;
         HandlerList.unregisterAll(this);
-    }
-
-    // ---- session manager ----
-
-    public void register(final Session session) {
-        this.sessions.add(session);
-        session.addObserver(this);
-        Bukkit.getPluginManager().registerEvents(session, this);
-    }
-
-    @Override
-    public void update(final Observable o, final Object arg) {
-        this.sessions.remove(o);
-    }
-
-    public void clearSessions() {
-        for (final Session session : this.sessions) session.destroy(Main.courier.format("session-destroy-reload"));
-        this.sessions.clear();
     }
 
 }

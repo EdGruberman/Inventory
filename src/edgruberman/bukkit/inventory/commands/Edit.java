@@ -7,20 +7,18 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import edgruberman.bukkit.inventory.Clerk;
 import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
-import edgruberman.bukkit.inventory.sessions.DeliveryEdit;
+import edgruberman.bukkit.inventory.sessions.DeliverySession;
 import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 
 public final class Edit extends TokenizedExecutor {
 
-    private final DeliveryRepository deliveries;
-    private final Main plugin;
+    private final Clerk clerk;
 
-    public Edit(final DeliveryRepository deliveries, final Main plugin) {
-        this.deliveries = deliveries;
-        this.plugin = plugin;
+    public Edit(final Clerk clerk) {
+        this.clerk = clerk;
     }
 
     // usage: /<command> <Player>
@@ -37,8 +35,8 @@ public final class Edit extends TokenizedExecutor {
         }
 
         final String target = Bukkit.getOfflinePlayer(args.get(0)).getName();
-        final Delivery active = this.deliveries.create(target);
-        this.plugin.register(new DeliveryEdit((Player) sender, this.deliveries, active));
+        final Delivery active = this.clerk.getDeliveryRepository().create(target);
+        this.clerk.startSession(new DeliverySession((Player) sender, this.clerk.getDeliveryRepository(), active));
         return true;
     }
 

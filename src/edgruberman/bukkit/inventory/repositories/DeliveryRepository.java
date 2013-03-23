@@ -13,7 +13,7 @@ public class DeliveryRepository extends CachedRepository<String, Delivery>{
         if (result != null) return result;
 
         result = new Delivery(player);
-        this.cache.put(player.toLowerCase(), result);
+        this.cache.put(result.getKey(), result);
         return result;
     }
 
@@ -23,11 +23,11 @@ public class DeliveryRepository extends CachedRepository<String, Delivery>{
     }
 
     public void save(final Delivery delivery) {
-        this.save(delivery.getPlayer().toLowerCase(), delivery);
+        this.save(delivery.getKey(), delivery);
     }
 
     public void delete(final Delivery delivery) {
-        this.delete(delivery.getPlayer().toLowerCase());
+        this.delete(delivery.getKey());
     }
 
 }

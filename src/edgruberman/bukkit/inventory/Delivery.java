@@ -15,6 +15,7 @@ public final class Delivery implements ConfigurationSerializable {
 
     private final String player;
     private final Pallet balance;
+    private final String key;
 
     public Delivery(final String player) {
         this(player, new Pallet());
@@ -24,10 +25,15 @@ public final class Delivery implements ConfigurationSerializable {
     private Delivery(final String player, final Pallet balance) {
         this.player = player;
         this.balance = balance;
+        this.key = this.player.toLowerCase();
     }
 
     public String getPlayer() {
         return this.player;
+    }
+
+    public String getKey() {
+        return this.key;
     }
 
     public Pallet getBalance() {
@@ -58,6 +64,24 @@ public final class Delivery implements ConfigurationSerializable {
         final String player = Bukkit.getOfflinePlayer((String) serialized.get("player")).getName();
         final Pallet balance = (Pallet) serialized.get("balance");
         return new Delivery(player, balance);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.key.hashCode();
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+        final Delivery other = (Delivery) obj;
+        if (!this.key.equals(other.key)) return false;
+        return true;
     }
 
 }

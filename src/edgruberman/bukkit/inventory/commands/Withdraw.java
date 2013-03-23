@@ -11,20 +11,18 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import edgruberman.bukkit.inventory.Clerk;
 import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 import edgruberman.bukkit.inventory.sessions.DeliveryWithdraw;
 import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 
 public final class Withdraw extends TokenizedExecutor implements Listener {
 
-    private final DeliveryRepository deliveries;
-    private final Main plugin;
+    private final Clerk clerk;
 
-    public Withdraw(final DeliveryRepository deliveries, final Main plugin) {
-        this.deliveries = deliveries;
-        this.plugin = plugin;
+    public Withdraw(final Clerk clerk) {
+        this.clerk = clerk;
     }
 
     // usage: /<command>
@@ -35,13 +33,13 @@ public final class Withdraw extends TokenizedExecutor implements Listener {
             return false;
         }
 
-        final Delivery requested = this.deliveries.load(sender.getName());
+        final Delivery requested = this.clerk.getDeliveryRepository().load(sender.getName());
         if (requested == null || requested.getBalance().isEmpty()) {
             Main.courier.send(sender, "withdraw-empty", sender.getName());
             return true;
         }
 
-        this.plugin.register(new DeliveryWithdraw((Player) sender, this.deliveries, requested));
+        this.clerk.startSession(new DeliveryWithdraw((Player) sender, this.clerk.getDeliveryRepository(), requested));
         return true;
     }
 

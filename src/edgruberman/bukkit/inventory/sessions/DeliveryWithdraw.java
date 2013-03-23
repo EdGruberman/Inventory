@@ -12,7 +12,7 @@ import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 
 /** prevents any additions */
-public class DeliveryWithdraw extends DeliveryEdit {
+public class DeliveryWithdraw extends DeliverySession {
 
     public DeliveryWithdraw(final Player customer, final DeliveryRepository deliveries, final Delivery active) {
         super(customer, deliveries, active);

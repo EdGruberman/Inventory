@@ -6,17 +6,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import edgruberman.bukkit.inventory.Clerk;
 import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
+import edgruberman.bukkit.inventory.sessions.Session;
 import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 
 public final class Empty extends TokenizedExecutor {
 
-    private final DeliveryRepository deliveries;
+    private final Clerk clerk;
 
-    public Empty(final DeliveryRepository deliveries) {
-        this.deliveries = deliveries;
+    public Empty(final Clerk clerk) {
+        this.clerk = clerk;
     }
 
     // usage: /<command> <Player>
@@ -28,9 +29,24 @@ public final class Empty extends TokenizedExecutor {
         }
 
         final String player = Bukkit.getOfflinePlayer(args.get(0)).getName();
-        final Delivery active = this.deliveries.load(player);
-        if (active != null && !active.getBalance().isEmpty()) active.getBalance().clear();
-        this.deliveries.save(active);
+        final Delivery delivery = this.clerk.getDeliveryRepository().load(player);
+        if (delivery != null && !delivery.getBalance().isEmpty()) delivery.getBalance().clear();
+
+        boolean use = false;
+        delivery.getBalance().clear();
+        final boolean trimmed = delivery.getBalance().trim();
+        if (trimmed) delivery.relabel();
+        for (final Session session : this.clerk.sessionsFor(delivery)) {
+            if (trimmed && session.getIndex() != 0) session.next();
+            use = true;
+        }
+
+        if (use) {
+            this.clerk.getDeliveryRepository().save(delivery);
+        } else {
+            this.clerk.getDeliveryRepository().delete(delivery);
+        }
+
         Main.courier.send(sender, "empty", player);
         return true;
     }

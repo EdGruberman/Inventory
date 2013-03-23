@@ -5,16 +5,17 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import edgruberman.bukkit.inventory.Clerk;
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.repositories.KitRepository;
+import edgruberman.bukkit.inventory.sessions.Session;
 import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 
 public final class Delete extends TokenizedExecutor {
 
-    private final KitRepository kits;
+    private final Clerk clerk;
 
-    public Delete(final KitRepository kits) {
-        this.kits = kits;
+    public Delete(final Clerk clerk) {
+        this.clerk = clerk;
     }
 
     // usage: /<command> <Kit>
@@ -25,13 +26,27 @@ public final class Delete extends TokenizedExecutor {
             return false;
         }
 
-        final edgruberman.bukkit.inventory.Kit kit = this.kits.load(args.get(0));
+        final edgruberman.bukkit.inventory.Kit kit = this.clerk.getKitRepository().load(args.get(0));
         if (kit == null) {
             Main.courier.send(sender, "unknown-argument", "<Kit>", args.get(0));
             return true;
         }
 
-        this.kits.delete(kit);
+        boolean use = false;
+        kit.getContents().clear();
+        final boolean trimmed = kit.getContents().trim();
+        if (trimmed) kit.relabel();
+        for (final Session session : this.clerk.sessionsFor(kit)) {
+            if (trimmed && session.getIndex() != 0) session.next();
+            use = true;
+        }
+
+        if (use) {
+            this.clerk.getKitRepository().save(kit);
+        } else {
+            this.clerk.getKitRepository().delete(kit);
+        }
+
         Main.courier.send(sender, "delete", kit.getName());
         return true;
     }

@@ -6,19 +6,17 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import edgruberman.bukkit.inventory.Clerk;
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.repositories.KitRepository;
-import edgruberman.bukkit.inventory.sessions.KitDefine;
+import edgruberman.bukkit.inventory.sessions.KitSession;
 import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 
 public final class Define extends TokenizedExecutor {
 
-    private final KitRepository kits;
-    private final Main plugin;
+    private final Clerk clerk;
 
-    public Define(final KitRepository kits, final Main plugin) {
-        this.kits = kits;
-        this.plugin = plugin;
+    public Define(final Clerk clerk) {
+        this.clerk = clerk;
     }
 
     // usage: /<command> <Kit>
@@ -34,8 +32,8 @@ public final class Define extends TokenizedExecutor {
             return false;
         }
 
-        final edgruberman.bukkit.inventory.Kit kit = this.kits.create(args.get(0));
-        this.plugin.register(new KitDefine((Player) sender, this.kits, kit));
+        final edgruberman.bukkit.inventory.Kit kit = this.clerk.getKitRepository().create(args.get(0));
+        this.clerk.startSession(new KitSession((Player) sender, this.clerk.getKitRepository(), kit));
         return true;
     }
 

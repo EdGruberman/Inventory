@@ -13,7 +13,7 @@ public class KitRepository extends CachedRepository<String, Kit>{
         if (result != null) return result;
 
         result = new Kit(name);
-        this.cache.put(name.toLowerCase(), result);
+        this.cache.put(result.getKey(), result);
         return result;
     }
 
@@ -23,11 +23,11 @@ public class KitRepository extends CachedRepository<String, Kit>{
     }
 
     public void save(final Kit kit) {
-        this.save(kit.getName().toLowerCase(), kit);
+        this.save(kit.getKey(), kit);
     }
 
     public void delete(final Kit kit) {
-        this.delete(kit.getName().toLowerCase());
+        this.delete(kit.getKey());
     }
 
 }

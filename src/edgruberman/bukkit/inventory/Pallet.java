@@ -174,9 +174,9 @@ public final class Pallet implements ConfigurationSerializable, Cloneable {
     /** clear empty boxes off end of pallet */
     public boolean trim() {
         boolean removed = false;
-        for (int i = this.boxes.size() - 1; i >= 0; i--) {
+        for (int i = this.boxes.size() - 1; i > 0; i--) {
             final Box last = this.boxes.get(i);
-            if (last.getInventory().getContents().length == 0) {
+            if (last.isEmpty()) {
                 this.boxes.remove(i);
                 removed = true;
             }

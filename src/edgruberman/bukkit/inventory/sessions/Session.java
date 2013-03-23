@@ -16,24 +16,32 @@ import edgruberman.bukkit.inventory.Box;
 import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.Pallet;
 
-/** pallet inventory interaction */
-public class Session extends Observable implements Listener {
+/** pallet inventory interaction manager */
+public abstract class Session extends Observable implements Listener {
 
     protected final Player customer;
     protected final Pallet pallet;
 
-    protected int index;
+    protected int index = -1;
 
     /** @param initial set of similar items, single instance of items excluding amount */
     public Session(final Player customer, final Pallet pallet) {
         this.customer = customer;
         this.pallet = pallet;
+    }
 
+    public int getIndex() {
+        return this.index;
+    }
+
+    public abstract Object getKey();
+
+    public void start() {
         this.onStart();
-        final List<Box> boxes = pallet.getBoxes();
+        final List<Box> boxes = this.pallet.getBoxes();
         final Box last = boxes.get(boxes.size() - 1);
         this.index = boxes.size() - 1;
-        last.open(customer);
+        last.open(this.customer);
     }
 
     protected void onStart() {};
@@ -92,12 +100,18 @@ public class Session extends Observable implements Listener {
     protected void end() {
         HandlerList.unregisterAll(this);
         this.onEnd();
+        this.setChanged();
+        this.notifyObservers();
     }
 
     protected void onEnd() {};
 
     public void destroy(final String reason) {
-        this.end();
+        try {
+            this.end();
+        } catch (final Exception e) {
+            // ignore to avoid implementation preventing complete destruction
+        }
         this.customer.getOpenInventory().close();
         Main.courier.send(this.customer, "session-destroy", reason);
     }

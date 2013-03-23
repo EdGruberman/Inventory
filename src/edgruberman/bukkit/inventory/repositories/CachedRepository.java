@@ -18,6 +18,8 @@ public class CachedRepository<K, V> implements Repository<K, V> {
         if (value != null) return value;
 
         value = this.source.load(key);
+        if (value == null) return null;
+
         this.cache.put(key, value);
         return value;
     }
