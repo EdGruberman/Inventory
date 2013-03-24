@@ -1,5 +1,7 @@
 package edgruberman.bukkit.inventory.commands;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.bukkit.command.Command;
@@ -32,9 +34,27 @@ public final class Define extends TokenizedExecutor {
             return false;
         }
 
-        final edgruberman.bukkit.inventory.Kit kit = this.clerk.getKitRepository().create(args.get(0));
+        final String name = args.get(0);
+        edgruberman.bukkit.inventory.Kit kit = this.clerk.getKitRepository().load(args.get(0));
+        if (kit == null && !Define.isFilenameValid(name)) {
+            Main.courier.send(sender, "define-invalid", args.get(0));
+            return true;
+        }
+
+        if (kit == null) kit = this.clerk.getKitRepository().create(args.get(0));
         this.clerk.startSession(new KitSession((Player) sender, this.clerk.getKitRepository(), kit));
         return true;
+    }
+
+    private static boolean isFilenameValid(final String name) {
+        final File f = new File(name);
+        try {
+           f.getCanonicalPath();
+           return true;
+        }
+        catch (final IOException e) {
+           return false;
+        }
     }
 
 }
