@@ -2,7 +2,7 @@ name: Inventory
 version: @VERSION@
 description: Provide items to players
 author: EdGruberman (ed@rjump.com)
-website: http://github.com/EdGruberman/Inventory
+website: http://dev.bukkit.org/server-mods/inventory
 main: edgruberman.bukkit.inventory.Main
 commands:
   'inventory:withdraw':
