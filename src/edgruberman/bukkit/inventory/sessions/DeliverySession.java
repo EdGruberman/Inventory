@@ -11,31 +11,21 @@ public class DeliverySession extends Session {
     protected final Delivery delivery;
 
     public DeliverySession(final Player customer, final DeliveryRepository repository, final Delivery delivery) {
-        super(customer, delivery.getBalance());
+        super(customer, delivery.getList());
         this.repository = repository;
         this.delivery = delivery;
     }
 
     @Override
-    public Delivery getKey() {
-        return this.delivery;
-    }
-
-    @Override
-    protected void onExpand() {
-        this.pallet.label("box-delivery", this.delivery.getPlayer());
-    }
-
-    @Override
     protected void onEnd() {
-        final int viewers = this.pallet.viewers().size();
-        if (viewers == 1 && this.pallet.isEmpty()) {
-            this.repository.delete(this.delivery);
+        final int viewers = this.list.getViewers().size();
+        if (viewers == 1 && this.list.isContentsEmpty()) {
+            this.repository.remove(this.delivery);
             return;
         }
 
-        if (viewers == 1 && this.pallet.trim()) this.pallet.label("box-delivery", this.delivery.getPlayer());
-        this.repository.save(this.delivery);
+        if ((viewers == 1) && (this.list.trim() > 0)) this.list.setTitles();
+        this.repository.put(this.delivery);
     }
 
 }

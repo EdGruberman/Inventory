@@ -29,22 +29,21 @@ public final class Empty extends TokenizedExecutor {
         }
 
         final String player = Bukkit.getOfflinePlayer(args.get(0)).getName();
-        final Delivery delivery = this.clerk.getDeliveryRepository().load(player);
-        if (delivery != null && !delivery.getBalance().isEmpty()) delivery.getBalance().clear();
+        final Delivery delivery = this.clerk.getDeliveryRepository().get(player);
+        if (delivery != null && !delivery.getList().isContentsEmpty()) delivery.getList().removeAll();
+        final boolean trimmed = delivery.getList().trim() > 0;
+        if (trimmed) delivery.getList().setTitles();
 
         boolean use = false;
-        delivery.getBalance().clear();
-        final boolean trimmed = delivery.getBalance().trim();
-        if (trimmed) delivery.relabel();
         for (final Session session : this.clerk.sessionsFor(delivery)) {
-            if (trimmed && session.getIndex() != 0) session.next();
+            if (trimmed) session.refresh();
             use = true;
         }
 
         if (use) {
-            this.clerk.getDeliveryRepository().save(delivery);
+            this.clerk.getDeliveryRepository().put(delivery);
         } else {
-            this.clerk.getDeliveryRepository().delete(delivery);
+            this.clerk.getDeliveryRepository().remove(delivery);
         }
 
         Main.courier.send(sender, "empty", player);

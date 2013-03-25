@@ -24,7 +24,7 @@ public abstract class CraftBukkit {
 
 
     /** change inventory title (text that appears at top of gui window) */
-    public abstract void entitle(Inventory inventory, String title);
+    public abstract void setTitle(Inventory inventory, String title);
 
 
 

@@ -1,8 +1,8 @@
 format-code: '§'
-box-delivery: 'Delivery {1,choice,1#|2#{0}/{1} }({2})' # 0 = Index, 1 = Total, 2 = Owner
-box-kit: '{2} Kit{1,choice,1#|2# ({0} of {1})}' # 0 = Index, 1 = Total, 2 = Kit
+title-delivery: 'Delivery {1,choice,1#|2#{0}/{1} }({2})' # 0 = Index, 1 = Total, 2 = Owner
+title-kit: '{2} Kit{1,choice,1#|2# ({0} of {1})}' # 0 = Index, 1 = Total, 2 = Kit
 kit: '§f-> §7Kit §f{1}{3,choice,-1# §7x§f-{3}|0#|2# §7x§f{3}} {3,choice,-1#§2recalled §7from|0#§2issued §7to} {2}§8' # 1 = Kit, 2 = Player, 3 = Quantity, 4 = Failure Count
-failures: '§f-> §cFailed to recall§7 {1} item types from {2}: {3}' # 1 = Types Count, 2 = Target, 3 = Failures Summary
+failures: '§f-> Recall of {1} Kit from {2} §cfailed§7 for §f{4}§7 item types: {3}' # 1 = Kit, 2 = Target, 3 = Failures Summary, 4 = Failure Count
 items-summary:
   item: '§7{0}'
   delimiter: '§8, '

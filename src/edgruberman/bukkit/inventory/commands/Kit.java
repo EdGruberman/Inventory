@@ -10,21 +10,19 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import edgruberman.bukkit.inventory.Clerk;
 import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
-import edgruberman.bukkit.inventory.repositories.KitRepository;
+import edgruberman.bukkit.inventory.sessions.Session;
 import edgruberman.bukkit.inventory.util.ItemStackUtil;
 import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 
 public final class Kit extends TokenizedExecutor {
 
-    private final KitRepository kits;
-    private final DeliveryRepository deliveries;
+    private final Clerk clerk;
 
-    public Kit(final KitRepository kits, final DeliveryRepository deliveries) {
-        this.kits = kits;
-        this.deliveries = deliveries;
+    public Kit(final Clerk clerk) {
+        this.clerk = clerk;
     }
 
     // usage: /<command> <Kit>[ <Player>[ <Quantity>]]
@@ -40,7 +38,7 @@ public final class Kit extends TokenizedExecutor {
             return false;
         }
 
-        final edgruberman.bukkit.inventory.Kit kit = this.kits.load(args.get(0));
+        final edgruberman.bukkit.inventory.Kit kit = this.clerk.getKitRepository().get(args.get(0));
         if (kit == null) {
             Main.courier.send(sender, "unknown-argument", "<Kit>", args.get(0));
             return false;
@@ -59,7 +57,7 @@ public final class Kit extends TokenizedExecutor {
             }
         }
 
-        final List<ItemStack> changes = kit.getContents().items();
+        final List<ItemStack> changes = kit.getList().getContents();
         if (quantity != 1) {
             // clone contents stack by stack to respect stack sizes provided
             final List<ItemStack> multiplied = new ArrayList<ItemStack>();
@@ -73,13 +71,15 @@ public final class Kit extends TokenizedExecutor {
             changes.addAll(multiplied);
         }
 
-        final Delivery target = this.deliveries.create(player);
-        final Collection<ItemStack> failures = target.modifyBalance(changes);
+        final Delivery target = this.clerk.getDeliveryRepository().create(player);
+        final Collection<ItemStack> failures = target.getList().modify(changes);
         for (final ItemStack stack : failures) stack.setAmount(stack.getAmount() * -1);
-        this.deliveries.save(target);
+        this.clerk.getDeliveryRepository().put(target);
 
-        Main.courier.send(sender, "kit", kit.getName(), target.getPlayer(), quantity, failures.size());
-        if (!failures.isEmpty()) Main.courier.send(sender, "failures", failures.size(), target.getPlayer(), ItemStackUtil.summarize(failures));
+        for (final Session session : this.clerk.sessionsFor(target)) session.refresh();
+
+        Main.courier.send(sender, "kit", kit.getList().getKey(), target.getList().getKey(), quantity, failures.size());
+        if (!failures.isEmpty()) Main.courier.send(sender, "failures", kit.getList().getKey(), target.getList().getKey(), ItemStackUtil.summarize(failures), failures.size());
         return true;
     }
 

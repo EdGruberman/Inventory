@@ -6,7 +6,7 @@ import org.bukkit.inventory.Inventory;
 public class CraftBukkit_v1_4_6 extends CraftBukkit {
 
     @Override
-    public void entitle(final Inventory inventory, final String title) {
+    public void setTitle(final Inventory inventory, final String title) {
         if (!(inventory instanceof CraftInventoryCustom))
             throw new IllegalArgumentException("Inventory is not a " + CraftInventoryCustom.class.getName() + " instance: " + inventory.getClass().getName());
 

@@ -35,14 +35,14 @@ public final class Define extends TokenizedExecutor {
         }
 
         final String name = args.get(0);
-        edgruberman.bukkit.inventory.Kit kit = this.clerk.getKitRepository().load(args.get(0));
+        edgruberman.bukkit.inventory.Kit kit = this.clerk.getKitRepository().get(args.get(0));
         if (kit == null && !Define.isFilenameValid(name)) {
             Main.courier.send(sender, "define-invalid", args.get(0));
             return true;
         }
 
         if (kit == null) kit = this.clerk.getKitRepository().create(args.get(0));
-        this.clerk.startSession(new KitSession((Player) sender, this.clerk.getKitRepository(), kit));
+        this.clerk.openSession(new KitSession((Player) sender, this.clerk.getKitRepository(), kit));
         return true;
     }
 

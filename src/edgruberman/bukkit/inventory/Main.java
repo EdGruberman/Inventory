@@ -28,8 +28,8 @@ public final class Main extends CustomPlugin {
 
     @Override
     public void onLoad() {
-        this.putConfigMinimum("config.yml", "4.0.0a13");
-        this.putConfigMinimum("language.yml", "4.0.0a25");
+        this.putConfigMinimum("config.yml", "4.0.0a36");
+        this.putConfigMinimum("language.yml", "4.0.0a36");
     }
 
     @Override
@@ -58,7 +58,7 @@ public final class Main extends CustomPlugin {
         this.getCommand("inventory:edit").setExecutor(new Edit(this.clerk));
         this.getCommand("inventory:empty").setExecutor(new Empty(this.clerk));
         this.getCommand("inventory:define").setExecutor(new Define(this.clerk));
-        this.getCommand("inventory:kit").setExecutor(new edgruberman.bukkit.inventory.commands.Kit(this.clerk.getKitRepository(), this.clerk.getDeliveryRepository()));
+        this.getCommand("inventory:kit").setExecutor(new edgruberman.bukkit.inventory.commands.Kit(this.clerk));
         this.getCommand("inventory:delete").setExecutor(new Delete(this.clerk));
         this.getCommand("inventory:move").setExecutor(new Move());
         this.getCommand("inventory:copy").setExecutor(new Copy());

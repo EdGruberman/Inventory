@@ -16,7 +16,7 @@ public class YamlRepository<V extends ConfigurationSerializable> implements Repo
     protected final File folder;
     protected final int rate;
 
-    protected final Map<String, BufferedYamlConfiguration> loaded = new HashMap<String, BufferedYamlConfiguration>();
+    protected final Map<String, BufferedYamlConfiguration> yaml = new HashMap<String, BufferedYamlConfiguration>();
 
     public YamlRepository(final Plugin plugin, final File folder, final int rate) {
         this.plugin = plugin;
@@ -25,8 +25,14 @@ public class YamlRepository<V extends ConfigurationSerializable> implements Repo
     }
 
     @Override
-    public V load(final String key) {
-        BufferedYamlConfiguration buffer = this.loaded.get(key);
+    public boolean contains(final String key) {
+        final File file = new File(this.folder, key + ".yml");
+        return file.exists();
+    }
+
+    @Override
+    public V get(final String key) {
+        BufferedYamlConfiguration buffer = this.yaml.get(key);
         if (buffer == null) {
             final File file = new File(this.folder, key + ".yml");
             if (!file.exists()) return null;
@@ -37,7 +43,7 @@ public class YamlRepository<V extends ConfigurationSerializable> implements Repo
             } catch (final Exception e) {
                 throw new IllegalStateException("Unable to load repository YAML file " + buffer.getFile(), e);
             }
-            this.loaded.put(key, buffer);
+            this.yaml.put(key, buffer);
         }
 
         try {
@@ -50,11 +56,11 @@ public class YamlRepository<V extends ConfigurationSerializable> implements Repo
     }
 
     @Override
-    public void save(final String key, final V value) {
-        BufferedYamlConfiguration buffer = this.loaded.get(key);
+    public void put(final String key, final V value) {
+        BufferedYamlConfiguration buffer = this.yaml.get(key);
         if (buffer == null) {
             buffer = new BufferedYamlConfiguration(this.plugin, new File(this.folder, key + ".yml"), this.rate);
-            this.loaded.put(key, buffer);
+            this.yaml.put(key, buffer);
         }
 
         buffer.set(key, value);
@@ -62,8 +68,8 @@ public class YamlRepository<V extends ConfigurationSerializable> implements Repo
     }
 
     @Override
-    public void delete(final String key) {
-        final BufferedYamlConfiguration buffer = this.loaded.remove(key);
+    public void remove(final String key) {
+        final BufferedYamlConfiguration buffer = this.yaml.remove(key);
         if (buffer != null) {
             if (buffer.isQueued()) buffer.cancelSave();
             buffer.getFile().delete();
@@ -76,10 +82,10 @@ public class YamlRepository<V extends ConfigurationSerializable> implements Repo
 
     @Override
     public void destroy() {
-        for (final BufferedYamlConfiguration buffer : this.loaded.values())
+        for (final BufferedYamlConfiguration buffer : this.yaml.values())
             if (buffer.isQueued()) buffer.save();
 
-        this.loaded.clear();
+        this.yaml.clear();
     }
 
 }

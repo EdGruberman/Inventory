@@ -36,7 +36,7 @@ public final class Edit extends TokenizedExecutor {
 
         final String target = Bukkit.getOfflinePlayer(args.get(0)).getName();
         final Delivery active = this.clerk.getDeliveryRepository().create(target);
-        this.clerk.startSession(new DeliverySession((Player) sender, this.clerk.getDeliveryRepository(), active));
+        this.clerk.openSession(new DeliverySession((Player) sender, this.clerk.getDeliveryRepository(), active));
         return true;
     }
 

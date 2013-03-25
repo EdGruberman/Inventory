@@ -33,13 +33,13 @@ public final class Withdraw extends TokenizedExecutor implements Listener {
             return false;
         }
 
-        final Delivery requested = this.clerk.getDeliveryRepository().load(sender.getName());
-        if (requested == null || requested.getBalance().isEmpty()) {
+        final Delivery requested = this.clerk.getDeliveryRepository().get(sender.getName());
+        if (requested == null || requested.getList().isEmpty()) {
             Main.courier.send(sender, "withdraw-empty", sender.getName());
             return true;
         }
 
-        this.clerk.startSession(new DeliveryWithdraw((Player) sender, this.clerk.getDeliveryRepository(), requested));
+        this.clerk.openSession(new DeliveryWithdraw((Player) sender, this.clerk.getDeliveryRepository(), requested));
         return true;
     }
 

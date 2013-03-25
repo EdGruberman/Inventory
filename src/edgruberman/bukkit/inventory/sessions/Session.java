@@ -1,6 +1,5 @@
 package edgruberman.bukkit.inventory.sessions;
 
-import java.util.List;
 import java.util.Observable;
 
 import org.bukkit.Material;
@@ -12,58 +11,61 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import edgruberman.bukkit.inventory.Box;
+import edgruberman.bukkit.inventory.CustomInventory;
+import edgruberman.bukkit.inventory.KeyedInventoryList;
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.Pallet;
 
-/** pallet inventory interaction manager */
+/** inventory list interaction manager */
 public abstract class Session extends Observable implements Listener {
 
     protected final Player customer;
-    protected final Pallet pallet;
+    protected final KeyedInventoryList list;
 
     protected int index = -1;
+    protected boolean refresh = false;
 
     /** @param initial set of similar items, single instance of items excluding amount */
-    public Session(final Player customer, final Pallet pallet) {
+    public Session(final Player customer, final KeyedInventoryList list) {
         this.customer = customer;
-        this.pallet = pallet;
+        this.list = list;
+        this.index = this.list.size() - 1;
+    }
+
+    public Player getCustomer() {
+        return this.customer;
+    }
+
+    public KeyedInventoryList getList() {
+        return this.list;
     }
 
     public int getIndex() {
         return this.index;
     }
 
-    public abstract Object getKey();
-
-    public void start() {
-        this.onStart();
-        final List<Box> boxes = this.pallet.getBoxes();
-        final Box last = boxes.get(boxes.size() - 1);
-        this.index = boxes.size() - 1;
-        last.open(this.customer);
+    public void refresh() {
+        this.refresh = true;
+        if (this.index > this.list.size() - 1) this.index = 0;
+        this.customer.closeInventory();
+        this.list.get(this.index).open(this.customer);
+        this.refresh = false;
     }
 
-    protected void onStart() {};
-
-    protected void onExpand() {};
-
     public void next() {
-        final List<Box> boxes = this.pallet.getBoxes();
-        if (this.index == boxes.size() - 1 && boxes.get(this.index).isFull()) {
-            this.pallet.addBox();
-            this.onExpand();
+        if ((this.index == this.list.size() - 1) && this.list.get(this.index).isFull()) {
+            this.list.add(new CustomInventory());
+            this.list.setTitles();
         }
 
         final int current = this.index++;
-        if (this.index > boxes.size() - 1) this.index = 0;
-        if (current != this.index) boxes.get(this.index).open(this.customer);
+        if (this.index > this.list.size() - 1) this.index = 0;
+        if (current != this.index) this.refresh();
     }
 
     public void previous() {
         final int current = this.index--;
-        if (this.index < 0) this.index = this.pallet.getBoxes().size() - 1;
-        if (current != this.index) this.pallet.getBoxes().get(this.index).open(this.customer);
+        if (this.index < 0) this.index = this.list.size() - 1;
+        if (current != this.index) this.list.get(this.index).open(this.customer);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -87,6 +89,7 @@ public abstract class Session extends Observable implements Listener {
 
     @EventHandler
     public void close(final InventoryCloseEvent close) {
+        if (this.refresh) return; // ignore when refreshing view
         if (!this.customer.equals(close.getPlayer())) return; // ignore when not this customer
         this.end();
     }

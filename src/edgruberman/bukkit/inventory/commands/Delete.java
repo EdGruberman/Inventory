@@ -26,28 +26,29 @@ public final class Delete extends TokenizedExecutor {
             return false;
         }
 
-        final edgruberman.bukkit.inventory.Kit kit = this.clerk.getKitRepository().load(args.get(0));
+        final edgruberman.bukkit.inventory.Kit kit = this.clerk.getKitRepository().get(args.get(0));
         if (kit == null) {
             Main.courier.send(sender, "unknown-argument", "<Kit>", args.get(0));
             return true;
         }
 
+        kit.getList().removeAll();
+        final boolean trimmed = kit.getList().trim() > 0;
+        if (trimmed) kit.getList().setTitles();
+
         boolean use = false;
-        kit.getContents().clear();
-        final boolean trimmed = kit.getContents().trim();
-        if (trimmed) kit.relabel();
         for (final Session session : this.clerk.sessionsFor(kit)) {
-            if (trimmed && session.getIndex() != 0) session.next();
+            if (trimmed) session.refresh();
             use = true;
         }
 
         if (use) {
-            this.clerk.getKitRepository().save(kit);
+            this.clerk.getKitRepository().put(kit);
         } else {
-            this.clerk.getKitRepository().delete(kit);
+            this.clerk.getKitRepository().remove(kit);
         }
 
-        Main.courier.send(sender, "delete", kit.getName());
+        Main.courier.send(sender, "delete", kit.getList().getKey());
         return true;
     }
 

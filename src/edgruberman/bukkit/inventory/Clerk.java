@@ -24,14 +24,13 @@ public class Clerk implements Observer {
     static {
         ConfigurationSerialization.registerClass(Kit.class);
         ConfigurationSerialization.registerClass(Delivery.class);
-        ConfigurationSerialization.registerClass(Pallet.class);
-        ConfigurationSerialization.registerClass(Box.class);
+        ConfigurationSerialization.registerClass(CustomInventory.class);
     }
 
     private final Plugin plugin;
     private final KitRepository kitRepository;
     private final DeliveryRepository deliveryRepository;
-    private final Map<Object, List<Session>> sessions = new HashMap<Object, List<Session>>();
+    private final Map<KeyedInventoryList, List<Session>> sessions = new HashMap<KeyedInventoryList, List<Session>>();
 
     Clerk(final Plugin plugin, final File kits, final File deliveries) {
         this.plugin = plugin;
@@ -51,32 +50,31 @@ public class Clerk implements Observer {
         return this.deliveryRepository;
     }
 
-    public void startSession(final Session session) {
-        final Object key = session.getKey();
-        if (!this.sessions.containsKey(key)) this.sessions.put(key, new ArrayList<Session>());
-        this.sessions.get(session.getKey()).add(session);
+    public void openSession(final Session session) {
+        if (!this.sessions.containsKey(session.getList())) this.sessions.put(session.getList(), new ArrayList<Session>());
+        this.sessions.get(session.getList()).add(session);
 
         session.addObserver(this);
-        session.start();
+        session.getList().get(session.getIndex()).open(session.getCustomer());
         Bukkit.getPluginManager().registerEvents(session, this.plugin);
     }
 
     @Override
     public void update(final Observable o, final Object arg) {
         final Session session = (Session) o;
-        final List<Session> sessions = this.sessions.get(session.getKey());
+        final List<Session> sessions = this.sessions.get(session.getList());
         sessions.remove(session);
-        if (sessions.size() == 0) this.sessions.remove(session.getKey());
+        if (sessions.size() == 0) this.sessions.remove(session.getList());
     }
 
     public List<Session> sessionsFor(final Kit kit) {
-        final List<Session> result = this.sessions.get(kit);
+        final List<Session> result = this.sessions.get(kit.getList());
         if (result != null) return result;
         return Collections.emptyList();
     }
 
     public List<Session> sessionsFor(final Delivery delivery) {
-        final List<Session> result = this.sessions.get(delivery);
+        final List<Session> result = this.sessions.get(delivery.getList());
         if (result != null) return result;
         return Collections.emptyList();
     }
