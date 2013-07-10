@@ -1,9 +1,9 @@
 package edgruberman.bukkit.inventory.craftbukkit;
 
-import org.bukkit.craftbukkit.v1_4_6.inventory.CraftInventoryCustom;
+import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftInventoryCustom;
 import org.bukkit.inventory.Inventory;
 
-public class CraftBukkit_v1_4_6 extends CraftBukkit {
+public class CraftBukkit_v1_6_R2 extends CraftBukkit {
 
     @Override
     public void setTitle(final Inventory inventory, final String title) {
