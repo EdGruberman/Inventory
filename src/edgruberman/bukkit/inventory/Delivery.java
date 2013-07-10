@@ -20,7 +20,7 @@ public final class Delivery implements ConfigurationSerializable {
     }
 
     private Delivery(final String player, final Collection<CustomInventory> elements) {
-        this.list = new KeyedInventoryList(player, Main.courier.translate("title-delivery"), elements);
+        this.list = new KeyedInventoryList(player, Main.courier.translate("title-delivery").get(0), elements);
     }
 
     public KeyedInventoryList getList() {

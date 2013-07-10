@@ -15,7 +15,7 @@ import edgruberman.bukkit.inventory.commands.Move;
 import edgruberman.bukkit.inventory.commands.Reload;
 import edgruberman.bukkit.inventory.commands.Withdraw;
 import edgruberman.bukkit.inventory.craftbukkit.CraftBukkit;
-import edgruberman.bukkit.inventory.messaging.ConfigurationCourier;
+import edgruberman.bukkit.inventory.messaging.Courier.ConfigurationCourier;
 import edgruberman.bukkit.inventory.util.CustomPlugin;
 import edgruberman.bukkit.inventory.util.ItemStackUtil;
 
@@ -28,7 +28,7 @@ public final class Main extends CustomPlugin {
 
     @Override
     public void onLoad() {
-        this.putConfigMinimum("config.yml", "4.0.0");
+        this.putConfigMinimum("4.0.0");
         this.putConfigMinimum("language.yml", "4.0.0");
     }
 
@@ -67,7 +67,7 @@ public final class Main extends CustomPlugin {
 
     @Override
     public void onDisable() {
-        if (this.clerk != null) this.clerk.destroy(Main.courier.format("session-destroy-disable"));
+        if (this.clerk != null) this.clerk.destroy(Main.courier.format("session-destroy-disable").get(0));
         Main.courier = null;
         Main.craftBukkit = null;
         HandlerList.unregisterAll(this);

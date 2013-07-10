@@ -19,7 +19,7 @@ public class Kit implements ConfigurationSerializable {
     }
 
     private Kit(final String name, final Collection<CustomInventory> elements) {
-        this.list = new KeyedInventoryList(name, Main.courier.translate("title-kit"), elements);
+        this.list = new KeyedInventoryList(name, Main.courier.translate("title-kit").get(0), elements);
     }
 
     public KeyedInventoryList getList() {
