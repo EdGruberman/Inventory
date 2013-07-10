@@ -14,37 +14,37 @@ commands:
     aliases: [delivery, delivery.edit]
     description: Add or remove items in delivery
     permission: inventory.edit
-    usage: '§f-> §7Usage: §b/<command> §o<Player>'
+    usage: '§f-> §7Usage: §b/<command> §3§oplayer'
   'inventory:empty':
     aliases: [delivery.empty]
     description: Remove all items from delivery
     permission: inventory.empty
-    usage: '§f-> §7Usage: §b/<command> §o<Player>'
+    usage: '§f-> §7Usage: §b/<command> §3§oplayer'
   'inventory:define':
     aliases: [kit.define]
     description: Create, edit, or delete a kit
     permission: inventory.define
-    usage: '§f-> §7Usage: §b/<command> §o<Kit>'
+    usage: '§f-> §7Usage: §b/<command> §3§okit'
   'inventory:kit':
     aliases: [kit]
     description: Issue or recall a kit
     permission: inventory.kit
-    usage: '§f-> §7Usage: §b/<command> §o<Kit>§3[ §b§o<Player>§3[ §b§o<Quantity>§3]]'
+    usage: '§f-> §7Usage: §b/<command> §3§okit §3[§oplayer§3] [§oquantity§3]'
   'inventory:delete':
     aliases: [kit.delete]
     description: Delete a kit
     permission: inventory.delete
-    usage: '§f-> §7Usage: §b/<command> §o<Kit>'
+    usage: '§f-> §7Usage: §b/<command> §3§okit'
   'inventory:move':
     aliases: [move]
     description: Move held item to player
     permission: inventory.move
-    usage: '§f-> §7Usage: §b/<command> §o<Player>'
+    usage: '§f-> §7Usage: §b/<command> §3§oplayer'
   'inventory:copy':
     aliases: [copy]
     description: Copy held item and optionally move to player
     permission: inventory.copy
-    usage: '§f-> §7Usage: §b/<command>§3[ §b§o<Player>§3]'
+    usage: '§f-> §7Usage: §b/<command> §3[§oplayer§3]'
   'inventory:reload':
     description: Reload Inventory plugin
     permission: inventory.reload
