@@ -17,7 +17,6 @@ import edgruberman.bukkit.inventory.commands.Withdraw;
 import edgruberman.bukkit.inventory.craftbukkit.CraftBukkit;
 import edgruberman.bukkit.inventory.messaging.Courier.ConfigurationCourier;
 import edgruberman.bukkit.inventory.util.CustomPlugin;
-import edgruberman.bukkit.inventory.util.ItemStackUtil;
 
 public final class Main extends CustomPlugin {
 
@@ -45,7 +44,6 @@ public final class Main extends CustomPlugin {
 
         this.reloadConfig();
         Main.courier = ConfigurationCourier.create(this).setBase(this.loadConfig("language.yml")).setFormatCode("format-code").build();
-        ItemStackUtil.setFormat(Main.courier.getSection("items-summary"));
 
         final File kits = new File(this.getDataFolder(), this.getConfig().getString("kit-folder"));
         final File deliveries = new File(this.getDataFolder(), this.getConfig().getString("delivery-folder"));
@@ -58,7 +56,7 @@ public final class Main extends CustomPlugin {
         this.getCommand("inventory:edit").setExecutor(new Edit(this.clerk));
         this.getCommand("inventory:empty").setExecutor(new Empty(this.clerk));
         this.getCommand("inventory:define").setExecutor(new Define(this.clerk));
-        this.getCommand("inventory:kit").setExecutor(new edgruberman.bukkit.inventory.commands.Kit(this.clerk));
+        this.getCommand("inventory:kit").setExecutor(new edgruberman.bukkit.inventory.commands.Kit(this.clerk, Main.courier.getSection("items-summary")));
         this.getCommand("inventory:delete").setExecutor(new Delete(this.clerk));
         this.getCommand("inventory:move").setExecutor(new Move());
         this.getCommand("inventory:copy").setExecutor(new Copy());

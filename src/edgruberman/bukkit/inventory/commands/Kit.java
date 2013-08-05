@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,14 +15,14 @@ import edgruberman.bukkit.inventory.Clerk;
 import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.sessions.Session;
-import edgruberman.bukkit.inventory.util.ItemStackUtil;
-import edgruberman.bukkit.inventory.util.TokenizedExecutor;
+import edgruberman.bukkit.inventory.util.ItemStackExecutor;
 
-public final class Kit extends TokenizedExecutor {
+public final class Kit extends ItemStackExecutor {
 
     private final Clerk clerk;
 
-    public Kit(final Clerk clerk) {
+    public Kit(final Clerk clerk, final ConfigurationSection listFormat) {
+        super(listFormat);
         this.clerk = clerk;
     }
 
@@ -79,7 +80,7 @@ public final class Kit extends TokenizedExecutor {
         for (final Session session : this.clerk.sessionsFor(target)) session.refresh();
 
         Main.courier.send(sender, "kit", kit.getList().getKey(), target.getList().getKey(), quantity, failures.size());
-        if (!failures.isEmpty()) Main.courier.send(sender, "failures", kit.getList().getKey(), target.getList().getKey(), ItemStackUtil.summarize(failures), failures.size());
+        if (!failures.isEmpty()) Main.courier.send(sender, "failures", kit.getList().getKey(), target.getList().getKey(), this.summarize(failures), failures.size());
         return true;
     }
 

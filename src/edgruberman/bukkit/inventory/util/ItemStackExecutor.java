@@ -5,19 +5,25 @@ import java.util.Collection;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemStackUtil {
+public abstract class ItemStackExecutor extends TokenizedExecutor {
 
-    private static ConfigurationSection format;
+    private final ConfigurationSection listFormat;
 
-    public static void setFormat(final ConfigurationSection format) {
-        ItemStackUtil.format = format;
+    protected ItemStackExecutor() {
+        this(null);
     }
 
-    public static JoinList<StringBuilder> summarize(final Collection<ItemStack> stacks) {
-        final JoinList<StringBuilder> joined = new JoinList<StringBuilder>(ItemStackUtil.format);
-        for (final ItemStack stack : stacks) joined.add(ItemStackUtil.summarize(stack));
+    protected ItemStackExecutor(final ConfigurationSection listFormat) {
+        this.listFormat = listFormat;
+    }
+
+    public JoinList<StringBuilder> summarize(final Collection<ItemStack> stacks) {
+        final JoinList<StringBuilder> joined = new JoinList<StringBuilder>(this.listFormat);
+        for (final ItemStack stack : stacks) joined.add(ItemStackExecutor.summarize(stack));
         return joined;
     }
+
+
 
     public static StringBuilder summarize(final ItemStack stack) {
         final StringBuilder sb = new StringBuilder(stack.getType().name());

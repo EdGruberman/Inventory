@@ -142,11 +142,4 @@ public class InventoryList extends ArrayList<CustomInventory> {
         return result;
     }
 
-//    /** @return clone of list with each element cloned */
-//    public InventoryList copy() {
-//        final List<CustomInventory> cloned = new ArrayList<CustomInventory>();
-//        for (final CustomInventory inv : this) cloned.add(inv.clone());
-//        return new InventoryList(cloned);
-//    }
-
 }

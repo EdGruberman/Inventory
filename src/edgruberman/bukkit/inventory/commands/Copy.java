@@ -9,10 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.util.ItemStackUtil;
-import edgruberman.bukkit.inventory.util.TokenizedExecutor;
+import edgruberman.bukkit.inventory.util.ItemStackExecutor;
 
-public final class Copy extends TokenizedExecutor {
+public final class Copy extends ItemStackExecutor {
 
     // usage: /<command>[ <Player>]
     @Override
@@ -37,7 +36,7 @@ public final class Copy extends TokenizedExecutor {
         final Player source = (Player) sender;
         final ItemStack clone = source.getItemInHand().clone();
         target.getInventory().setItem(slot, clone);
-        Main.courier.send(sender, "copy", target.getName(), ItemStackUtil.summarize(clone));
+        Main.courier.send(sender, "copy", target.getName(), ItemStackExecutor.summarize(clone));
         return true;
     }
 

@@ -9,10 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.util.ItemStackUtil;
-import edgruberman.bukkit.inventory.util.TokenizedExecutor;
+import edgruberman.bukkit.inventory.util.ItemStackExecutor;
 
-public final class Move extends TokenizedExecutor {
+public final class Move extends ItemStackExecutor {
 
     // usage: /<command> <Player>
     @Override
@@ -43,7 +42,7 @@ public final class Move extends TokenizedExecutor {
         final ItemStack clone = source.getItemInHand().clone();
         source.setItemInHand(null);
         target.getInventory().setItem(slot, clone);
-        Main.courier.send(sender, "move", target.getName(), ItemStackUtil.summarize(clone));
+        Main.courier.send(sender, "move", target.getName(), ItemStackExecutor.summarize(clone));
         return true;
     }
 
