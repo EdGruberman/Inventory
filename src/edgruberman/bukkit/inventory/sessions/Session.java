@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import edgruberman.bukkit.inventory.CustomInventory;
@@ -76,7 +77,7 @@ public abstract class Session extends Observable implements Listener {
         if (click.isCancelled()) return;
 
         // left or right click outside with nothing on cursor to navigate boxes forwards or backwards
-        if (click.getRawSlot() == -999 && click.getCursor().getTypeId() == Material.AIR.getId()) { // TODO Fix SlotType.OUTSIDE not being properly identified; BUKKIT-2768
+        if (click.getSlotType() == SlotType.OUTSIDE && click.getCursor().getTypeId() == Material.AIR.getId()) {
             if (click.isLeftClick()) {
                 this.next();
             } else {
