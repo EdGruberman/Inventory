@@ -9,6 +9,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import edgruberman.bukkit.inventory.CustomInventory;
@@ -85,7 +86,15 @@ public abstract class Session extends Observable implements Listener {
         }
     }
 
-    protected void onClick(final InventoryClickEvent click) {};
+    protected void onClick(final InventoryClickEvent click) {}
+
+    @EventHandler(ignoreCancelled = true)
+    public void drag(final InventoryDragEvent drag) {
+        if (!this.customer.equals(drag.getWhoClicked())) return; // ignore when not this customer
+        this.onDrag(drag);
+    }
+
+    protected void onDrag(final InventoryDragEvent drag) {}
 
     @EventHandler
     public void close(final InventoryCloseEvent close) {
@@ -107,7 +116,7 @@ public abstract class Session extends Observable implements Listener {
         this.notifyObservers();
     }
 
-    protected void onEnd() {};
+    protected void onEnd() {}
 
     public void destroy(final String reason) {
         try {
