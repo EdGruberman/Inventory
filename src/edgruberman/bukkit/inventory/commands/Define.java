@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import edgruberman.bukkit.inventory.Clerk;
+import edgruberman.bukkit.inventory.InventoryList;
 import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.sessions.KitSession;
 import edgruberman.bukkit.inventory.util.TokenizedExecutor;
@@ -33,7 +34,7 @@ public final class Define extends TokenizedExecutor {
         }
 
         final String name = args.get(0);
-        edgruberman.bukkit.inventory.Kit kit = this.clerk.getKit(name.toLowerCase());
+        InventoryList kit = this.clerk.getKit(name.toLowerCase());
         if (kit == null) kit = this.clerk.createKit(name);
 
         this.clerk.openSession(new KitSession((Player) sender, this.clerk, kit));

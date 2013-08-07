@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import edgruberman.bukkit.inventory.Clerk;
-import edgruberman.bukkit.inventory.Delivery;
+import edgruberman.bukkit.inventory.InventoryList;
 import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.sessions.Session;
 import edgruberman.bukkit.inventory.util.ItemStackExecutor;
@@ -39,7 +39,7 @@ public final class Kit extends ItemStackExecutor {
             return false;
         }
 
-        final edgruberman.bukkit.inventory.Kit kit = this.clerk.getKit(args.get(0).toLowerCase());
+        final InventoryList kit = this.clerk.getKit(args.get(0).toLowerCase());
         if (kit == null) {
             Main.courier.send(sender, "unknown-argument", "<Kit>", args.get(0));
             return false;
@@ -72,13 +72,13 @@ public final class Kit extends ItemStackExecutor {
             changes.addAll(multiplied);
         }
 
-        Delivery target = this.clerk.getDelivery(player.toLowerCase());
+        InventoryList target = this.clerk.getDelivery(player.toLowerCase());
         if (target == null) target = this.clerk.createDelivery(player);
 
         final int before = target.size();
         final Collection<ItemStack> failures = target.modify(changes);
         if (target.size() != before) {
-            target.formatTitles();
+            target.formatTitles(this.clerk.getKitTitle(), target.getName());
             // TODO refresh sessions
         }
 

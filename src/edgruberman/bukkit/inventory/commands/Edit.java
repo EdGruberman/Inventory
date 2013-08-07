@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import edgruberman.bukkit.inventory.Clerk;
-import edgruberman.bukkit.inventory.Delivery;
+import edgruberman.bukkit.inventory.InventoryList;
 import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.sessions.DeliverySession;
 import edgruberman.bukkit.inventory.util.TokenizedExecutor;
@@ -35,7 +35,7 @@ public final class Edit extends TokenizedExecutor {
         }
 
         final String target = Bukkit.getOfflinePlayer(args.get(0)).getName();
-        final Delivery active = this.clerk.getDelivery(target.toLowerCase());
+        final InventoryList active = this.clerk.getDelivery(target.toLowerCase());
         if (active == null) this.clerk.createDelivery(target);
 
         this.clerk.openSession(new DeliverySession((Player) sender, this.clerk, active));

@@ -6,19 +6,35 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class CustomInventoryList extends ArrayList<CustomInventory> {
+@SerializableAs("InventoryList")
+public class InventoryList extends ArrayList<InventoryAdapter> implements ConfigurationSerializable {
     private static final long serialVersionUID = 1L;
 
-    public CustomInventoryList(final Collection<CustomInventory> elements) {
+    protected final String name;
+
+    public InventoryList(final String name) {
+        this(name, Collections.<InventoryAdapter>emptyList());
+    }
+
+    public InventoryList(final String name, final Collection<InventoryAdapter> elements) {
         super(elements);
+        this.name = name;
+        if (elements.isEmpty()) this.add(new InventoryAdapter());
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     /** @param pattern 0 = index, 1 = total, 2+ = arguments */
@@ -77,7 +93,7 @@ public class CustomInventoryList extends ArrayList<CustomInventory> {
             }
         }
 
-        this.add(new CustomInventory());
+        this.add(new InventoryAdapter());
         for (final ItemStack still : remaining.values()) this.add(still);
     }
 
@@ -94,7 +110,7 @@ public class CustomInventoryList extends ArrayList<CustomInventory> {
         // TODO check for exact stack matches to remove first
 
         Map<Integer, ItemStack> remaining = Collections.emptyMap();
-        for (final CustomInventory inv : this) {
+        for (final InventoryAdapter inv : this) {
             remaining = inv.removeItem(clone);
             if (remaining.size() == 0) break;
         }
@@ -110,12 +126,12 @@ public class CustomInventoryList extends ArrayList<CustomInventory> {
     /** @return mirrors of all ItemStacks that are not null and not AIR */
     public List<ItemStack> getContents() {
         final List<ItemStack> result = new ArrayList<ItemStack>();
-        for (final CustomInventory inv : this) result.addAll(inv.getPopulated());
+        for (final InventoryAdapter inv : this) result.addAll(inv.getPopulated());
         return result;
     }
 
     public boolean isContentsEmpty() {
-        for (final CustomInventory inv : this)
+        for (final InventoryAdapter inv : this)
             if (!inv.isEmpty()) return false;
 
         return true;
@@ -138,8 +154,23 @@ public class CustomInventoryList extends ArrayList<CustomInventory> {
 
     public Set<HumanEntity> getViewers() {
         final Set<HumanEntity> result = new HashSet<HumanEntity>();
-        for (final CustomInventory inv : this) result.addAll(inv.getViewers());
+        for (final InventoryAdapter inv : this) result.addAll(inv.getViewers());
         return result;
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        final Map<String, Object> result = new LinkedHashMap<String, Object>();
+        result.put("name", this.name);
+        result.put("elements", this.subList(0, this.size()));
+        return result;
+    }
+
+    public static InventoryList deserialize(final Map<String, Object> serialized) {
+        final String name = (String) serialized.get("name");
+        @SuppressWarnings("unchecked")
+        final List<InventoryAdapter> elements = (ArrayList<InventoryAdapter>) serialized.get("elements");
+        return new InventoryList(name, elements);
     }
 
 }

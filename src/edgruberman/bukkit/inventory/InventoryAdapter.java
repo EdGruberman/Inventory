@@ -18,19 +18,18 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
-/** Inventory adapter */
 @SerializableAs("Inventory")
-public final class CustomInventory implements Inventory, ConfigurationSerializable, Cloneable {
+public final class InventoryAdapter implements Inventory, ConfigurationSerializable, Cloneable {
 
     public static final int SIZE = 54;
 
     private final Inventory inventory;
 
-    public CustomInventory() {
-        this(Bukkit.createInventory(null, CustomInventory.SIZE));
+    public InventoryAdapter() {
+        this(Bukkit.createInventory(null, InventoryAdapter.SIZE));
     }
 
-    public CustomInventory(final Inventory inventory) {
+    public InventoryAdapter(final Inventory inventory) {
         this.inventory = inventory;
     }
 
@@ -38,7 +37,7 @@ public final class CustomInventory implements Inventory, ConfigurationSerializab
         player.openInventory(this.inventory);
     }
 
-    public CustomInventory setTitle(final String title) {
+    public InventoryAdapter setTitle(final String title) {
         Main.craftBukkit.setTitle(this.inventory, title);
         return this;
     }
@@ -68,10 +67,10 @@ public final class CustomInventory implements Inventory, ConfigurationSerializab
     }
 
     @Override
-    public CustomInventory clone() {
+    public InventoryAdapter clone() {
         final Inventory inventory = Bukkit.createInventory(this.inventory.getHolder(), this.inventory.getSize(), this.inventory.getTitle());
         inventory.setContents(this.inventory.getContents());
-        return new CustomInventory(inventory);
+        return new InventoryAdapter(inventory);
     }
 
     @Override
@@ -91,8 +90,8 @@ public final class CustomInventory implements Inventory, ConfigurationSerializab
         return result;
     }
 
-    public static CustomInventory deserialize(final Map<String, Object> serialized) {
-        final CustomInventory result = new CustomInventory();
+    public static InventoryAdapter deserialize(final Map<String, Object> serialized) {
+        final InventoryAdapter result = new InventoryAdapter();
 
         result.setTitle((String) serialized.get("title"));
 

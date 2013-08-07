@@ -6,13 +6,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 
 import edgruberman.bukkit.inventory.Clerk;
-import edgruberman.bukkit.inventory.Delivery;
+import edgruberman.bukkit.inventory.InventoryList;
 import edgruberman.bukkit.inventory.Main;
 
 /** prevents any additions */
 public class DeliveryWithdraw extends DeliverySession {
 
-    public DeliveryWithdraw(final Player customer, final Clerk clerk, final Delivery delivery) {
+    public DeliveryWithdraw(final Player customer, final Clerk clerk, final InventoryList delivery) {
         super(customer, clerk, delivery);
     }
 

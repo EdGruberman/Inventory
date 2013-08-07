@@ -13,23 +13,25 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import edgruberman.bukkit.inventory.CustomInventory;
+import edgruberman.bukkit.inventory.InventoryAdapter;
+import edgruberman.bukkit.inventory.InventoryList;
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.NamedCustomInventoryList;
 
 /** inventory list interaction manager */
 public abstract class Session extends Observable implements Listener {
 
     protected final Player customer;
-    protected final NamedCustomInventoryList list;
+    protected final InventoryList list;
+    protected final String title;
 
     protected int index = -1;
     protected boolean refresh = false;
 
     /** @param initial set of similar items, single instance of items excluding amount */
-    public Session(final Player customer, final NamedCustomInventoryList list) {
+    public Session(final Player customer, final InventoryList list, final String title) {
         this.customer = customer;
         this.list = list;
+        this.title = title;
         this.index = this.list.size() - 1;
     }
 
@@ -37,7 +39,7 @@ public abstract class Session extends Observable implements Listener {
         return this.customer;
     }
 
-    public NamedCustomInventoryList getInventory() {
+    public InventoryList getInventory() {
         return this.list;
     }
 
@@ -55,8 +57,8 @@ public abstract class Session extends Observable implements Listener {
 
     public void next() {
         if ((this.index == this.list.size() - 1) && this.list.get(this.index).isFull()) {
-            this.list.add(new CustomInventory());
-            this.list.formatTitles();
+            this.list.add(new InventoryAdapter());
+            this.list.formatTitles(this.title, this.list.getName());
         }
 
         final int current = this.index++;

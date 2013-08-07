@@ -7,7 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import edgruberman.bukkit.inventory.Clerk;
-import edgruberman.bukkit.inventory.Delivery;
+import edgruberman.bukkit.inventory.InventoryList;
 import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.sessions.Session;
 import edgruberman.bukkit.inventory.util.TokenizedExecutor;
@@ -29,10 +29,10 @@ public final class Empty extends TokenizedExecutor {
         }
 
         final String player = Bukkit.getOfflinePlayer(args.get(0)).getName();
-        final Delivery delivery = this.clerk.getDelivery(player.toLowerCase());
+        final InventoryList delivery = this.clerk.getDelivery(player.toLowerCase());
         if (delivery != null && !delivery.isContentsEmpty()) delivery.removeAll();
         final boolean trimmed = delivery.trim() > 0;
-        if (trimmed) delivery.formatTitles();
+        if (trimmed) delivery.formatTitles(this.clerk.getDeliveryTitle(), delivery.getName());
 
         boolean use = false;
         for (final Session session : this.clerk.sessionsFor(delivery)) {

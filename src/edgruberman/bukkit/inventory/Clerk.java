@@ -23,66 +23,94 @@ import edgruberman.bukkit.inventory.sessions.Session;
 public class Clerk implements Observer {
 
     static {
-        ConfigurationSerialization.registerClass(Kit.class);
-        ConfigurationSerialization.registerClass(Delivery.class);
-        ConfigurationSerialization.registerClass(CustomInventory.class);
+        ConfigurationSerialization.registerClass(InventoryAdapter.class);
+        ConfigurationSerialization.registerClass(InventoryList.class);
     }
 
     private final Plugin plugin;
-    private final CachingRepository<SimpleString, Kit> kits;
-    private final CachingRepository<SimpleString, Delivery> deliveries;
-    private final Map<NamedCustomInventoryList, List<Session>> sessions = new HashMap<NamedCustomInventoryList, List<Session>>();
+    private final CachingRepository<SimpleString, InventoryList> kits;
+    private final CachingRepository<SimpleString, InventoryList> deliveries;
+    private final Map<InventoryList, List<Session>> sessions = new HashMap<InventoryList, List<Session>>();
 
     Clerk(final Plugin plugin, final File kits, final File deliveries) {
         this.plugin = plugin;
 
-        final Repository<SimpleString, Kit> yamlKits = new YamlRepository<Kit>(this.plugin, kits, 30000);
-        this.kits = new CachingRepository<SimpleString, Kit>(yamlKits);
+        final Repository<SimpleString, InventoryList> yamlKits = new YamlRepository<InventoryList>(this.plugin, kits, 30000);
+        this.kits = new CachingRepository<SimpleString, InventoryList>(yamlKits);
 
-        final Repository<SimpleString, Delivery> yamlDeliveries = new YamlRepository<Delivery>(this.plugin, deliveries, 30000);
-        this.deliveries = new CachingRepository<SimpleString, Delivery>(yamlDeliveries);
+        final Repository<SimpleString, InventoryList> yamlDeliveries = new YamlRepository<InventoryList>(this.plugin, deliveries, 30000);
+        this.deliveries = new CachingRepository<SimpleString, InventoryList>(yamlDeliveries);
     }
+//
+//    public NamedCustomInventoryList createInventory(final String name) {
+//        final SimpleString simple = SimpleString.of(name);
+//        final Kit result = new NamedCustomInventoryList(simple.getValue());
+//        this.kits.put(simple.toLowerCase(), result);
+//        return result;
+//    }
+//
+//    public NamedCustomInventoryList getInventory(final String key) {
+//        final SimpleString simple = SimpleString.of(key);
+//        if (!simple.equals(key)) return null;
+//        return this.kits.get(simple);
+//    }
+//
+//    public void putInventory(final NamedCustomInventoryList inventory) {
+//        this.kits.put(SimpleString.of(inventory.getName().toLowerCase()), inventory);
+//    }
+//
+//    public void removeInventory(final NamedCustomInventoryList inventory) {
+//        this.kits.remove(SimpleString.of(inventory.getName().toLowerCase()));
+//    }
 
-    public Kit createKit(final String name) {
+    public InventoryList createKit(final String name) {
         final SimpleString simple = SimpleString.of(name);
-        final Kit result = new Kit(simple.getValue());
+        final InventoryList result = new InventoryList(simple.getValue());
         this.kits.put(simple.toLowerCase(), result);
         return result;
     }
 
-    public Kit getKit(final String key) {
+    public InventoryList getKit(final String key) {
         final SimpleString simple = SimpleString.of(key);
         if (!simple.equals(key)) return null;
         return this.kits.get(simple);
     }
 
-    public void putKit(final Kit kit) {
+    public void putKit(final InventoryList kit) {
         this.kits.put(SimpleString.of(kit.getName().toLowerCase()), kit);
     }
 
-    public void removeKit(final Kit kit) {
+    public void removeKit(final InventoryList kit) {
         this.kits.remove(SimpleString.of(kit.getName().toLowerCase()));
     }
 
-    public Delivery createDelivery(final String name) {
+    public String getKitTitle() {
+        return Main.courier.translate("title-kit").get(0);
+    }
+
+    public InventoryList createDelivery(final String name) {
         final SimpleString simple = SimpleString.of(name);
-        final Delivery result = new Delivery(simple.getValue());
+        final InventoryList result = new InventoryList(simple.getValue());
         this.deliveries.put(simple.toLowerCase(), result);
         return result;
     }
 
-    public Delivery getDelivery(final String key) {
+    public InventoryList getDelivery(final String key) {
         final SimpleString simple = SimpleString.of(key);
         if (!simple.equals(key)) return null;
         return this.deliveries.get(simple);
     }
 
-    public void putDelivery(final Delivery delivery) {
+    public void putDelivery(final InventoryList delivery) {
         this.deliveries.put(SimpleString.of(delivery.getName().toLowerCase()), delivery);
     }
 
-    public void removeDelivery(final Delivery delivery) {
+    public void removeDelivery(final InventoryList delivery) {
         this.deliveries.remove(SimpleString.of(delivery.getName().toLowerCase()));
+    }
+
+    public String getDeliveryTitle() {
+        return Main.courier.translate("title-delivery").get(0);
     }
 
     @Override
@@ -102,24 +130,14 @@ public class Clerk implements Observer {
         Bukkit.getPluginManager().registerEvents(session, this.plugin);
     }
 
-    public List<Session> sessionsFor(final Kit kit) {
-        final List<Session> result = this.sessions.get(kit);
+    public List<Session> sessionsFor(final InventoryList inventory) {
+        final List<Session> result = this.sessions.get(inventory);
         if (result != null) return result;
         return Collections.emptyList();
     }
 
-    public List<Session> sessionsFor(final Delivery delivery) {
-        final List<Session> result = this.sessions.get(delivery);
-        if (result != null) return result;
-        return Collections.emptyList();
-    }
-
-    public void destroySessions(final Kit kit, final String reason) {
-        this.destroySessions(this.sessionsFor(kit), reason);
-    }
-
-    public void destroySessions(final Delivery delivery, final String reason) {
-        this.destroySessions(this.sessionsFor(delivery), reason);
+    public void destroySessions(final InventoryList inventory, final String reason) {
+        this.destroySessions(this.sessionsFor(inventory), reason);
     }
 
     public void destroySessions(final String reason) {

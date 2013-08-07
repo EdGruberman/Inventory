@@ -3,15 +3,15 @@ package edgruberman.bukkit.inventory.sessions;
 import org.bukkit.entity.Player;
 
 import edgruberman.bukkit.inventory.Clerk;
-import edgruberman.bukkit.inventory.Delivery;
+import edgruberman.bukkit.inventory.InventoryList;
 
 public class DeliverySession extends Session {
 
     protected final Clerk clerk;
-    protected final Delivery delivery;
+    protected final InventoryList delivery;
 
-    public DeliverySession(final Player customer, final Clerk clerk, final Delivery delivery) {
-        super(customer, delivery);
+    public DeliverySession(final Player customer, final Clerk clerk, final InventoryList delivery) {
+        super(customer, delivery, clerk.getDeliveryTitle());
         this.clerk = clerk;
         this.delivery = delivery;
     }
@@ -24,7 +24,7 @@ public class DeliverySession extends Session {
             return;
         }
 
-        if ((viewers == 1) && (this.list.trim() > 0)) this.list.formatTitles();
+        if ((viewers == 1) && (this.list.trim() > 0)) this.list.formatTitles(this.title, this.list.getName());
         this.clerk.putDelivery(this.delivery);
     }
 

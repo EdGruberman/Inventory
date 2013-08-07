@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import edgruberman.bukkit.inventory.Clerk;
+import edgruberman.bukkit.inventory.InventoryList;
 import edgruberman.bukkit.inventory.Main;
 import edgruberman.bukkit.inventory.sessions.Session;
 import edgruberman.bukkit.inventory.util.TokenizedExecutor;
@@ -26,7 +27,7 @@ public final class Delete extends TokenizedExecutor {
             return false;
         }
 
-        final edgruberman.bukkit.inventory.Kit kit = this.clerk.getKit(args.get(0));
+        final InventoryList kit = this.clerk.getKit(args.get(0));
         if (kit == null) {
             Main.courier.send(sender, "unknown-argument", "<Kit>", args.get(0));
             return true;
@@ -34,7 +35,7 @@ public final class Delete extends TokenizedExecutor {
 
         kit.removeAll();
         final boolean trimmed = kit.trim() > 0;
-        if (trimmed) kit.formatTitles();
+        if (trimmed) kit.formatTitles(this.clerk.getKitTitle(), kit.getName());
 
         boolean use = false;
         for (final Session session : this.clerk.sessionsFor(kit)) {
