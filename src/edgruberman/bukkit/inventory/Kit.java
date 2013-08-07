@@ -10,25 +10,15 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 
 @SerializableAs("Kit")
-public class Kit implements ConfigurationSerializable {
+public final class Kit extends NamedCustomInventoryList implements ConfigurationSerializable {
+    private static final long serialVersionUID = 1L;
 
-    private final KeyedInventoryList list;
-
-    public Kit(final String name) {
+    Kit(final String name) {
         this(name, Collections.<CustomInventory>emptyList());
     }
 
     private Kit(final String name, final Collection<CustomInventory> elements) {
-        this.list = new KeyedInventoryList(name, Main.courier.translate("title-kit").get(0), elements);
-    }
-
-    public KeyedInventoryList getList() {
-        return this.list;
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        return this.list.serialize();
+        super(name, Main.courier.translate("title-kit").get(0), elements);
     }
 
     @SuppressWarnings("unchecked")

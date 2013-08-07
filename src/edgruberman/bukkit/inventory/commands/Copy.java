@@ -21,7 +21,7 @@ public final class Copy extends ItemStackExecutor {
             return false;
         }
 
-        final Player target = (args.size() == 0 ? (Player) sender : Bukkit.getPlayerExact(args.get(0)) );
+        final Player target = (args.size() >= 1 ? Bukkit.getPlayerExact(args.get(0)) : (Player) sender );
         if (target == null) {
             Main.courier.send(sender, "unknown-argument", "<Player>", args.get(0));
             return true;

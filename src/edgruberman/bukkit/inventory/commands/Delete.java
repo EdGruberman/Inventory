@@ -21,34 +21,29 @@ public final class Delete extends TokenizedExecutor {
     // usage: /<command> <Kit>
     @Override
     protected boolean onCommand(final CommandSender sender, final Command command, final String label, final List<String> args) {
-        if (args.size() == 0) {
+        if (args.size() < 1) {
             Main.courier.send(sender, "requires-argument", "<Kit>");
             return false;
         }
 
-        final edgruberman.bukkit.inventory.Kit kit = this.clerk.getKitRepository().get(args.get(0));
+        final edgruberman.bukkit.inventory.Kit kit = this.clerk.getKit(args.get(0));
         if (kit == null) {
             Main.courier.send(sender, "unknown-argument", "<Kit>", args.get(0));
             return true;
         }
 
-        kit.getList().removeAll();
-        final boolean trimmed = kit.getList().trim() > 0;
-        if (trimmed) kit.getList().setTitles();
+        kit.removeAll();
+        final boolean trimmed = kit.trim() > 0;
+        if (trimmed) kit.formatTitles();
 
         boolean use = false;
         for (final Session session : this.clerk.sessionsFor(kit)) {
             if (trimmed) session.refresh();
             use = true;
         }
+        if (!use) this.clerk.removeKit(kit);
 
-        if (use) {
-            this.clerk.getKitRepository().put(kit);
-        } else {
-            this.clerk.getKitRepository().remove(kit);
-        }
-
-        Main.courier.send(sender, "delete", kit.getList().getKey());
+        Main.courier.send(sender, "delete", kit.getName());
         return true;
     }
 

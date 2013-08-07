@@ -13,9 +13,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
 
-import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
-import edgruberman.bukkit.inventory.repositories.KitRepository;
+import edgruberman.bukkit.inventory.repositories.CachingRepository;
+import edgruberman.bukkit.inventory.repositories.Repository;
 import edgruberman.bukkit.inventory.repositories.YamlRepository;
+import edgruberman.bukkit.inventory.repositories.YamlRepository.SimpleString;
 import edgruberman.bukkit.inventory.sessions.Session;
 
 /** session and repository manager */
@@ -28,53 +29,87 @@ public class Clerk implements Observer {
     }
 
     private final Plugin plugin;
-    private final KitRepository kitRepository;
-    private final DeliveryRepository deliveryRepository;
-    private final Map<KeyedInventoryList, List<Session>> sessions = new HashMap<KeyedInventoryList, List<Session>>();
+    private final CachingRepository<SimpleString, Kit> kits;
+    private final CachingRepository<SimpleString, Delivery> deliveries;
+    private final Map<NamedCustomInventoryList, List<Session>> sessions = new HashMap<NamedCustomInventoryList, List<Session>>();
 
     Clerk(final Plugin plugin, final File kits, final File deliveries) {
         this.plugin = plugin;
 
-        final YamlRepository<Kit> yamlKits = new YamlRepository<Kit>(this.plugin, kits, 30000);
-        this.kitRepository = new KitRepository(yamlKits);
+        final Repository<SimpleString, Kit> yamlKits = new YamlRepository<Kit>(this.plugin, kits, 30000);
+        this.kits = new CachingRepository<SimpleString, Kit>(yamlKits);
 
-        final YamlRepository<Delivery> yamlDeliveries = new YamlRepository<Delivery>(this.plugin, deliveries, 30000);
-        this.deliveryRepository = new DeliveryRepository(yamlDeliveries);
+        final Repository<SimpleString, Delivery> yamlDeliveries = new YamlRepository<Delivery>(this.plugin, deliveries, 30000);
+        this.deliveries = new CachingRepository<SimpleString, Delivery>(yamlDeliveries);
     }
 
-    public KitRepository getKitRepository() {
-        return this.kitRepository;
+    public Kit createKit(final String name) {
+        final SimpleString simple = SimpleString.of(name);
+        final Kit result = new Kit(simple.getValue());
+        this.kits.put(simple.toLowerCase(), result);
+        return result;
     }
 
-    public DeliveryRepository getDeliveryRepository() {
-        return this.deliveryRepository;
+    public Kit getKit(final String key) {
+        final SimpleString simple = SimpleString.of(key);
+        if (!simple.equals(key)) return null;
+        return this.kits.get(simple);
     }
 
-    public void openSession(final Session session) {
-        if (!this.sessions.containsKey(session.getList())) this.sessions.put(session.getList(), new ArrayList<Session>());
-        this.sessions.get(session.getList()).add(session);
+    public void putKit(final Kit kit) {
+        this.kits.put(SimpleString.of(kit.getName().toLowerCase()), kit);
+    }
 
-        session.addObserver(this);
-        session.getList().get(session.getIndex()).open(session.getCustomer());
-        Bukkit.getPluginManager().registerEvents(session, this.plugin);
+    public void removeKit(final Kit kit) {
+        this.kits.remove(SimpleString.of(kit.getName().toLowerCase()));
+    }
+
+    public Delivery createDelivery(final String name) {
+        final SimpleString simple = SimpleString.of(name);
+        final Delivery result = new Delivery(simple.getValue());
+        this.deliveries.put(simple.toLowerCase(), result);
+        return result;
+    }
+
+    public Delivery getDelivery(final String key) {
+        final SimpleString simple = SimpleString.of(key);
+        if (!simple.equals(key)) return null;
+        return this.deliveries.get(simple);
+    }
+
+    public void putDelivery(final Delivery delivery) {
+        this.deliveries.put(SimpleString.of(delivery.getName().toLowerCase()), delivery);
+    }
+
+    public void removeDelivery(final Delivery delivery) {
+        this.deliveries.remove(SimpleString.of(delivery.getName().toLowerCase()));
     }
 
     @Override
     public void update(final Observable o, final Object arg) {
         final Session session = (Session) o;
-        final List<Session> sessions = this.sessions.get(session.getList());
+        final List<Session> sessions = this.sessions.get(session.getInventory());
         sessions.remove(session);
-        if (sessions.size() == 0) this.sessions.remove(session.getList());
+        if (sessions.size() == 0) this.sessions.remove(session.getInventory());
+    }
+
+    public void openSession(final Session session) {
+        if (!this.sessions.containsKey(session.getInventory())) this.sessions.put(session.getInventory(), new ArrayList<Session>());
+        this.sessions.get(session.getInventory()).add(session);
+
+        session.addObserver(this);
+        session.getInventory().get(session.getIndex()).open(session.getCustomer());
+        Bukkit.getPluginManager().registerEvents(session, this.plugin);
     }
 
     public List<Session> sessionsFor(final Kit kit) {
-        final List<Session> result = this.sessions.get(kit.getList());
+        final List<Session> result = this.sessions.get(kit);
         if (result != null) return result;
         return Collections.emptyList();
     }
 
     public List<Session> sessionsFor(final Delivery delivery) {
-        final List<Session> result = this.sessions.get(delivery.getList());
+        final List<Session> result = this.sessions.get(delivery);
         if (result != null) return result;
         return Collections.emptyList();
     }
@@ -100,8 +135,8 @@ public class Clerk implements Observer {
 
     public void destroy(final String reason) {
         this.destroySessions(reason);
-        this.kitRepository.destroy();
-        this.deliveryRepository.destroy();
+        this.kits.destroy();
+        this.deliveries.destroy();
     }
 
 }

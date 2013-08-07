@@ -14,10 +14,10 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class InventoryList extends ArrayList<CustomInventory> {
+public class CustomInventoryList extends ArrayList<CustomInventory> {
     private static final long serialVersionUID = 1L;
 
-    public InventoryList(final Collection<CustomInventory> elements) {
+    public CustomInventoryList(final Collection<CustomInventory> elements) {
         super(elements);
     }
 
@@ -110,7 +110,7 @@ public class InventoryList extends ArrayList<CustomInventory> {
     /** @return mirrors of all ItemStacks that are not null and not AIR */
     public List<ItemStack> getContents() {
         final List<ItemStack> result = new ArrayList<ItemStack>();
-        for (final CustomInventory inv : this) result.addAll(inv.getActualContents());
+        for (final CustomInventory inv : this) result.addAll(inv.getPopulated());
         return result;
     }
 

@@ -18,25 +18,22 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+/** Inventory adapter */
 @SerializableAs("Inventory")
 public final class CustomInventory implements Inventory, ConfigurationSerializable, Cloneable {
 
-    public static final int DEFAULT_SIZE = 54;
+    public static final int SIZE = 54;
 
     private final Inventory inventory;
 
     public CustomInventory() {
-        this(Bukkit.createInventory(null, CustomInventory.DEFAULT_SIZE));
+        this(Bukkit.createInventory(null, CustomInventory.SIZE));
     }
 
     public CustomInventory(final Inventory inventory) {
         this.inventory = inventory;
     }
 
-    /**
-     * Caused by: java.lang.ClassCastException: edgruberman.bukkit.inventory.CustomInventory cannot be cast to org.bukkit.craftbukkit.v1_5_R2.inventory.CraftInventory
-     *  at org.bukkit.craftbukkit.v1_5_R2.entity.CraftHumanEntity.openInventory(CraftHumanEntity.java:188)
-     */
     public void open(final Player player) {
         player.openInventory(this.inventory);
     }
@@ -46,18 +43,22 @@ public final class CustomInventory implements Inventory, ConfigurationSerializab
         return this;
     }
 
-    public List<ItemStack> getActualContents() {
+    /** non-empty/non-null/non-air stacks */
+    public List<ItemStack> getPopulated() {
         final List<ItemStack> result = new ArrayList<ItemStack>();
-        for (final ItemStack stack : this.getContents())
-            if (stack != null && stack.getTypeId() != Material.AIR.getId())
+        for (final ItemStack stack : this.getContents()) {
+            if (stack != null && stack.getTypeId() != Material.AIR.getId()) {
                 result.add(stack);
+            }
+        }
 
         return result;
     }
 
     public boolean isEmpty() {
-        for (final ItemStack content : this.inventory.getContents())
+        for (final ItemStack content : this.inventory.getContents()) {
             if (content != null) return false;
+        }
 
         return true;
     }
@@ -82,9 +83,9 @@ public final class CustomInventory implements Inventory, ConfigurationSerializab
         // only store slots with items in them
         final Map<String, ItemStack> contents = new LinkedHashMap<String, ItemStack>();
         final ItemStack[] array = this.inventory.getContents();
-        for (int i = 0; i < array.length; i++)
-            if (array[i] != null)
-                contents.put(String.valueOf(i), array[i]);
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] != null) contents.put(String.valueOf(i), array[i]);
+        }
         result.put("contents", contents);
 
         return result;
@@ -97,8 +98,9 @@ public final class CustomInventory implements Inventory, ConfigurationSerializab
 
         @SuppressWarnings("unchecked")
         final Map<String, ItemStack> contents = (Map<String, ItemStack>) serialized.get("contents");
-        for(final Map.Entry<String, ItemStack> entry : contents.entrySet())
+        for(final Map.Entry<String, ItemStack> entry : contents.entrySet()) {
             result.inventory.setItem(Integer.parseInt(entry.getKey()), entry.getValue());
+        }
 
         return result;
     }

@@ -29,14 +29,16 @@ public final class Edit extends TokenizedExecutor {
             return false;
         }
 
-        if (args.size() == 0) {
+        if (args.size() < 1) {
             Main.courier.send(sender, "requires-argument", "<Player>");
             return false;
         }
 
         final String target = Bukkit.getOfflinePlayer(args.get(0)).getName();
-        final Delivery active = this.clerk.getDeliveryRepository().create(target);
-        this.clerk.openSession(new DeliverySession((Player) sender, this.clerk.getDeliveryRepository(), active));
+        final Delivery active = this.clerk.getDelivery(target.toLowerCase());
+        if (active == null) this.clerk.createDelivery(target);
+
+        this.clerk.openSession(new DeliverySession((Player) sender, this.clerk, active));
         return true;
     }
 

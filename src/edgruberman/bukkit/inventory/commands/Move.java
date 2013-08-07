@@ -21,7 +21,7 @@ public final class Move extends ItemStackExecutor {
             return false;
         }
 
-        if (args.size() == 0) {
+        if (args.size() < 1) {
             Main.courier.send(sender, "requires-argument", "<Player>");
             return false;
         }

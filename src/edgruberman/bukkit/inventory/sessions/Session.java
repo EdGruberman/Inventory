@@ -14,20 +14,20 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import edgruberman.bukkit.inventory.CustomInventory;
-import edgruberman.bukkit.inventory.KeyedInventoryList;
 import edgruberman.bukkit.inventory.Main;
+import edgruberman.bukkit.inventory.NamedCustomInventoryList;
 
 /** inventory list interaction manager */
 public abstract class Session extends Observable implements Listener {
 
     protected final Player customer;
-    protected final KeyedInventoryList list;
+    protected final NamedCustomInventoryList list;
 
     protected int index = -1;
     protected boolean refresh = false;
 
     /** @param initial set of similar items, single instance of items excluding amount */
-    public Session(final Player customer, final KeyedInventoryList list) {
+    public Session(final Player customer, final NamedCustomInventoryList list) {
         this.customer = customer;
         this.list = list;
         this.index = this.list.size() - 1;
@@ -37,7 +37,7 @@ public abstract class Session extends Observable implements Listener {
         return this.customer;
     }
 
-    public KeyedInventoryList getList() {
+    public NamedCustomInventoryList getInventory() {
         return this.list;
     }
 
@@ -56,7 +56,7 @@ public abstract class Session extends Observable implements Listener {
     public void next() {
         if ((this.index == this.list.size() - 1) && this.list.get(this.index).isFull()) {
             this.list.add(new CustomInventory());
-            this.list.setTitles();
+            this.list.formatTitles();
         }
 
         final int current = this.index++;

@@ -11,25 +11,15 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 
 @SerializableAs("Delivery")
-public final class Delivery implements ConfigurationSerializable {
-
-    private final KeyedInventoryList list;
+public final class Delivery extends NamedCustomInventoryList implements ConfigurationSerializable {
+    private static final long serialVersionUID = 1L;
 
     public Delivery(final String player) {
         this(player, Collections.<CustomInventory>emptyList());
     }
 
     private Delivery(final String player, final Collection<CustomInventory> elements) {
-        this.list = new KeyedInventoryList(player, Main.courier.translate("title-delivery").get(0), elements);
-    }
-
-    public KeyedInventoryList getList() {
-        return this.list;
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        return this.list.serialize();
+        super(player.toLowerCase(), Main.courier.translate("title-delivery").get(0), elements);
     }
 
     @SuppressWarnings("unchecked")

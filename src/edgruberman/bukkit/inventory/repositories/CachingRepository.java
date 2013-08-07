@@ -2,7 +2,6 @@ package edgruberman.bukkit.inventory.repositories;
 
 import java.util.HashMap;
 
-// TODO weak hash map?  time out?  be smarter?
 public class CachingRepository<K, V> implements Repository<K, V> {
 
     protected final Repository<K, V> source;

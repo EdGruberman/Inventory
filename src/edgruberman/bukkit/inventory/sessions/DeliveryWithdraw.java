@@ -5,15 +5,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 
+import edgruberman.bukkit.inventory.Clerk;
 import edgruberman.bukkit.inventory.Delivery;
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.repositories.DeliveryRepository;
 
 /** prevents any additions */
 public class DeliveryWithdraw extends DeliverySession {
 
-    public DeliveryWithdraw(final Player customer, final DeliveryRepository deliveries, final Delivery delivery) {
-        super(customer, deliveries, delivery);
+    public DeliveryWithdraw(final Player customer, final Clerk clerk, final Delivery delivery) {
+        super(customer, clerk, delivery);
     }
 
     /** do not add a box if full */
