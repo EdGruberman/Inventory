@@ -1,6 +1,6 @@
 package edgruberman.bukkit.inventory.repositories;
 
-public interface Repository<K extends Repository.Key, V> {
+public interface Repository<K, V> {
 
     /** @return true if an value exists for key */
     public boolean contains(K key);

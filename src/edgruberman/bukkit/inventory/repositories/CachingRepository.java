@@ -3,9 +3,9 @@ package edgruberman.bukkit.inventory.repositories;
 import java.util.HashMap;
 
 /** caches objects in memory to avoid duplicating expensive repository calls */
-public class CachingRepository<K extends Repository.Key, V> implements Repository<K, V> {
+public class CachingRepository<K, V> implements Repository<K, V> {
 
-    public static <L extends Repository.Key, W> CachingRepository<L, W> of(final Repository<L, W> source) {
+    public static <L, W> CachingRepository<L, W> of(final Repository<L, W> source) {
         return new CachingRepository<L, W>(source);
     }
 
