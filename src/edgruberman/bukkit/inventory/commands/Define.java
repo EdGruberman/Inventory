@@ -32,7 +32,7 @@ public final class Define extends TokenizedExecutor {
         }
 
         if (args.size() < 1) {
-            Main.courier.send(sender, "requires-argument", "kit");
+            Main.courier.send(sender, "requires-argument", "kit", 0);
             return false;
         }
 

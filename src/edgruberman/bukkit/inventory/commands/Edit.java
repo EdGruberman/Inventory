@@ -33,7 +33,7 @@ public final class Edit extends TokenizedExecutor {
         }
 
         if (args.size() < 1) {
-            Main.courier.send(sender, "requires-argument", "player");
+            Main.courier.send(sender, "requires-argument", "player", 0);
             return false;
         }
 

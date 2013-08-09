@@ -27,7 +27,7 @@ public final class Empty extends TokenizedExecutor {
     @Override
     protected boolean onCommand(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (args.size() < 1) {
-            Main.courier.send(sender, "requires-argument", "player");
+            Main.courier.send(sender, "requires-argument", "player", 0);
             return false;
         }
 

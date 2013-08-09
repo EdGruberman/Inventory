@@ -22,13 +22,13 @@ public final class Move extends ItemStackExecutor {
         }
 
         if (args.size() < 1) {
-            Main.courier.send(sender, "requires-argument", "player");
+            Main.courier.send(sender, "requires-argument", "player", 0);
             return false;
         }
 
         final Player target = Bukkit.getPlayerExact(args.get(0));
         if (target == null) {
-            Main.courier.send(sender, "unknown-argument", "player", args.get(0));
+            Main.courier.send(sender, "unknown-argument", "player", 0, args.get(0));
             return true;
         }
 

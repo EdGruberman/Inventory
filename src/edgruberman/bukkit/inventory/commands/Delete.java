@@ -26,13 +26,13 @@ public final class Delete extends TokenizedExecutor {
     @Override
     protected boolean onCommand(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (args.size() < 1) {
-            Main.courier.send(sender, "requires-argument", "kit");
+            Main.courier.send(sender, "requires-argument", "kit", 0);
             return false;
         }
 
         final InventoryList kit = this.clerk.getInventory(KitInventory.class, args.get(0));
         if (kit == null) {
-            Main.courier.send(sender, "unknown-argument", "kit", args.get(0));
+            Main.courier.send(sender, "unknown-argument", "kit", 0, args.get(0));
             return true;
         }
 
