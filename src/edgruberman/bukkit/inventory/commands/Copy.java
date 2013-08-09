@@ -13,7 +13,7 @@ import edgruberman.bukkit.inventory.util.ItemStackExecutor;
 
 public final class Copy extends ItemStackExecutor {
 
-    // usage: /<command>[ <Player>]
+    // usage: /<command> [player]
     @Override
     protected boolean onCommand(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (!(sender instanceof Player)) {
@@ -23,7 +23,7 @@ public final class Copy extends ItemStackExecutor {
 
         final Player target = (args.size() >= 1 ? Bukkit.getPlayerExact(args.get(0)) : (Player) sender );
         if (target == null) {
-            Main.courier.send(sender, "unknown-argument", "<Player>", args.get(0));
+            Main.courier.send(sender, "unknown-argument", "player", args.get(0));
             return true;
         }
 

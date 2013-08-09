@@ -1,6 +1,5 @@
 package edgruberman.bukkit.inventory;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,104 +12,51 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
 
-import edgruberman.bukkit.inventory.repositories.CachingRepository;
 import edgruberman.bukkit.inventory.repositories.Repository;
-import edgruberman.bukkit.inventory.repositories.YamlRepository;
-import edgruberman.bukkit.inventory.repositories.YamlRepository.SimpleString;
 import edgruberman.bukkit.inventory.sessions.Session;
 
-/** session and repository manager */
+/** repository and session manager */
 public class Clerk implements Observer {
 
     static {
         ConfigurationSerialization.registerClass(InventoryAdapter.class);
-        ConfigurationSerialization.registerClass(InventoryList.class);
+        ConfigurationSerialization.registerClass(DeliveryInventory.class);
+        ConfigurationSerialization.registerClass(KitInventory.class);
     }
 
     private final Plugin plugin;
-    private final CachingRepository<SimpleString, InventoryList> kits;
-    private final CachingRepository<SimpleString, InventoryList> deliveries;
+    private final Map<Class<? extends InventoryList>, Repository<Repository.Key, InventoryList>> repositories
+            = new HashMap<Class<? extends InventoryList>, Repository<Repository.Key, InventoryList>>();
     private final Map<InventoryList, List<Session>> sessions = new HashMap<InventoryList, List<Session>>();
 
-    Clerk(final Plugin plugin, final File kits, final File deliveries) {
+    Clerk(final Plugin plugin) {
         this.plugin = plugin;
-
-        final Repository<SimpleString, InventoryList> yamlKits = new YamlRepository<InventoryList>(this.plugin, kits, 30000);
-        this.kits = new CachingRepository<SimpleString, InventoryList>(yamlKits);
-
-        final Repository<SimpleString, InventoryList> yamlDeliveries = new YamlRepository<InventoryList>(this.plugin, deliveries, 30000);
-        this.deliveries = new CachingRepository<SimpleString, InventoryList>(yamlDeliveries);
-    }
-//
-//    public NamedCustomInventoryList createInventory(final String name) {
-//        final SimpleString simple = SimpleString.of(name);
-//        final Kit result = new NamedCustomInventoryList(simple.getValue());
-//        this.kits.put(simple.toLowerCase(), result);
-//        return result;
-//    }
-//
-//    public NamedCustomInventoryList getInventory(final String key) {
-//        final SimpleString simple = SimpleString.of(key);
-//        if (!simple.equals(key)) return null;
-//        return this.kits.get(simple);
-//    }
-//
-//    public void putInventory(final NamedCustomInventoryList inventory) {
-//        this.kits.put(SimpleString.of(inventory.getName().toLowerCase()), inventory);
-//    }
-//
-//    public void removeInventory(final NamedCustomInventoryList inventory) {
-//        this.kits.remove(SimpleString.of(inventory.getName().toLowerCase()));
-//    }
-
-    public InventoryList createKit(final String name) {
-        final SimpleString simple = SimpleString.of(name);
-        final InventoryList result = new InventoryList(simple.getValue());
-        this.kits.put(simple.toLowerCase(), result);
-        return result;
     }
 
-    public InventoryList getKit(final String key) {
-        final SimpleString simple = SimpleString.of(key);
-        if (!simple.equals(key)) return null;
-        return this.kits.get(simple);
+    public Repository<Repository.Key, InventoryList> putRepository(final Class<? extends InventoryList> type
+            , final Repository<? extends Repository.Key, ? extends InventoryList> repository) {
+        @SuppressWarnings("unchecked")
+        final Repository<Repository.Key, InventoryList> cast = (Repository<Repository.Key, InventoryList>) repository;
+        return this.repositories.put(type, cast);
     }
 
-    public void putKit(final InventoryList kit) {
-        this.kits.put(SimpleString.of(kit.getName().toLowerCase()), kit);
+    /** @return value for key; null if not found */
+    public InventoryList getInventory(final Class<? extends InventoryList> type, final String key) {
+        final Repository<Repository.Key, InventoryList> repository = this.repositories.get(type);
+        return repository.get(repository.createKey(key));
     }
 
-    public void removeKit(final InventoryList kit) {
-        this.kits.remove(SimpleString.of(kit.getName().toLowerCase()));
+    /** replaces existing value */
+    public void putInventory(final InventoryList inventory) {
+        final Repository<Repository.Key, InventoryList> repository = this.repositories.get(inventory.getClass());
+        repository.put(repository.createKey(inventory.getName()), inventory);
     }
 
-    public String getKitTitle() {
-        return Main.courier.translate("title-kit").get(0);
-    }
-
-    public InventoryList createDelivery(final String name) {
-        final SimpleString simple = SimpleString.of(name);
-        final InventoryList result = new InventoryList(simple.getValue());
-        this.deliveries.put(simple.toLowerCase(), result);
-        return result;
-    }
-
-    public InventoryList getDelivery(final String key) {
-        final SimpleString simple = SimpleString.of(key);
-        if (!simple.equals(key)) return null;
-        return this.deliveries.get(simple);
-    }
-
-    public void putDelivery(final InventoryList delivery) {
-        this.deliveries.put(SimpleString.of(delivery.getName().toLowerCase()), delivery);
-    }
-
-    public void removeDelivery(final InventoryList delivery) {
-        this.deliveries.remove(SimpleString.of(delivery.getName().toLowerCase()));
-    }
-
-    public String getDeliveryTitle() {
-        return Main.courier.translate("title-delivery").get(0);
+    // TODO end viewer sessions before removing
+    /** delete value associated with key */
+    public void removeInventory(final InventoryList inventory) {
+        final Repository<Repository.Key, InventoryList> repository = this.repositories.get(inventory.getClass());
+        repository.remove(repository.createKey(inventory.getName()));
     }
 
     @Override
@@ -153,8 +99,7 @@ public class Clerk implements Observer {
 
     public void destroy(final String reason) {
         this.destroySessions(reason);
-        this.kits.destroy();
-        this.deliveries.destroy();
+        for (final Repository<Repository.Key, InventoryList> repository : this.repositories.values()) repository.destroy();
     }
 
 }

@@ -21,18 +21,18 @@ import edgruberman.bukkit.inventory.Main;
 public abstract class Session extends Observable implements Listener {
 
     protected final Player customer;
-    protected final InventoryList list;
+    protected final InventoryList inventory;
     protected final String title;
 
     protected int index = -1;
     protected boolean refresh = false;
 
     /** @param initial set of similar items, single instance of items excluding amount */
-    public Session(final Player customer, final InventoryList list, final String title) {
+    public Session(final Player customer, final InventoryList inventory, final String title) {
         this.customer = customer;
-        this.list = list;
+        this.inventory = inventory;
         this.title = title;
-        this.index = this.list.size() - 1;
+        this.index = this.inventory.size() - 1;
     }
 
     public Player getCustomer() {
@@ -40,7 +40,7 @@ public abstract class Session extends Observable implements Listener {
     }
 
     public InventoryList getInventory() {
-        return this.list;
+        return this.inventory;
     }
 
     public int getIndex() {
@@ -49,27 +49,27 @@ public abstract class Session extends Observable implements Listener {
 
     public void refresh() {
         this.refresh = true;
-        if (this.index > this.list.size() - 1) this.index = 0;
+        if (this.index > this.inventory.size() - 1) this.index = 0;
         this.customer.closeInventory();
-        this.list.get(this.index).open(this.customer);
+        this.inventory.get(this.index).open(this.customer);
         this.refresh = false;
     }
 
     public void next() {
-        if ((this.index == this.list.size() - 1) && this.list.get(this.index).isFull()) {
-            this.list.add(new InventoryAdapter());
-            this.list.formatTitles(this.title, this.list.getName());
+        if ((this.index == this.inventory.size() - 1) && this.inventory.get(this.index).isFull()) {
+            this.inventory.add(new InventoryAdapter());
+            this.inventory.formatTitles(this.title, this.inventory.getName());
         }
 
         final int current = this.index++;
-        if (this.index > this.list.size() - 1) this.index = 0;
+        if (this.index > this.inventory.size() - 1) this.index = 0;
         if (current != this.index) this.refresh();
     }
 
     public void previous() {
         final int current = this.index--;
-        if (this.index < 0) this.index = this.list.size() - 1;
-        if (current != this.index) this.list.get(this.index).open(this.customer);
+        if (this.index < 0) this.index = this.inventory.size() - 1;
+        if (current != this.index) this.inventory.get(this.index).open(this.customer);
     }
 
     @EventHandler(ignoreCancelled = true)

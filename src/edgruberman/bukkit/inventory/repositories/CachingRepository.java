@@ -2,7 +2,12 @@ package edgruberman.bukkit.inventory.repositories;
 
 import java.util.HashMap;
 
-public class CachingRepository<K, V> implements Repository<K, V> {
+/** caches objects in memory to avoid duplicating expensive repository calls */
+public class CachingRepository<K extends Repository.Key, V> implements Repository<K, V> {
+
+    public static <L extends Repository.Key, W> CachingRepository<L, W> of(final Repository<L, W> source) {
+        return new CachingRepository<L, W>(source);
+    }
 
     protected final Repository<K, V> source;
     protected final HashMap<K, V> cache = new HashMap<K, V>();
@@ -44,6 +49,11 @@ public class CachingRepository<K, V> implements Repository<K, V> {
     public void destroy() {
         this.cache.clear();
         this.source.destroy();
+    }
+
+    @Override
+    public K createKey(final String value) {
+        return this.source.createKey(value);
     }
 
 }

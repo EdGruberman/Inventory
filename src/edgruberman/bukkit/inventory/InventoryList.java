@@ -12,12 +12,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-@SerializableAs("InventoryList")
 public class InventoryList extends ArrayList<InventoryAdapter> implements ConfigurationSerializable {
     private static final long serialVersionUID = 1L;
 
@@ -161,16 +159,9 @@ public class InventoryList extends ArrayList<InventoryAdapter> implements Config
     @Override
     public Map<String, Object> serialize() {
         final Map<String, Object> result = new LinkedHashMap<String, Object>();
-        result.put("name", this.name);
+        result.put("key", this.name); // TODO update to name and migrate existing configurations
         result.put("elements", this.subList(0, this.size()));
         return result;
-    }
-
-    public static InventoryList deserialize(final Map<String, Object> serialized) {
-        final String name = (String) serialized.get("name");
-        @SuppressWarnings("unchecked")
-        final List<InventoryAdapter> elements = (ArrayList<InventoryAdapter>) serialized.get("elements");
-        return new InventoryList(name, elements);
     }
 
 }

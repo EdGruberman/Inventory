@@ -10,17 +10,17 @@ import edgruberman.bukkit.inventory.InventoryList;
 import edgruberman.bukkit.inventory.Main;
 
 /** prevents any additions */
-public class DeliveryWithdraw extends DeliverySession {
+public class PullSession extends EditSession {
 
-    public DeliveryWithdraw(final Player customer, final Clerk clerk, final InventoryList delivery) {
-        super(customer, clerk, delivery);
+    public PullSession(final Player customer, final Clerk clerk, final InventoryList delivery, final String title) {
+        super(customer, clerk, delivery, title);
     }
 
     /** do not add a box if full */
     @Override
     public void next() {
         final int current = this.index++;
-        if (this.index > this.list.size() - 1) this.index = 0;
+        if (this.index > this.inventory.size() - 1) this.index = 0;
         if (current != this.index) this.refresh();
     }
 

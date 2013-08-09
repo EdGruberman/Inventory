@@ -11,11 +11,14 @@ import edgruberman.bukkit.inventory.commands.Define;
 import edgruberman.bukkit.inventory.commands.Delete;
 import edgruberman.bukkit.inventory.commands.Edit;
 import edgruberman.bukkit.inventory.commands.Empty;
+import edgruberman.bukkit.inventory.commands.Kit;
 import edgruberman.bukkit.inventory.commands.Move;
 import edgruberman.bukkit.inventory.commands.Reload;
 import edgruberman.bukkit.inventory.commands.Withdraw;
 import edgruberman.bukkit.inventory.craftbukkit.CraftBukkit;
 import edgruberman.bukkit.inventory.messaging.Courier.ConfigurationCourier;
+import edgruberman.bukkit.inventory.repositories.CachingRepository;
+import edgruberman.bukkit.inventory.repositories.YamlRepository;
 import edgruberman.bukkit.inventory.util.CustomPlugin;
 
 public final class Main extends CustomPlugin {
@@ -45,19 +48,24 @@ public final class Main extends CustomPlugin {
         this.reloadConfig();
         Main.courier = ConfigurationCourier.create(this).setBase(this.loadConfig("language.yml")).setFormatCode("format-code").build();
 
+        this.clerk = new Clerk(this);
         final File kits = new File(this.getDataFolder(), this.getConfig().getString("kit-folder"));
+        this.clerk.putRepository(KitInventory.class, CachingRepository.of(new YamlRepository<KitInventory>(this, kits, 30000)));
         final File deliveries = new File(this.getDataFolder(), this.getConfig().getString("delivery-folder"));
-        this.clerk = new Clerk(this, kits, deliveries);
+        this.clerk.putRepository(DeliveryInventory.class, CachingRepository.of(new YamlRepository<KitInventory>(this, deliveries, 30000)));
 
-        final Withdraw withdraw = new Withdraw(this.clerk);
+        final String titleDelivery = Main.courier.translate("title-delivery").get(0);
+        final String titleKit = Main.courier.translate("title-kit").get(0);
+
+        final Withdraw withdraw = new Withdraw(this.clerk, titleDelivery);
         Bukkit.getPluginManager().registerEvents(withdraw, this);
 
         this.getCommand("inventory:withdraw").setExecutor(withdraw);
-        this.getCommand("inventory:edit").setExecutor(new Edit(this.clerk));
-        this.getCommand("inventory:empty").setExecutor(new Empty(this.clerk));
-        this.getCommand("inventory:define").setExecutor(new Define(this.clerk));
-        this.getCommand("inventory:kit").setExecutor(new edgruberman.bukkit.inventory.commands.Kit(this.clerk, Main.courier.getSection("items-summary")));
-        this.getCommand("inventory:delete").setExecutor(new Delete(this.clerk));
+        this.getCommand("inventory:edit").setExecutor(new Edit(this.clerk, titleDelivery));
+        this.getCommand("inventory:empty").setExecutor(new Empty(this.clerk, titleDelivery));
+        this.getCommand("inventory:define").setExecutor(new Define(this.clerk, titleKit));
+        this.getCommand("inventory:kit").setExecutor(new Kit(this.clerk, Main.courier.getSection("items-summary"), titleKit));
+        this.getCommand("inventory:delete").setExecutor(new Delete(this.clerk, titleKit));
         this.getCommand("inventory:move").setExecutor(new Move());
         this.getCommand("inventory:copy").setExecutor(new Copy());
         this.getCommand("inventory:reload").setExecutor(new Reload(this));

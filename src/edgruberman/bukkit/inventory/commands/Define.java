@@ -8,19 +8,22 @@ import org.bukkit.entity.Player;
 
 import edgruberman.bukkit.inventory.Clerk;
 import edgruberman.bukkit.inventory.InventoryList;
+import edgruberman.bukkit.inventory.KitInventory;
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.sessions.KitSession;
+import edgruberman.bukkit.inventory.sessions.EditSession;
 import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 
 public final class Define extends TokenizedExecutor {
 
     private final Clerk clerk;
+    private final String title;
 
-    public Define(final Clerk clerk) {
+    public Define(final Clerk clerk, final String title) {
         this.clerk = clerk;
+        this.title = title;
     }
 
-    // usage: /<command> <Kit>
+    // usage: /<command> kit
     @Override
     protected boolean onCommand(final CommandSender sender, final Command command, final String label, final List<String> args) {
         if (!(sender instanceof Player)) {
@@ -29,15 +32,18 @@ public final class Define extends TokenizedExecutor {
         }
 
         if (args.size() < 1) {
-            Main.courier.send(sender, "requires-argument", "<Kit>");
+            Main.courier.send(sender, "requires-argument", "kit");
             return false;
         }
 
         final String name = args.get(0);
-        InventoryList kit = this.clerk.getKit(name.toLowerCase());
-        if (kit == null) kit = this.clerk.createKit(name);
+        InventoryList kit = this.clerk.getInventory(KitInventory.class, name);
+        if (kit == null) {
+            kit = new KitInventory(name);
+            this.clerk.putInventory(kit);
+        }
 
-        this.clerk.openSession(new KitSession((Player) sender, this.clerk, kit));
+        this.clerk.openSession(new EditSession((Player) sender, this.clerk, kit, this.title));
         return true;
     }
 

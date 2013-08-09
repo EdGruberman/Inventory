@@ -26,8 +26,8 @@ public class YamlRepository<V extends ConfigurationSerializable> implements Repo
         this.rate = rate;
     }
 
-    private File fileFor(final SimpleString key) {
-        return new File(this.folder, key.getValue() + ".yml");
+    private File fileFor(final Key key) {
+        return new File(this.folder, key + ".yml");
     }
 
     @Override
@@ -54,7 +54,7 @@ public class YamlRepository<V extends ConfigurationSerializable> implements Repo
 
         try {
             @SuppressWarnings("unchecked")
-            final V value = (V) buffer.get(key.getValue());
+            final V value = (V) buffer.get(key.toString());
             return value;
 
         } catch (final ClassCastException e) {
@@ -70,7 +70,7 @@ public class YamlRepository<V extends ConfigurationSerializable> implements Repo
             this.yaml.put(key, buffer);
         }
 
-        buffer.set(key.getValue(), value);
+        buffer.set(key.toString(), value);
         buffer.queueSave();
     }
 
@@ -96,41 +96,20 @@ public class YamlRepository<V extends ConfigurationSerializable> implements Repo
         this.yaml.clear();
     }
 
+    @Override
+    public SimpleString createKey(final String value) {
+        return new SimpleString(value);
+    }
 
 
-    public static class SimpleString {
+
+    public static class SimpleString extends Repository.Key.StringKey {
 
         public static final Pattern filter = Pattern.compile("[\\/:*\\?\"<>\\|]+");
         public static final String replacement = "_";
 
-        public static SimpleString of(final String requested) {
-            return new SimpleString(requested);
-        }
-
-
-
-        private final String value;
-
         public SimpleString(final String requested) {
-            this.value = SimpleString.filter.matcher(requested).replaceAll(SimpleString.replacement);
-        }
-
-        public String getValue() {
-            return this.value;
-        }
-
-        public SimpleString toLowerCase() {
-            return SimpleString.of(this.value.toLowerCase());
-        }
-
-        @Override
-        public int hashCode() {
-            return this.value.hashCode();
-        }
-
-        @Override
-        public boolean equals(final Object obj) {
-            return this.value.equals(obj);
+            super(SimpleString.filter.matcher(requested).replaceAll(SimpleString.replacement).toLowerCase());
         }
 
     }
