@@ -11,38 +11,53 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class InventoryList extends ArrayList<InventoryAdapter> implements ConfigurationSerializable {
-    private static final long serialVersionUID = 1L;
+public class InventoryList {
 
     protected final String name;
+    protected final List<InventoryAdapter> inventories = new ArrayList<InventoryAdapter>();
 
     public InventoryList(final String name) {
         this(name, Collections.<InventoryAdapter>emptyList());
     }
 
     public InventoryList(final String name, final Collection<InventoryAdapter> elements) {
-        super(elements);
         this.name = name;
-        if (elements.isEmpty()) this.add(new InventoryAdapter());
+        this.inventories.addAll(elements);
+        if (elements.isEmpty()) this.inventories.add(new InventoryAdapter());
     }
 
     public String getName() {
         return this.name;
     }
 
+    public int size() {
+        return this.inventories.size();
+    }
+
+    public boolean isEmpty() {
+        return this.inventories.isEmpty();
+    }
+
+    public InventoryAdapter get(final int index) {
+        return this.inventories.get(index);
+    }
+
+    public boolean add(final InventoryAdapter inventory) {
+        return this.inventories.add(inventory);
+    }
+
     /** @param pattern 0 = index, 1 = total, 2+ = arguments */
     public void formatTitles(final String pattern, final Object... arguments) {
         final Object[] concatenated = new Object[2 + arguments.length];
         System.arraycopy(arguments, 0, concatenated, 2, arguments.length);
-        concatenated[1] = this.size();
-        for (int i = 0; i < this.size(); i++) {
+        concatenated[1] = this.inventories.size();
+        for (int i = 0; i < this.inventories.size(); i++) {
             concatenated[0] = i + 1;
-            this.get(i).setTitle(MessageFormat.format(pattern, concatenated));
+            this.inventories.get(i).setTitle(MessageFormat.format(pattern, concatenated));
         }
     }
 
@@ -74,12 +89,12 @@ public class InventoryList extends ArrayList<InventoryAdapter> implements Config
 
         Map<Integer, ItemStack> remaining = Collections.emptyMap();
         if (stack.getAmount() <= stack.getMaxStackSize()) {
-            for (final Inventory inv : this) {
+            for (final Inventory inv : this.inventories) {
                 remaining = inv.addItem(clone);
                 if (remaining.size() == 0) return;
             }
         } else {
-            for (final Inventory inv : this) {
+            for (final Inventory inv : this.inventories) {
                 final int empty = inv.firstEmpty();
                 if (empty != -1) {
                     inv.setItem(empty, clone);
@@ -91,7 +106,7 @@ public class InventoryList extends ArrayList<InventoryAdapter> implements Config
             }
         }
 
-        this.add(new InventoryAdapter());
+        this.inventories.add(new InventoryAdapter());
         for (final ItemStack still : remaining.values()) this.add(still);
     }
 
@@ -108,7 +123,7 @@ public class InventoryList extends ArrayList<InventoryAdapter> implements Config
         // TODO check for exact stack matches to remove first
 
         Map<Integer, ItemStack> remaining = Collections.emptyMap();
-        for (final InventoryAdapter inv : this) {
+        for (final InventoryAdapter inv : this.inventories) {
             remaining = inv.removeItem(clone);
             if (remaining.size() == 0) break;
         }
@@ -118,18 +133,18 @@ public class InventoryList extends ArrayList<InventoryAdapter> implements Config
     }
 
     public void removeAll() {
-        for (final Inventory inv : this) inv.clear();
+        for (final Inventory inv : this.inventories) inv.clear();
     }
 
     /** @return mirrors of all ItemStacks that are not null and not AIR */
     public List<ItemStack> getContents() {
         final List<ItemStack> result = new ArrayList<ItemStack>();
-        for (final InventoryAdapter inv : this) result.addAll(inv.getPopulated());
+        for (final InventoryAdapter inv : this.inventories) result.addAll(inv.getPopulated());
         return result;
     }
 
     public boolean isContentsEmpty() {
-        for (final InventoryAdapter inv : this)
+        for (final InventoryAdapter inv : this.inventories)
             if (!inv.isEmpty()) return false;
 
         return true;
@@ -141,9 +156,9 @@ public class InventoryList extends ArrayList<InventoryAdapter> implements Config
      */
     public int trim() {
         int removed = 0;
-        for (int i = this.size() - 1; i > 0; i--) {
-            if (this.get(i).isEmpty()) {
-                this.remove(i);
+        for (int i = this.inventories.size() - 1; i > 0; i--) {
+            if (this.inventories.get(i).isEmpty()) {
+                this.inventories.remove(i);
                 removed++;
             }
         }
@@ -152,15 +167,14 @@ public class InventoryList extends ArrayList<InventoryAdapter> implements Config
 
     public Set<HumanEntity> getViewers() {
         final Set<HumanEntity> result = new HashSet<HumanEntity>();
-        for (final InventoryAdapter inv : this) result.addAll(inv.getViewers());
+        for (final InventoryAdapter inv : this.inventories) result.addAll(inv.getViewers());
         return result;
     }
 
-    @Override
     public Map<String, Object> serialize() {
         final Map<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("key", this.name); // TODO update to name and migrate existing configurations
-        result.put("elements", this.subList(0, this.size()));
+        result.put("elements", this.inventories);
         return result;
     }
 

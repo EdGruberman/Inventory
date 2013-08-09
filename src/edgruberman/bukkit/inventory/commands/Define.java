@@ -39,7 +39,7 @@ public final class Define extends TokenizedExecutor {
         final String name = args.get(0);
         InventoryList kit = this.clerk.getInventory(KitInventory.class, name);
         if (kit == null) {
-            kit = new KitInventory(name);
+            kit = KitInventory.create(name, this.title);
             this.clerk.putInventory(kit);
         }
 

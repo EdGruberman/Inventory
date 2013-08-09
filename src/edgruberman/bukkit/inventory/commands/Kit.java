@@ -78,7 +78,7 @@ public final class Kit extends ItemStackExecutor {
 
         InventoryList delivery = this.clerk.getInventory(DeliveryInventory.class, player);
         if (delivery == null) {
-            delivery = new DeliveryInventory(player);
+            delivery = DeliveryInventory.create(player, this.title);
             this.clerk.putInventory(delivery);
         }
 

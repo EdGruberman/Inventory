@@ -10,7 +10,6 @@ import org.bukkit.configuration.serialization.SerializableAs;
 
 @SerializableAs("Kit")
 public class KitInventory extends InventoryList implements ConfigurationSerializable {
-    private static final long serialVersionUID = 1L;
 
     public static KitInventory deserialize(final Map<String, Object> serialized) {
         final String name = (String) serialized.get("key");
@@ -19,6 +18,11 @@ public class KitInventory extends InventoryList implements ConfigurationSerializ
         return new KitInventory(name, elements);
     }
 
+    public static KitInventory create(final String name, final String title) {
+        final KitInventory kit = new KitInventory(name);
+        kit.formatTitles(title, kit.getName());
+        return kit;
+    }
 
 
     public KitInventory(final String name) {

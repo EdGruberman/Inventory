@@ -40,7 +40,7 @@ public final class Edit extends TokenizedExecutor {
         final String target = Bukkit.getOfflinePlayer(args.get(0)).getName();
         InventoryList delivery = this.clerk.getInventory(DeliveryInventory.class, target);
         if (delivery == null) {
-            delivery = new DeliveryInventory(target);
+            delivery = DeliveryInventory.create(target, this.title);
             this.clerk.putInventory(delivery);
         }
 
