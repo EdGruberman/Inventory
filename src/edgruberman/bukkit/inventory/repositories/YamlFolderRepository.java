@@ -8,11 +8,11 @@ import java.util.regex.Pattern;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.plugin.Plugin;
 
-import edgruberman.bukkit.inventory.repositories.YamlRepository.SimpleString;
+import edgruberman.bukkit.inventory.repositories.YamlFolderRepository.SimpleString;
 import edgruberman.bukkit.inventory.util.BufferedYamlConfiguration;
 
 /** individual buffered YAML files for each key */
-public class YamlRepository<V extends ConfigurationSerializable> implements Repository<SimpleString, V> {
+public class YamlFolderRepository<V extends ConfigurationSerializable> implements Repository<SimpleString, V> {
 
     protected final Plugin plugin;
     protected final File folder;
@@ -20,7 +20,7 @@ public class YamlRepository<V extends ConfigurationSerializable> implements Repo
 
     protected final Map<SimpleString, BufferedYamlConfiguration> yaml = new HashMap<SimpleString, BufferedYamlConfiguration>();
 
-    public YamlRepository(final Plugin plugin, final File folder, final int rate) {
+    public YamlFolderRepository(final Plugin plugin, final File folder, final int rate) {
         this.plugin = plugin;
         this.folder = folder;
         this.rate = rate;

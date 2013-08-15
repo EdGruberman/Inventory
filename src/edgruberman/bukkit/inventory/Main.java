@@ -18,7 +18,7 @@ import edgruberman.bukkit.inventory.commands.Withdraw;
 import edgruberman.bukkit.inventory.craftbukkit.CraftBukkit;
 import edgruberman.bukkit.inventory.messaging.Courier.ConfigurationCourier;
 import edgruberman.bukkit.inventory.repositories.CachingRepository;
-import edgruberman.bukkit.inventory.repositories.YamlRepository;
+import edgruberman.bukkit.inventory.repositories.YamlFolderRepository;
 import edgruberman.bukkit.inventory.util.CustomPlugin;
 
 public final class Main extends CustomPlugin {
@@ -50,9 +50,9 @@ public final class Main extends CustomPlugin {
 
         this.clerk = new Clerk(this);
         final File kits = new File(this.getDataFolder(), this.getConfig().getString("kit-folder"));
-        this.clerk.putRepository(KitInventory.class, CachingRepository.of(new YamlRepository<KitInventory>(this, kits, 30000)));
+        this.clerk.putRepository(KitInventory.class, CachingRepository.of(new YamlFolderRepository<KitInventory>(this, kits, 30000)));
         final File deliveries = new File(this.getDataFolder(), this.getConfig().getString("delivery-folder"));
-        this.clerk.putRepository(DeliveryInventory.class, CachingRepository.of(new YamlRepository<KitInventory>(this, deliveries, 30000)));
+        this.clerk.putRepository(DeliveryInventory.class, CachingRepository.of(new YamlFolderRepository<KitInventory>(this, deliveries, 30000)));
 
         final String titleDelivery = Main.courier.translate("title-delivery").get(0);
         final String titleKit = Main.courier.translate("title-kit").get(0);
