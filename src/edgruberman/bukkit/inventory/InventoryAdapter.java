@@ -46,7 +46,7 @@ public final class InventoryAdapter implements Inventory, ConfigurationSerializa
     public List<ItemStack> getPopulated() {
         final List<ItemStack> result = new ArrayList<ItemStack>();
         for (final ItemStack stack : this.getContents()) {
-            if (stack != null && stack.getTypeId() != Material.AIR.getId()) {
+            if (stack != null && stack.getType() != Material.AIR) {
                 result.add(stack);
             }
         }
@@ -156,6 +156,7 @@ public final class InventoryAdapter implements Inventory, ConfigurationSerializa
         this.inventory.setContents(items);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean contains(final int materialId) {
         return this.inventory.contains(materialId);
@@ -171,6 +172,7 @@ public final class InventoryAdapter implements Inventory, ConfigurationSerializa
         return this.inventory.contains(item);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean contains(final int materialId, final int amount) {
         return this.inventory.contains(materialId, amount);
@@ -191,6 +193,7 @@ public final class InventoryAdapter implements Inventory, ConfigurationSerializa
         return this.inventory.containsAtLeast(item, amount);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public HashMap<Integer, ? extends ItemStack> all(final int materialId) {
         return this.inventory.all(materialId);
@@ -206,6 +209,7 @@ public final class InventoryAdapter implements Inventory, ConfigurationSerializa
         return this.inventory.all(item);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public int first(final int materialId) {
         return this.inventory.first(materialId);
@@ -226,6 +230,7 @@ public final class InventoryAdapter implements Inventory, ConfigurationSerializa
         return this.inventory.firstEmpty();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void remove(final int materialId) {
         this.inventory.remove(materialId);

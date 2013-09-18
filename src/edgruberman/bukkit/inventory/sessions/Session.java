@@ -79,7 +79,7 @@ public abstract class Session extends Observable implements Listener {
         if (click.isCancelled()) return;
 
         // left or right click outside with nothing on cursor to navigate boxes forwards or backwards
-        if (click.getSlotType() == SlotType.OUTSIDE && click.getCursor().getTypeId() == Material.AIR.getId()) {
+        if (click.getSlotType() == SlotType.OUTSIDE && click.getCursor().getType() == Material.AIR) {
             if (click.isLeftClick()) {
                 this.next();
             } else {

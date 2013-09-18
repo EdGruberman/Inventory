@@ -48,7 +48,7 @@ public final class Withdraw extends TokenizedExecutor implements Listener {
 
     @EventHandler(ignoreCancelled = false) // chest right clicks in air are by default cancelled since they do nothing
     public void onRequest(final PlayerInteractEvent interact) {
-        if (interact.getItem() != null && interact.getItem().getTypeId() != Material.CHEST.getId()) return; // ignore when a chest item is not held
+        if (interact.getItem() != null && interact.getItem().getType() != Material.CHEST) return; // ignore when a chest item is not held
         if (interact.getAction() != Action.RIGHT_CLICK_AIR) return; // ignore if attempting to place chest
         if (!interact.getPlayer().hasPermission("inventory.withdraw.chest")) return; // ignore if not allowed
         interact.setCancelled(true);
