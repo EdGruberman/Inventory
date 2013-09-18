@@ -64,7 +64,7 @@ public final class Main extends CustomPlugin {
         this.getCommand("inventory:edit").setExecutor(new Edit(this.clerk, titleDelivery));
         this.getCommand("inventory:empty").setExecutor(new Empty(this.clerk, titleDelivery));
         this.getCommand("inventory:define").setExecutor(new Define(this.clerk, titleKit));
-        this.getCommand("inventory:kit").setExecutor(new Kit(this.clerk, Main.courier.getSection("items-summary"), titleKit));
+        this.getCommand("inventory:kit").setExecutor(new Kit(this.clerk, Main.courier.getSection("items-summary"), titleDelivery));
         this.getCommand("inventory:delete").setExecutor(new Delete(this.clerk, titleKit));
         this.getCommand("inventory:move").setExecutor(new Move());
         this.getCommand("inventory:copy").setExecutor(new Copy());
