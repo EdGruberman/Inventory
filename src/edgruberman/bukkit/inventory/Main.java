@@ -40,7 +40,7 @@ public final class Main extends CustomPlugin {
             Main.craftBukkit = CraftBukkit.create();
         } catch (final Exception e) {
             this.getLogger().log(Level.SEVERE, "Unsupported CraftBukkit version {0}; {1}", new Object[] { Bukkit.getVersion(), e });
-            this.getLogger().log(Level.SEVERE, "Disabling plugin; Dependencies not met; Check for updates at: {0}", this.getDescription().getWebsite());
+            this.getLogger().log(Level.SEVERE, "Disabling plugin; Dependencies not met; Check for updates at {0}", this.getDescription().getWebsite());
             this.setEnabled(false);
             return;
         }
