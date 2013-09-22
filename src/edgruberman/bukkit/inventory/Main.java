@@ -4,7 +4,9 @@ import java.io.File;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.ItemStack;
 
 import edgruberman.bukkit.inventory.commands.Copy;
 import edgruberman.bukkit.inventory.commands.Define;
@@ -23,15 +25,15 @@ import edgruberman.bukkit.inventory.util.CustomPlugin;
 
 public final class Main extends CustomPlugin {
 
-    public static ConfigurationCourier courier;
     public static CraftBukkit craftBukkit = null;
 
+    private ConfigurationCourier courier;
     private Clerk clerk = null;
 
     @Override
     public void onLoad() {
         this.putConfigMinimum("4.0.0");
-        this.putConfigMinimum("language.yml", "4.3.0a2");
+        this.putConfigMinimum("language.yml", "4.3.0");
     }
 
     @Override
@@ -46,7 +48,7 @@ public final class Main extends CustomPlugin {
         }
 
         this.reloadConfig();
-        Main.courier = ConfigurationCourier.create(this).setBase(this.loadConfig("language.yml")).setFormatCode("format-code").build();
+        this.courier = ConfigurationCourier.Factory.create(this).setBase(this.loadConfig("language.yml")).setFormatCode("format-code").build();
 
         this.clerk = new Clerk(this);
         final File kits = new File(this.getDataFolder(), this.getConfig().getString("kit-folder"));
@@ -54,29 +56,36 @@ public final class Main extends CustomPlugin {
         final File deliveries = new File(this.getDataFolder(), this.getConfig().getString("delivery-folder"));
         this.clerk.putRepository(DeliveryInventory.class, CachingRepository.of(new YamlFolderRepository<KitInventory>(this, deliveries, 30000)));
 
-        final String titleDelivery = Main.courier.translate("title-delivery").get(0);
-        final String titleKit = Main.courier.translate("title-kit").get(0);
+        final PluginCommand withdrawCommand = this.getCommand("inventory:withdraw");
+        final Withdraw withdrawExecutor = new Withdraw(this.courier, this.clerk, withdrawCommand);
+        Bukkit.getPluginManager().registerEvents(withdrawExecutor, this);
+        withdrawCommand.setExecutor(withdrawExecutor);
 
-        final Withdraw withdraw = new Withdraw(this.clerk, titleDelivery);
-        Bukkit.getPluginManager().registerEvents(withdraw, this);
-
-        this.getCommand("inventory:withdraw").setExecutor(withdraw);
-        this.getCommand("inventory:edit").setExecutor(new Edit(this.clerk, titleDelivery));
-        this.getCommand("inventory:empty").setExecutor(new Empty(this.clerk, titleDelivery));
-        this.getCommand("inventory:define").setExecutor(new Define(this.clerk, titleKit));
-        this.getCommand("inventory:kit").setExecutor(new Kit(this.clerk, Main.courier.getSection("items-summary"), titleDelivery));
-        this.getCommand("inventory:delete").setExecutor(new Delete(this.clerk, titleKit));
-        this.getCommand("inventory:move").setExecutor(new Move());
-        this.getCommand("inventory:copy").setExecutor(new Copy());
-        this.getCommand("inventory:reload").setExecutor(new Reload(this));
+        this.getCommand("inventory:edit").setExecutor(new Edit(this.courier, this.getServer(), this.clerk));
+        this.getCommand("inventory:empty").setExecutor(new Empty(this.courier, this.getServer(), this.clerk));
+        this.getCommand("inventory:define").setExecutor(new Define(this.courier, this.clerk));
+        this.getCommand("inventory:kit").setExecutor(new Kit(this.courier, this.getServer(), this.clerk));
+        this.getCommand("inventory:delete").setExecutor(new Delete(this.courier, this.clerk));
+        this.getCommand("inventory:move").setExecutor(new Move(this.courier, this.getServer()));
+        this.getCommand("inventory:copy").setExecutor(new Copy(this.courier, this.getServer()));
+        this.getCommand("inventory:reload").setExecutor(new Reload(this.courier, this));
     }
 
     @Override
     public void onDisable() {
-        if (this.clerk != null) this.clerk.destroy(Main.courier.format("session-destroy-disable").get(0));
-        Main.courier = null;
-        Main.craftBukkit = null;
+        if (this.clerk != null) this.clerk.destroy(this.courier.format("session-destroy-disable"));
         HandlerList.unregisterAll(this);
+        Main.craftBukkit = null;
+    }
+
+
+
+    public static StringBuilder summarize(final ItemStack stack) {
+        final StringBuilder sb = new StringBuilder(stack.getType().name());
+        if (stack.getDurability() != 0) sb.append('/').append(stack.getDurability());
+        if (stack.hasItemMeta()) sb.append('*');
+        if (stack.getAmount() != 0) sb.append('x').append(stack.getAmount());
+        return sb;
     }
 
 }

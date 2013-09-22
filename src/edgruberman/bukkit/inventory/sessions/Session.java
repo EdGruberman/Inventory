@@ -15,11 +15,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import edgruberman.bukkit.inventory.InventoryAdapter;
 import edgruberman.bukkit.inventory.InventoryList;
-import edgruberman.bukkit.inventory.Main;
+import edgruberman.bukkit.inventory.messaging.Courier.ConfigurationCourier;
 
 /** inventory list interaction manager */
 public abstract class Session extends Observable implements Listener {
 
+    protected final ConfigurationCourier courier;
     protected final Player customer;
     protected final InventoryList inventory;
     protected final String title;
@@ -28,7 +29,8 @@ public abstract class Session extends Observable implements Listener {
     protected boolean refresh = false;
 
     /** @param initial set of similar items, single instance of items excluding amount */
-    public Session(final Player customer, final InventoryList inventory, final String title) {
+    public Session(final ConfigurationCourier courier, final Player customer, final InventoryList inventory, final String title) {
+        this.courier = courier;
         this.customer = customer;
         this.inventory = inventory;
         this.title = title;
@@ -128,7 +130,7 @@ public abstract class Session extends Observable implements Listener {
             // ignore to avoid implementation preventing complete destruction
         }
         this.customer.getOpenInventory().close();
-        Main.courier.send(this.customer, "session-destroy", reason);
+        this.courier.send(this.customer, "session-destroy", reason);
     }
 
 }

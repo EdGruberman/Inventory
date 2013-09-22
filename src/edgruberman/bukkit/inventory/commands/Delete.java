@@ -1,44 +1,39 @@
 package edgruberman.bukkit.inventory.commands;
 
-import java.util.List;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-
 import edgruberman.bukkit.inventory.Clerk;
 import edgruberman.bukkit.inventory.InventoryList;
 import edgruberman.bukkit.inventory.KitInventory;
-import edgruberman.bukkit.inventory.Main;
+import edgruberman.bukkit.inventory.commands.util.ArgumentContingency;
+import edgruberman.bukkit.inventory.commands.util.ConfigurationExecutor;
+import edgruberman.bukkit.inventory.commands.util.ExecutionRequest;
+import edgruberman.bukkit.inventory.commands.util.StringParameter;
+import edgruberman.bukkit.inventory.commands.util.UnknownArgumentContingency;
+import edgruberman.bukkit.inventory.messaging.Courier.ConfigurationCourier;
 import edgruberman.bukkit.inventory.sessions.Session;
-import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 
-public final class Delete extends TokenizedExecutor {
+public final class Delete extends ConfigurationExecutor {
 
     private final Clerk clerk;
-    private final String title;
 
-    public Delete(final Clerk clerk, final String title) {
+    private final StringParameter kit;
+
+    public Delete(final ConfigurationCourier courier, final Clerk clerk) {
+        super(courier);
         this.clerk = clerk;
-        this.title = title;
+
+        this.kit = this.addRequired(StringParameter.Factory.create("kit"));
     }
 
     // usage: /<command> kit
     @Override
-    protected boolean onCommand(final CommandSender sender, final Command command, final String label, final List<String> args) {
-        if (args.size() < 1) {
-            Main.courier.send(sender, "requires-argument", "kit", 0);
-            return false;
-        }
-
-        final InventoryList kit = this.clerk.getInventory(KitInventory.class, args.get(0));
-        if (kit == null) {
-            Main.courier.send(sender, "unknown-argument", "kit", 0, args.get(0));
-            return true;
-        }
+    protected boolean executeImplementation(final ExecutionRequest request) throws ArgumentContingency {
+        final String name = request.parse(this.kit);
+        final InventoryList kit = this.clerk.getInventory(KitInventory.class, name);
+        if (kit == null) throw new UnknownArgumentContingency(request, this.kit);
 
         kit.removeAll();
         final boolean trimmed = kit.trim() > 0;
-        if (trimmed) kit.formatTitles(this.title, kit.getName());
+        if (trimmed) kit.formatTitles(this.courier.translate("title-kit"), kit.getName());
 
         boolean use = false;
         for (final Session session : this.clerk.sessionsFor(kit)) {
@@ -47,7 +42,7 @@ public final class Delete extends TokenizedExecutor {
         }
         if (!use) this.clerk.removeInventory(kit);
 
-        Main.courier.send(sender, "delete", kit.getName());
+        this.courier.send(request.getSender(), "delete", kit.getName());
         return true;
     }
 

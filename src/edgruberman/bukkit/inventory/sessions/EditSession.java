@@ -4,13 +4,14 @@ import org.bukkit.entity.Player;
 
 import edgruberman.bukkit.inventory.Clerk;
 import edgruberman.bukkit.inventory.InventoryList;
+import edgruberman.bukkit.inventory.messaging.Courier.ConfigurationCourier;
 
 public class EditSession extends Session {
 
     protected final Clerk clerk;
 
-    public EditSession(final Player customer, final Clerk clerk, final InventoryList delivery, final String title) {
-        super(customer, delivery, title);
+    public EditSession(final ConfigurationCourier courier, final Player customer, final Clerk clerk, final InventoryList delivery, final String title) {
+        super(courier, customer, delivery, title);
         this.clerk = clerk;
     }
 

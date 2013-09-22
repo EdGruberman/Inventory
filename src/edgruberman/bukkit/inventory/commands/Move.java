@@ -1,48 +1,43 @@
 package edgruberman.bukkit.inventory.commands;
 
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import edgruberman.bukkit.inventory.Main;
-import edgruberman.bukkit.inventory.util.ItemStackExecutor;
+import edgruberman.bukkit.inventory.commands.util.ArgumentContingency;
+import edgruberman.bukkit.inventory.commands.util.ConfigurationExecutor;
+import edgruberman.bukkit.inventory.commands.util.ExecutionRequest;
+import edgruberman.bukkit.inventory.commands.util.OnlinePlayerParameter;
+import edgruberman.bukkit.inventory.messaging.Courier.ConfigurationCourier;
 
-public final class Move extends ItemStackExecutor {
+public final class Move extends ConfigurationExecutor {
+
+    private final OnlinePlayerParameter player;
+
+    public Move(final ConfigurationCourier courier, final Server server) {
+        super(courier);
+
+        this.requirePlayer();
+        this.player = this.addRequired(OnlinePlayerParameter.Factory.create("player", server));
+    }
 
     // usage: /<command> player
     @Override
-    protected boolean onCommand(final CommandSender sender, final Command command, final String label, final List<String> args) {
-        if (!(sender instanceof Player)) {
-            Main.courier.send(sender, "requires-player", label);
-            return false;
-        }
-
-        if (args.size() < 1) {
-            Main.courier.send(sender, "requires-argument", "player", 0);
-            return false;
-        }
-
-        final Player target = Bukkit.getPlayerExact(args.get(0));
-        if (target == null) {
-            Main.courier.send(sender, "unknown-argument", "player", 0, args.get(0));
-            return true;
-        }
+    protected boolean executeImplementation(final ExecutionRequest request) throws ArgumentContingency {
+        final Player target = request.parse(this.player);
 
         final int slot = target.getInventory().firstEmpty();
         if (slot == -1) {
-            Main.courier.send(sender, "full", target.getName());
+            this.courier.send(request.getSender(), "full", target.getName());
             return true;
         }
 
-        final Player source = (Player) sender;
+        final Player source = (Player) request.getSender();
         final ItemStack clone = source.getItemInHand().clone();
         source.setItemInHand(null);
         target.getInventory().setItem(slot, clone);
-        Main.courier.send(sender, "move", target.getName(), ItemStackExecutor.summarize(clone));
+        this.courier.send(request.getSender(), "move", target.getName(), Main.summarize(clone));
         return true;
     }
 

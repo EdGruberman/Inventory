@@ -1,50 +1,47 @@
 package edgruberman.bukkit.inventory.commands;
 
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import edgruberman.bukkit.inventory.Clerk;
 import edgruberman.bukkit.inventory.DeliveryInventory;
 import edgruberman.bukkit.inventory.InventoryList;
-import edgruberman.bukkit.inventory.Main;
+import edgruberman.bukkit.inventory.commands.util.CancellationContingency;
+import edgruberman.bukkit.inventory.commands.util.ConfigurationExecutor;
+import edgruberman.bukkit.inventory.commands.util.ExecutionRequest;
+import edgruberman.bukkit.inventory.commands.util.OfflinePlayerParameter;
+import edgruberman.bukkit.inventory.messaging.Courier.ConfigurationCourier;
 import edgruberman.bukkit.inventory.sessions.EditSession;
-import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 
-public final class Edit extends TokenizedExecutor {
+public final class Edit extends ConfigurationExecutor {
 
     private final Clerk clerk;
-    private final String title;
 
-    public Edit(final Clerk clerk, final String title) {
+    private final OfflinePlayerParameter player;
+
+    public Edit(final ConfigurationCourier courier, final Server server, final Clerk clerk) {
+        super(courier);
         this.clerk = clerk;
-        this.title = title;
+
+        this.requirePlayer();
+        this.player = this.addRequired(OfflinePlayerParameter.Factory.create("player", server));
     }
 
     // usage: /<command> player
     @Override
-    protected boolean onCommand(final CommandSender sender, final Command command, final String label, final List<String> args) {
-        if (!(sender instanceof Player)) {
-            Main.courier.send(sender, "requires-player", label);
-            return false;
-        }
+    protected boolean executeImplementation(final ExecutionRequest request) throws CancellationContingency {
+        final OfflinePlayer target = request.parse(this.player);
 
-        if (args.size() < 1) {
-            Main.courier.send(sender, "requires-argument", "player", 0);
-            return false;
-        }
+        final String title = this.courier.translate("title-delivery");
 
-        final String target = Bukkit.getOfflinePlayer(args.get(0)).getName();
-        InventoryList delivery = this.clerk.getInventory(DeliveryInventory.class, target);
+        InventoryList delivery = this.clerk.getInventory(DeliveryInventory.class, target.getName());
         if (delivery == null) {
-            delivery = DeliveryInventory.create(target, this.title);
+            delivery = DeliveryInventory.create(target.getName(), title);
             this.clerk.putInventory(delivery);
         }
 
-        this.clerk.openSession(new EditSession((Player) sender, this.clerk, delivery, this.title));
+        this.clerk.openSession(new EditSession(this.courier, (Player) request.getSender(), this.clerk, delivery, title));
         return true;
     }
 

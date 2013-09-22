@@ -7,13 +7,13 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 
 import edgruberman.bukkit.inventory.Clerk;
 import edgruberman.bukkit.inventory.InventoryList;
-import edgruberman.bukkit.inventory.Main;
+import edgruberman.bukkit.inventory.messaging.Courier.ConfigurationCourier;
 
 /** prevents any additions */
 public class PullSession extends EditSession {
 
-    public PullSession(final Player customer, final Clerk clerk, final InventoryList delivery, final String title) {
-        super(customer, clerk, delivery, title);
+    public PullSession(final ConfigurationCourier courier, final Player customer, final Clerk clerk, final InventoryList delivery, final String title) {
+        super(courier, customer, clerk, delivery, title);
     }
 
     /** do not add a box if full */
@@ -38,7 +38,7 @@ public class PullSession extends EditSession {
         if (click.isCancelled()) {
             click.setCursor(click.getCursor());
             ((Player) click.getWhoClicked()).updateInventory();
-            Main.courier.send((Player) click.getWhoClicked(), "withdraw-only");
+            this.courier.send((Player) click.getWhoClicked(), "withdraw-only");
         }
     }
 
@@ -55,7 +55,7 @@ public class PullSession extends EditSession {
         if (drag.isCancelled()) {
             drag.setCursor(drag.getCursor());
             ((Player) drag.getWhoClicked()).updateInventory();
-            Main.courier.send((Player) drag.getWhoClicked(), "withdraw-only");
+            this.courier.send((Player) drag.getWhoClicked(), "withdraw-only");
         }
     }
 
