@@ -25,6 +25,7 @@ public class KitInventory extends InventoryList implements ConfigurationSerializ
     }
 
 
+
     public KitInventory(final String name) {
         super(name);
     }

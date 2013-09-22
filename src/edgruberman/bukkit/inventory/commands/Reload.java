@@ -1,25 +1,25 @@
 package edgruberman.bukkit.inventory.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
-import edgruberman.bukkit.inventory.Main;
+import edgruberman.bukkit.inventory.commands.util.ConfigurationExecutor;
+import edgruberman.bukkit.inventory.commands.util.ExecutionRequest;
+import edgruberman.bukkit.inventory.messaging.Courier.ConfigurationCourier;
 
-public final class Reload implements CommandExecutor {
+public final class Reload extends ConfigurationExecutor {
 
     private final Plugin plugin;
 
-    public Reload(final Plugin plugin) {
+    public Reload(final ConfigurationCourier courier, final Plugin plugin) {
+        super(courier);
         this.plugin = plugin;
     }
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+    public boolean executeImplementation(final ExecutionRequest request) {
         this.plugin.onDisable();
         this.plugin.onEnable();
-        Main.courier.send(sender, "reload", this.plugin.getName());
+        this.courier.send(request.getSender(), "reload", this.plugin.getName());
         return true;
     }
 

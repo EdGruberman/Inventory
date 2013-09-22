@@ -1,49 +1,45 @@
 package edgruberman.bukkit.inventory.commands;
 
-import java.util.List;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import edgruberman.bukkit.inventory.Clerk;
 import edgruberman.bukkit.inventory.InventoryList;
 import edgruberman.bukkit.inventory.KitInventory;
-import edgruberman.bukkit.inventory.Main;
+import edgruberman.bukkit.inventory.commands.util.ArgumentContingency;
+import edgruberman.bukkit.inventory.commands.util.ConfigurationExecutor;
+import edgruberman.bukkit.inventory.commands.util.ExecutionRequest;
+import edgruberman.bukkit.inventory.commands.util.StringParameter;
+import edgruberman.bukkit.inventory.messaging.Courier.ConfigurationCourier;
 import edgruberman.bukkit.inventory.sessions.EditSession;
-import edgruberman.bukkit.inventory.util.TokenizedExecutor;
 
-public final class Define extends TokenizedExecutor {
+public final class Define extends ConfigurationExecutor {
 
     private final Clerk clerk;
-    private final String title;
 
-    public Define(final Clerk clerk, final String title) {
+    private final StringParameter kit;
+
+    public Define(final ConfigurationCourier courier, final Clerk clerk) {
+        super(courier);
         this.clerk = clerk;
-        this.title = title;
+
+        this.requirePlayer();
+        this.kit = this.addRequired(StringParameter.Factory.create("kit"));
     }
 
     // usage: /<command> kit
     @Override
-    protected boolean onCommand(final CommandSender sender, final Command command, final String label, final List<String> args) {
-        if (!(sender instanceof Player)) {
-            Main.courier.send(sender, "requires-player", label);
-            return false;
-        }
+    protected boolean executeImplementation(final ExecutionRequest request) throws ArgumentContingency {
+        final String name = request.parse(this.kit);
 
-        if (args.size() < 1) {
-            Main.courier.send(sender, "requires-argument", "kit", 0);
-            return false;
-        }
+        final String title = this.courier.translate("title-kit");
 
-        final String name = args.get(0);
         InventoryList kit = this.clerk.getInventory(KitInventory.class, name);
         if (kit == null) {
-            kit = KitInventory.create(name, this.title);
+            kit = KitInventory.create(name, title);
             this.clerk.putInventory(kit);
         }
 
-        this.clerk.openSession(new EditSession((Player) sender, this.clerk, kit, this.title));
+        this.clerk.openSession(new EditSession(this.courier, (Player) request.getSender(), this.clerk, kit, title));
         return true;
     }
 
